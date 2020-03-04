@@ -1,0 +1,374 @@
+% \iffalse meta-comment
+%
+% Copyright 2015 by IME / FHNW
+%
+% Author: Hanspeter Schmid
+% 
+% \fi
+% \iffalse
+%
+%<*driver>
+% \fi
+\ProvidesFile{fhnwreport.dtx}[2018/05/06 v2.5 PDF-LaTeX class for FHNW reports]
+% \iffalse
+\documentclass{ltxdoc}
+\GetFileInfo{fhnwreport.dtx}
+\title{fhnwreport: PDF-\LaTeX class for articles, reports, and theses}
+\date{\filedate}
+\author{Hanspeter Schmid, hanspeter.schmid@fhnw.ch}
+\begin{document}
+\maketitle
+\DocInput{\filename}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{555}
+% \StopEventually{}
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesClass{fhnwreport}[2018/05/06 v2.5 PDF-LaTeX class for FHNW reports]
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\LoadClass{article}
+%    \end{macrocode}
+%
+%  This packages requires several other packages that we now
+%  load: |geometry| to set the page layout, |calc| for arithemtics
+%  within arguments, |times| such that the font Times is used,
+%  |graphicx| for having graphics.
+%
+%    \begin{macrocode}
+\RequirePackage{geometry}
+\RequirePackage{calc}
+\RequirePackage{times}
+\RequirePackage{graphicx}
+%    \end{macrocode}
+%
+% \section{Page Layout}
+%
+% The standard page stlye is two-sided; if you want it one-sided,
+% you have to write \verb|\geometry{twoside=false}| in your 
+% own document.
+%
+%    \begin{macrocode}
+\geometry{a4paper,twoside=true}
+\geometry{width=160mm,height=241mm,top=32mm,outer=25mm}
+\geometry{footskip=19mm,headsep=13mm}
+%    \end{macrocode}
+%
+% \begin{macro}{\CapFont}
+% \begin{macro}{\CapNumFont}
+% \begin{macro}{\SecFont}
+% \begin{macro}{\SecNumFont}
+% \begin{macro}{\ChapFont}
+% \begin{macro}{\TitleFont}
+% \begin{macro}{\HeaderFont}
+% \begin{macro}{\BackgroundFont}
+%
+%  The following macros define, in this order, the fonts used for
+%  captions, caption lables, section titles, section numbers, chapter
+%  titles, the document title, the page headings, and the |background|
+%  environment, and the fonts used on the official title page.
+%  
+%    \begin{macrocode}
+\newcommand{\CaptionFont}{\em}
+\newcommand{\SecFont}{\sf\bfseries}
+\newcommand{\SecNumFont}{\sf\bfseries}
+\newcommand{\ChapFont}{\sf\bfseries}
+\newcommand{\TitleFont}{\sf\bfseries}
+\newcommand{\HeaderFont}{\sf\small}
+\newcommand{\BackgroundFont}{\em}
+\newcommand{\DTfont@author}{\sf\bfseries}
+\newcommand{\DTfont@normal}{\sf}
+\newcommand{\DTfont@series}{\sf\bfseries}
+\newcommand{\DTfont@title}{\sf\bfseries}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\maketitle}
+%    \begin{macrocode}
+\renewcommand\maketitle{\par
+  \begingroup
+    \renewcommand\thefootnote{\@fnsymbol\c@footnote}%
+    \def\@makefnmark{\rlap{\@textsuperscript{\normalfont\@thefnmark}}}%
+    \long\def\@makefntext##1{\parindent 1em\noindent
+            \hb@xt@1.8em{%
+                \hss\@textsuperscript{\normalfont\@thefnmark}}##1}%
+    \if@twocolumn
+      \ifnum \col@number=\@ne
+        \@maketitle
+      \else
+        \twocolumn[\@maketitle]%
+      \fi
+    \else
+      \newpage
+      \global\@topnum\z@   % Prevents figures from going at top of the title page.
+      \@maketitle
+    \fi
+    \thispagestyle{empty}\@thanks
+  \endgroup
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+}
+%    \end{macrocode}
+%
+% \end{macro}
+%
+% The maketitle function assumes that there is a file called 
+% fhnwlogo.pdf in the working directory. Choose the one you need.
+%
+% \begin{macro}{\@maketitle}
+%    \begin{macrocode}
+\def\@maketitle{%
+  \newpage
+  \null
+  \setlength{\unitlength}{1cm}%
+  \begin{picture}(0,0)
+    \linethickness{0.025mm}
+    \put(-0.85,2.2){\mbox{\includegraphics[height=12mm]{fhnwlogo.pdf}}}
+  \end{picture}
+  \par%
+  \vskip 2em%
+  \begin{center}%
+    \let \footnote \thanks
+    {\LARGE \@title \par}%
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+%    \end{macrocode}
+%
+% \end{macro}
+%
+% \begin{macro}{\noparskip}
+%
+%  This class uses the European book layout, i.e., a layout that has
+%  no paragraph identations, but some paragraph skip.  This is sometimes
+%  not wanted in tables of contents, so we provide a macro that makes
+%  it possible to produce tables of contents with tight vertical spacing
+%  by writing something like |{\noparskip \tableofcontents}|.
+%
+%    \begin{macrocode}
+\newcommand{\noparskip}{\parskip=\z@ \@plus\z@ \@minus\z@}
+%    \end{macrocode}
+%
+% \end{macro}
+%
+%  Now come the details of the paragraph layout.  If |raggedright| is not
+%  used, |\TextAlignment| must be set anyway, and |\parindent| must be
+%  set to zero.  (The command |\RaggedRight| does that too).  The text
+%  alignement command is issued at the begin of the document, and the
+%  parskip is also set to a reasonable, non-zero value.  Finally, clubs
+%  and widows are punished hard.
+%    \begin{macrocode}
+\ifx\TextAlignment\undefined
+  \newcommand{\TextAlignment}{\relax}
+  \parindent=0pt
+\else\fi
+\AtBeginDocument{\TextAlignment}
+\parskip=1.6ex \@plus 0.4ex \@minus 0.4ex
+\widowpenalty 10000
+\clubpenalty 10000
+\@clubpenalty 10000
+%    \end{macrocode}
+%  Lists are generally defined with tighter vertical spacing, the
+%  following was adapted from |book.cls|.
+%    \begin{macrocode}
+\def\@listi{\leftmargin\leftmargini
+  \parsep \z@ \@plus2\p@ \@minus\z@
+  \topsep \z@ \@plus2\p@ \@minus\z@
+  \itemsep\z@ \@plus2\p@ \@minus\z@}
+\let\@listI\@listi
+\@listi
+\def\@listii{\leftmargin\leftmarginii
+  \labelwidth\leftmarginii
+  \advance\labelwidth-\labelsep
+  \topsep \z@ \@plus2\p@  \@minus\z@
+  \parsep \z@ \@plus\p@ \@minus\z@
+  \itemsep \parsep}
+\def\@listiii{\leftmargin\leftmarginiii
+  \labelwidth\leftmarginiii
+  \advance\labelwidth-\labelsep
+  \topsep \z@ \@plus\p@ \@minus\z@
+  \parsep \z@ \@minus\z@
+  \partopsep \z@ \plus\z@ \@minus\z@
+  \itemsep \topsep}
+\def\@listiv {\leftmargin\leftmarginiv
+  \labelwidth\leftmarginiv
+  \advance\labelwidth-\labelsep}
+\def\@listv  {\leftmargin\leftmarginv
+  \labelwidth\leftmarginv
+  \advance\labelwidth-\labelsep}
+\def\@listvi {\leftmargin\leftmarginvi
+  \labelwidth\leftmarginvi
+  \advance\labelwidth-\labelsep}
+%    \end{macrocode}
+%  We use font size 11pt, and notthing else, thus it is hard-wired.
+%  The following is adapted from |bk11.clo|.
+%    \begin{macrocode}
+\renewcommand\normalsize{%
+   \@setfontsize\normalsize\@xipt{13.6}%
+   \abovedisplayskip 11\p@ \@plus3\p@ \@minus6\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
+   \belowdisplayskip \abovedisplayskip
+   \let\@listi\@listI}
+\normalsize
+\renewcommand\small{%
+   \@setfontsize\small\@xpt\@xiipt
+   \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
+   \def\@listi{\leftmargin\leftmargini
+               \topsep \z@ \@plus2\p@ \@minus\z@
+               \parsep \z@ \@plus\p@ \@minus\z@
+               \itemsep \parsep}%
+   \belowdisplayskip \abovedisplayskip
+}
+\renewcommand\footnotesize{%
+   \@setfontsize\footnotesize\@ixpt{11}%
+   \abovedisplayskip 8\p@ \@plus2\p@ \@minus4\p@
+   \abovedisplayshortskip \z@ \@plus\p@
+   \belowdisplayshortskip 4\p@ \@plus2\p@ \@minus2\p@
+   \def\@listi{\leftmargin\leftmargini
+               \topsep \z@ \@plus\p@ \@minus\z@
+               \parsep \z@ \@plus\p@ \@minus\z@
+               \itemsep \parsep}%
+   \belowdisplayskip \abovedisplayskip
+}
+\renewcommand\scriptsize{\@setfontsize\scriptsize\@viiipt{9.5}}
+\renewcommand\tiny{\@setfontsize\tiny\@vipt\@viipt}
+\renewcommand\large{\@setfontsize\large\@xiipt{14}}
+\renewcommand\Large{\@setfontsize\Large\@xivpt{18}}
+\renewcommand\LARGE{\@setfontsize\LARGE\@xviipt{22}}
+\renewcommand\huge{\@setfontsize\huge\@xxpt{25}}
+\renewcommand\Huge{\@setfontsize\Huge\@xxvpt{30}}
+%    \end{macrocode}
+%
+% \section{Page Headings, captions, etc.}
+%
+%  The running heads are empty in this page style.
+%    \begin{macrocode}
+\def\ps@headings{%
+  \let\@oddfoot\@empty\let\@evenfoot\@empty
+  \def\@evenhead{\thepage\hfil\slshape\leftmark}%
+  \def\@oddhead{{\slshape\rightmark}\hfil\thepage}%
+  \let\@mkboth\markboth
+  \def\sectionmark##1{%
+    \markboth {\MakeUppercase{%
+        \ifnum \c@secnumdepth >\z@
+        \thesection\quad
+        \fi
+        ##1}}{}}%
+  \def\subsectionmark##1{%
+    \markright {%
+      \ifnum \c@secnumdepth >\@ne
+      \thesubsection\quad
+      \fi
+      ##1}}}
+\pagestyle{headings}
+%    \end{macrocode}
+%
+%  Figures, tables and equations are counted as section.number, i.e., the first
+%  figure in Section 2 would get the number 2.1
+%
+%    \begin{macrocode}
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\counterwithin{equation}{section}
+%    \end{macrocode}
+%
+% \section{Sections, subsections, \ldots}
+%
+%  Use a different font for sections:
+%  The following  gives a normal heading with white space above
+%  and below the section heading, the title set in |\SecFont\Large|,
+%  and no indentation on the first paragraph.
+%    \begin{macrocode}
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+  {-2.1ex \@plus -.6ex \@minus -.12ex}%
+  {1.38ex \@plus.12ex}%
+  {\SecFont\Large}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-1.95ex\@plus -.6ex \@minus -.12ex}%
+  {.9ex \@plus .12ex}%
+  {\SecFont\large}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-1.95ex\@plus -.6ex \@minus -.12ex}%
+  {.9ex \@plus .12ex}%
+  {\SecFont\normalsize}}
+%    \end{macrocode}
+%  Paragraphs are never numbered; they just make their
+%  Argument appear in the section font, with a line break after it.
+%    \begin{macrocode}
+\renewcommand{\paragraph}[1]{\par\noindent{\SecFont\normalsize #1}\\}
+%    \end{macrocode}
+%  No trailing period in the section number
+%    \begin{macrocode}
+\def\@seccntformat#1{\csname the#1\endcsname\quad}
+%    \end{macrocode}
+%
+% The bibliography should be numbered and appear in the table of contents
+%
+%    \begin{macrocode}
+\usepackage[numbib,nottoc]{tocbibind}
+%    \end{macrocode}
+
+% \section{Bibliohraphy setup}
+%
+% This is presently done in the document itself.
+
+% \section{Hyperrefs}
+%
+% Make hyperrefs work, but invisible.
+%
+%    \begin{macrocode}
+\RequirePackage{hyperref,color}
+\hypersetup{bookmarksnumbered={true},hidelinks}
+%    \end{macrocode}
+%
+% \section{How to treat figures and captions}
+%
+% The bottomfraction set to 0.7 makes it easier to place
+% figures at the bottom of the page.
+%
+%    \begin{macrocode}
+\RequirePackage{caption}
+\captionsetup{margin=10pt,font=small,labelfont=bf}
+\setlength\floatsep    {24\p@ \@plus 2\p@ \@minus 4\p@}
+\setlength\textfloatsep{30\p@ \@plus 2\p@ \@minus 4\p@}
+\renewcommand{\bottomfraction}{0.7}
+%    \end{macrocode}
+%
+% \section{Conclusion}
+%
+% \Finale
+%

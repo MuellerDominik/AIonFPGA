@@ -1,0 +1,74 @@
+%% Packages
+% Main packages
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage{float}
+
+% Useful packages
+\usepackage[pdftex,dvipsnames,tables]{xcolor}
+\usepackage{csquotes}
+\usepackage{siunitx}
+\usepackage{listings}
+\usepackage[bottom]{footmisc}
+\usepackage{footnote}
+\usepackage{verbatim}
+\usepackage[textsize=footnotesize]{todonotes}
+%\usepackage{soul}
+
+% TikZ packages
+%\usepackage{standalone}
+%\usepackage{tikz}
+%\usepackage{circuitikz}
+%\usetikzlibrary{arrows}
+%\usetikzlibrary{calc}
+%\usetikzlibrary{intersections}
+
+% Math packages
+\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage{array}
+%\usepackage{amsthm}
+
+% Table packages
+\usepackage{tabularx}
+%\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{multicol}
+
+% Figure packages
+%\usepackage{subfig}
+
+% PDF packages
+\usepackage{pdfpages}
+\usepackage{pdflscape}
+
+% Other packages
+%\usepackage{xargs}
+
+%% Settings
+% Bibliography
+\usepackage[style=ieee,urldate=comp,backend=biber]{biblatex}
+\addbibresource{literature/bibliography.bib}
+
+% Glossary
+\usepackage[toc]{glossaries}
+\makeglossaries
+\input{header/glossary}
+
+% Graphics
+\graphicspath{{./graphics/}}
+
+% Listings
+\input{header/listings}
+
+% Other
+%\geometry{twoside=false}
+\setlength{\marginparwidth}{2cm}
+\overfullrule=5em
+
+%% Custom definitions
+\input{header/custom_definitions}

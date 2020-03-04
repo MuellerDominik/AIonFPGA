@@ -1,0 +1,24 @@
+% Table definitions
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% Month
+\newcommand{\MONTH}{
+	\ifcase\the\month
+	\or January
+	\or February
+	\or March
+	\or April
+	\or May
+	\or June
+	\or July
+	\or August
+	\or September
+	\or October
+	\or November
+	\or December
+	\fi}
+
+% URL
+\urlstyle{same}

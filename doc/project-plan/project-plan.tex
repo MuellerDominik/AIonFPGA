@@ -1,0 +1,70 @@
+% !TeX document-id = {babb7a59-8b6e-fdc2-84ad-8d71da78a5e3}
+% !TeX TXS-program:compile = pdflatex -synctex=1 -interaction=nonstopmode -output-directory=build -jobname=project-plan_aionfpga_canzani_mueller project-plan.tex
+% !TeX TXS-program:bibliography = biber --output-directory build project-plan_aionfpga_canzani_mueller
+% !TeX TXS-program:glossary = makeglossaries -d build project-plan_aionfpga_canzani_mueller
+% !TeX TXS-program:view = txs:///view-pdf ./build/project-plan_aionfpga_canzani_mueller.pdf
+
+\documentclass[final]{fhnwthesis}
+
+\input{header/header}
+
+\title{\textbf{{\Huge AI High-Performance Solution \\[2mm] on FPGA}}}
+\author{\textit{{\LARGE Project Plan}}}
+\date{}
+
+\begin{document}
+
+% Title page
+\selectlanguage{english}
+\pagenumbering{gobble}
+\maketitle
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.55\textwidth]{top_assembly}
+\end{figure}
+
+\vfill
+\begin{center}
+  \begin{tabular}{>{\bfseries\large}rl}
+    Degree Program & Electrical Engineering and Information Technology \\[2mm]
+    Customer       & Institute for Sensors and Electronics \\[2mm]
+    Coaches        & Prof. Michael Pichler, Prof. Dr. Hanspeter Schmid \\[2mm]
+    Expert         & Dr. J\"urg M. Stettbacher \\[2mm]
+    Team           & Nico Canzani, Dominik M\"uller \\[2mm]
+    Date           & \today
+  \end{tabular}
+\end{center}
+\clearpage
+
+% Contents
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+
+% Sections
+\pagenumbering{arabic}
+\include{sections/initial_situation}
+\include{sections/project_goals}
+\include{sections/deliverables}
+\include{sections/concept}
+\include{sections/timetable}
+
+% Bibliography
+%\printbibliography[heading=bibintoc]
+%\label{sec:literature}
+%\clearpage
+
+% Glossary
+%\printglossaries
+%\clearpage
+
+% Appendix
+\include{sections/appendix}
+
+% Debug
+%\newpage
+%\listoftodos[\section{To-Do}]
+%\clearpage
+
+\end{document}
