@@ -1,20 +1,22 @@
-% goals of the project (table)
+\chapter{Project Goal}
+\label{ch:project_goal}
 
-\chapter{Project Goals}
-\label{ch:project_goals}
+The goal of this project is to develop and train a convolutional neural network (CNN) model and implement it on an FPGA.
+Images of the throwing objects can then be captured by the camera, classified on the FPGA and displayed on the monitor.
 
-The goal of project 5 and the thesis is to create an eye-catcher which demonstrates the engineering competences in FPGA and AI based design of the institute for sensors and electronics (ISE).
-To achieve this, a throwing booth consisting of a camera, lighting, an FPGA development board and a monitor was built up in project 5.
-During the thesis a system is to be implemented which captures the thrown object by the camera, classifies it on the FPGA by a CNN model and displays the result on the monitor.
+The respective objectives for this project are specified in the following table:\\
 
-The respective objectives for the thesis are specified in the table below.
-
-\begin{table}[h]
-	\begin{tabularx}{\textwidth}{L{1cm}|L{4cm}|X}
-		\textbf{No.}	& \textbf{Objective}				& \textbf{Description} \\ \hline
-		1.				& CNN Model							& The CNN model is developed and trained in Python 3 using TensorFlow 2 and the images collected in project 5. \\ \hline
-		2.				& High-Performance Implementation	& The advantages of an FPGA flow into the development. Thus, special attention is paid to the performance of the system. \\ \hline
-		3.				& Display							& A monitor displays the image of the object that was thrown. Furthermore, the guess of the CNN and the stats of the five most probably objects are shown. \\ \hline
-		4.				& Verification						& The accuracy and performance of the CNN model implemented on the FPGA is verified and compared to the computer results.
-	\end{tabularx}
-\end{table}
+\begin{tabularx}{\textwidth}{L{3.05cm}X}
+  \toprule
+  \textbf{Objective} & \textbf{Description} \\
+  \midrule
+  % CNN Model & The CNN model is developed and trained in Python 3 using TensorFlow 2 and the dataset collected in the previous project. \\
+  CNN Model & The CNN model is developed and trained on a computer. This is done in Python 3 using TensorFlow 2 and the previously collected dataset. \\
+  \midrule
+  High-Performance Implementation & The advantages of an FPGA flow into the development. Thus, special attention is paid to the performance of the system. \\
+  \midrule
+  Display & A monitor displays the image of the object that was thrown. Furthermore, the best guess of the CNN as well as additional statistics are shown. \\
+  \midrule
+  Verification & The accuracy and performance of the CNN model implemented on the FPGA is verified. These results are compared to the computer results. \\
+  \bottomrule
+\end{tabularx}
