@@ -1,15 +1,34 @@
 \chapter{Concept}
 \label{ch:concept}
 
+This chapter briefly explains the concept of this project.
+The three main parts are the demonstrator, the training and the inference.
+
+\section{Demonstrator}
+\label{sec:demonstrator}
+
+The demonstrator --- a throwing booth --- was not entirely finished during the previous project.
+However, the things that still need to be done are not that time-consuming.
+For this reason, those tasks are not included in the timetable.
+They are carried out on the side to fill time gaps (e.g. during the training of a CNN model).
 
 \section{Training}
 \label{sec:training}
 
+The development and training of the CNN model is an iterative process.
+Various CNN architectures are experimented with and the results are compared to each other.
+Furthermore, the labeled dataset allows for some experimentation as well.
+For instance, each image has a label that indicates whether the object was fully or only partially visible.
 
 \section{Inference}
 \label{sec:inference}
 
+A high-performance solution requires fast image acquisition and low-latency inference.
+To implement the necessary components on the MPSoC with the integrated FPGA, a variety of toolchains and Linux-based operating systems can be used.
+These options are initially examined carefully in order to select the most suitable one.
 
-\section{Throwing Booth}
-\label{sec:throwing_booth}
+The specific implementation of the image acquisition and the inference depends on the overall performance and the available resources of the MPSoC development board.
+For this reason, several performance tests are carried out to evaluate its real-time capabilities.
 
+The final step is to verify the performance and accuracy of the entire system.
+The accuracy is additionally compared to the accuracy of the computer solution.
