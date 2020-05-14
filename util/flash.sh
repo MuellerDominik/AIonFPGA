@@ -10,8 +10,6 @@ ROOTFS=/mnt/rootfs
 ROOTFS_CONT=../bin/rootfs.tar.gz
 BOOT_BIN=../bin/BOOT.BIN
 IMAGE_UB=../bin/image.ub
-dpu_XCLBIN=../bin/dpuxclbin
-VAI_PACKAGE=../bin/xilinx_vai_board_package
 
 # make sure the device is not mounted
 # (todo: unmount all partitions properly and not just the first two)
@@ -49,12 +47,7 @@ mount $DISK${PART}2 $ROOTFS
 cp $BOOT_BIN $BOOT
 cp $IMAGE_UB $BOOT
 
-cp -r $VAI_PACKAGE $BOOT
-
 tar -xf $ROOTFS_CONT -C $ROOTFS
-
-# Correct changes from sd_conten.sh workaround
-# sudo chmod u-r $ROOTFS/usr/bin/sudo
 
 sync
 sleep 10
