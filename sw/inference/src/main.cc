@@ -28,6 +28,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <chrono>
 
 #include <opencv2/opencv.hpp>
 /* header files for Vitis AI advanced APIs */
@@ -207,7 +208,13 @@ void runResnet(DPUTask *taskConv) {
 
     /* Run Resnet50 CONV part */
     cout << "\nRun Resnet50 CONV ..." << endl;
+    auto t1 = std::chrono::high_resolution_clock::now();
     dpuRunTask(taskConv);
+    auto t2 = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+
+    std::cout << "\n Time to run DPU: " << duration << "us" << endl;
 
     /* Calculate softmax on CPU and show TOP5 classification result */
     dpuRunSoftmax(outAddr, softmax, channel, size/channel, out_scale);

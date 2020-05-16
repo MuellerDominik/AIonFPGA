@@ -8,6 +8,9 @@ ROOT_TARGET=$RFS_DIR/home/root
 GEN_SD_CONT_DIR=../mpsoc/os/build/Vitis-AI/DPU-TRD-ULTRA96V2/prj/Vitis/binary_container_1/sd_card/
 XILINX_VAI_DIR=$BUILD_DIR/xilinx_vai_board_package
 
+BAUMER_GAPI=../mpsoc/os/build/baumer-gapi-sdk-linux-v2.10.0.25119-gcc-5.4-aarch64.tar.gz
+BAUMER_EXTR=$BUILD_DIR/baumer
+
 TESTSET=../mpsoc/os/build/Vitis-AI/DPU-TRD-ULTRA96V2/app/Vitis/samples/resnet50/img
 WORDS=../mpsoc/os/build/Vitis-AI/mpsoc/dnndk_samples_zcu104/dataset/image500_640_480/words.txt
 
@@ -21,6 +24,7 @@ APPLICATION=../sw/inference/build/ai_application
 sudo rm -rf $BUILD_DIR
 mkdir -p $BUILD_DIR
 mkdir -p $RFS_DIR
+mkdir -p $BAUMER_EXTR
 
 ####################### Docker Session to copy VAI Board Package #######################
 
@@ -72,6 +76,9 @@ docker stop $CONTAINERNAME
 cp $BOOT_BIN $BUILD_DIR
 cp $IMAGE_UB $BUILD_DIR
 
+# Extract Baumer GAPI
+tar xf $BAUMER_GAPI -C $BAUMER_EXTR
+
 # Extract Root File System
 sudo tar -xf $RFS -C $RFS_DIR
 
@@ -82,6 +89,10 @@ sudo mkdir -p $ROOT_TARGET/dataset/image500_640_480/
 sudo mkdir -p $RFS_DIR/usr/local/bin
 sudo mkdir -p $RFS_DIR/usr/local/lib
 sudo mkdir -p $RFS_DIR/etc/ld.so.conf.d
+
+# Make directories to install Baumer GAPI
+sudo mkdir -p $RFS_DIR/usr/local/lib/baumer
+sudo mkdir -p $RFS_DIR/usr/local/src/baumer/inc
 
 # Copy the AI Application
 sudo cp $APPLICATION $ROOT_TARGET
@@ -97,9 +108,17 @@ sudo cp $XILINX_VAI_DIR/pkgs/lib/* $RFS_DIR/usr/local/lib/
 sudo cp -r $XILINX_VAI_DIR/pkgs/include/* $RFS_DIR/usr/include
 echo "/usr/local/lib" | sudo tee $RFS_DIR/etc/ld.so.conf.d/dnndk.conf
 
+# Install Baumer GAPI
+sudo cp -r $BAUMER_EXTR/lib/* $RFS_DIR/usr/local/lib/baumer
+sudo cp -r $BAUMER_EXTR/include/* $RFS_DIR/usr/local/src/baumer/inc
+
+# Install Baumer Application
+sudo cp -r ../sw/inference/src/camera-interface $ROOT_TARGET
+
 # Compress Root File System
 sudo tar -czf $BUILD_DIR/$ARCHIV_NAME -C $RFS_DIR .
 
 # Remove temporarily created folders
 sudo rm -rf $XILINX_VAI_DIR
 sudo rm -rf $RFS_DIR
+sudo rm -rf $BAUMER_EXTR

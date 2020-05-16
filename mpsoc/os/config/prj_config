@@ -1,7 +1,7 @@
 [clock]
 
-freqHz=150000000:dpu_xrt_top_1.aclk
-freqHz=300000000:dpu_xrt_top_1.ap_clk_2
+freqHz=75000000:dpu_xrt_top_1.aclk
+freqHz=150000000:dpu_xrt_top_1.ap_clk_2
 
 [connectivity]
 
