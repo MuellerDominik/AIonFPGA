@@ -3,7 +3,7 @@
 CWD=$(pwd)
 ROOT=$CWD/../..
 CONTAINERNAME=docker-vitis-ai-tools-compile
-DOCKER_SH_SCRIPT=mpsoc/comp_model/dockerscripts/comp_model.sh
+DOCKER_SH_SCRIPT=mpsoc/comp_model/scripts/comp_model.sh
 BUILD_DIR=build
 
 IMAGE_NAME=xilinx/vitis-ai:tools-1.0.0-cpu

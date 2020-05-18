@@ -1,12 +1,10 @@
 .PHONY: all
 all:
-	build-os
-	quant-model
-	comp-model
-	comp-app
-	prep-cont
-	flash-sd
-
+	@cd mpsoc/quant_model && ./quantize_model.sh
+	@cd mpsoc/comp_model && ./build_model.sh
+	@cd sw/inference && ./build_app.sh
+	@cd util && ./sd_content.sh
+	@cd util && ./flash.sh
 
 get-repos:
 	@cd mpsoc/os && ./get_repos.sh

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo hello from xilinx docker-tool container
 echo beginning to quantize the model
 

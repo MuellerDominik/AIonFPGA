@@ -43,6 +43,6 @@ docker run \
     $IMAGE_NAME \
     bash
 
-docker exec $CONTAINERNAME sh $DOCKER_SH_SCRIPT
+docker exec $CONTAINERNAME ./$DOCKER_SH_SCRIPT
 
 docker stop $CONTAINERNAME
