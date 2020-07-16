@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DISK=/dev/mmcblk0
-PART=p
+DISK=/dev/sdb
+PART=
 
 BOOT=/mnt/boot
 ROOTFS=/mnt/rootfs
@@ -20,10 +20,12 @@ sudo umount $DISK${PART}2
 sleep 10
 
 # format disk
+echo Erasing disk
 sudo dd if=/dev/zero of=$DISK bs=4096 status=progress # fast
 
 #sleep 10
 
+echo Create partitions
 sudo parted $DISK -s mklabel msdos
 sudo parted $DISK -s mkpart primary fat32 1MiB 1025MiB
 sudo parted $DISK -s mkpart primary ext4 1026MiB 100%
@@ -32,6 +34,7 @@ sudo parted $DISK -s set 1 boot on
 
 sleep 10
 
+echo Format partitions
 sudo mkfs -t vfat -F 32 -n boot $DISK${PART}1
 sudo mkfs -t ext4 -L rootfs $DISK${PART}2
 
@@ -44,9 +47,11 @@ sudo mkdir $ROOTFS
 sudo mount $DISK${PART}1 $BOOT
 sudo mount $DISK${PART}2 $ROOTFS
 
+echo Copy boot files
 sudo cp $BOOT_BIN $BOOT
 sudo cp $IMAGE_UB $BOOT
 
+echo Extracting root file system on sd card
 sudo tar -xf $ROOTFS_CONT -C $ROOTFS
 
 sync
