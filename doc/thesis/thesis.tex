@@ -1,0 +1,81 @@
+% !TeX document-id = {57f7666b-e03d-5798-4b62-aabfb1296366}
+% !TeX TXS-program:compile = pdflatex -synctex=1 -interaction=nonstopmode -output-directory=build -jobname=p6_aionfpga_thesis_canzani_mueller thesis.tex
+% !TeX TXS-program:bibliography = biber --output-directory build p6_aionfpga_thesis_canzani_mueller
+% !TeX TXS-program:glossary = makeglossaries -d build p6_aionfpga_thesis_canzani_mueller
+% !TeX TXS-program:view = txs:///view-pdf ./build/p6_aionfpga_thesis_canzani_mueller.pdf
+
+\documentclass[final]{fhnwreport}
+
+\input{header/header}
+
+\title{\textbf{{\Huge AI High-Performance Solution \\[2mm] on FPGA}}}
+\author{\textit{{\LARGE Bachelor Thesis}}}
+\date{}
+
+\begin{document}
+
+% Title page
+\selectlanguage{english}
+\pagenumbering{gobble}
+\maketitle
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.55\textwidth]{top_assembly}
+\end{figure}
+
+\vfill
+\begin{center}
+  \begin{tabular}{>{\bfseries\large}rl}
+    Degree Program & Electrical Engineering and Information Technology \\[2mm]
+    Customer       & Institute for Sensors and Electronics \\[2mm]
+    Coaches        & Prof. Michael Pichler, Prof. Dr. Hanspeter Schmid \\[2mm]
+    Expert         & Dr. J\"urg M. Stettbacher \\[2mm]
+    Team           & Nico Canzani, Dominik M\"uller \\[2mm]
+%   Date           & \the\day.\MONTH \the\year
+    Date           & \today
+  \end{tabular}
+\end{center}
+\clearpage
+
+% Abstract
+\pagenumbering{roman}
+\include{chapters/abstract}
+\clearpage
+
+% Author's Declaration
+\include{chapters/authors_declaration}
+\clearpage
+
+% Contents
+\tableofcontents
+\clearpage
+
+% Chapters
+\pagenumbering{arabic}
+\include{chapters/introduction}
+\include{chapters/theoretical_background}
+\include{chapters/training_of_the_cnn}
+\include{chapters/embedded_platform}
+\include{chapters/verification_and_benchmark}
+\include{chapters/conclusion}
+\include{chapters/experiences}
+
+% Bibliography
+\printbibliography[heading=bibintoc]
+\label{sec:literature}
+\clearpage
+
+% Glossary
+%\printglossaries
+%\clearpage
+
+% Appendix
+\include{chapters/appendix}
+
+% Debug
+%\newpage
+%\listoftodos[\section{To-Do}]
+%\clearpage
+
+\end{document}
