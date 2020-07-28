@@ -1,8 +1,8 @@
-# aionfpga ~ camera interface
+# aionfpga ~ camera
 # Copyright (C) 2020 Dominik Müller and Nico Canzani
 
 cmake_minimum_required(VERSION 2.8)
-project(camera-interface)
+project(camera)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     # default path is '/usr/local'
@@ -95,8 +95,9 @@ else()
     message(FATAL_ERROR "Currently, only Linux is supported.")
 endif()
 
-set(SOURCE_FILES main.cc)
+set(SOURCE_FILES camera.cc)
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+# add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME} ${LIBS_ALL} ${OpenCV_LIBS})

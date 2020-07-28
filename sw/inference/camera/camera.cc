@@ -1,13 +1,12 @@
 /**
- * aionfpga ~ camera interface
+ * aionfpga ~ camera (libcamera.so)
  * Copyright (C) 2020 Dominik Müller and Nico Canzani
  */
-
-#include <string>
 
 #include "opencv2/opencv.hpp" // OpenCV
 #include "bgapi2_genicam/bgapi2_genicam.hpp" // Baumer GAPI
 
+// Return Codes
 enum returncodes {
     SUCCESS = 0,
 
@@ -32,54 +31,108 @@ enum returncodes {
     NOT_AVAILABLE = 17
 };
 
-int main(int argc, char **argv) {
+// Configuration
+const int width = 1280;
+const int height = 1024;
 
-    // Configuration
-    const int width = 1280;
-    const int height = 1024;
-    const double frame_rate = 200; // fps
-    const unsigned buff_size = 200; // 200 ≙ 1 s @ 200 fps
-    const unsigned exposure_time = 250; // us
-    const unsigned camera_gain = 4;
-    const unsigned avg_diffs = 8; // 8 diffs ≙ 40 ms @ 200 fps
-    const double threshold_mult = 1.1;
-    const std::string output_path = "/home/xilinx/imgs/";
+const unsigned payloadsize = (unsigned)(width * height);
 
-    // Parameters
-    double mean_diff;
-    double threshold;
-    double sum_thresh = 0;
+volatile double frame_rate = 200.0; // fps
+volatile unsigned buff_size = 600; // 600 ≙ 3 s @ 200 fps
+volatile unsigned exposure_time = 250; // us
+volatile unsigned camera_gain = 4;
 
-    unsigned frame_id = 0;
-    unsigned throw_bgn_idx, throw_end_idx;
-    bool throw_bgn = false; // Begin of the throw
-    bool throw_end = false; // End of the throw
+volatile unsigned avg_diffs = 8; // 8 diffs ≙ 40 ms @ 200 fps
+volatile double threshold_mult = 1.1;
 
-    int returncode = SUCCESS;
+// Parameters
+double mean_diff, threshold, sum_thresh;
 
-    // OpenCV
-    cv::Mat cv_buffer[buff_size];
-    cv::Mat cv_abs, cv_transformed;
+unsigned frame_id;
+unsigned throw_bgn_idx, throw_end_idx; // Index (frame_id) of the beginning/end of the throw
+bool throw_bgn, throw_end; // Begin/end of the throw
 
-    // Baumer
-    BGAPI2::SystemList *systemList = NULL;
-    BGAPI2::System *pSystem = NULL;
-    BGAPI2::String sSystemID;
+int returncode = SUCCESS;
 
-    BGAPI2::InterfaceList *interfaceList = NULL;
-    BGAPI2::Interface *pInterface = NULL;
-    BGAPI2::String sInterfaceID;
+// OpenCV
+cv::Mat* cv_buffer;
+cv::Mat cv_abs, cv_transformed;
 
-    BGAPI2::DeviceList *deviceList = NULL;
-    BGAPI2::Device *pDevice = NULL;
-    BGAPI2::String sDeviceID;
+// Baumer
+BGAPI2::SystemList* systemList = NULL;
+BGAPI2::System* pSystem = NULL;
+BGAPI2::String sSystemID;
 
-    BGAPI2::DataStreamList *datastreamList = NULL;
-    BGAPI2::DataStream *pDataStream = NULL;
-    BGAPI2::String sDataStreamID;
+BGAPI2::InterfaceList* interfaceList = NULL;
+BGAPI2::Interface* pInterface = NULL;
+BGAPI2::String sInterfaceID;
 
-    BGAPI2::BufferList *bufferList = NULL;
-    BGAPI2::Buffer *pBuffer = NULL;
+BGAPI2::DeviceList* deviceList = NULL;
+BGAPI2::Device* pDevice = NULL;
+BGAPI2::String sDeviceID;
+
+BGAPI2::DataStreamList* datastreamList = NULL;
+BGAPI2::DataStream* pDataStream = NULL;
+BGAPI2::String sDataStreamID;
+
+BGAPI2::BufferList* bufferList = NULL;
+BGAPI2::Buffer* pBuffer = NULL;
+
+// Buffer
+char** pMemoryBlock;
+
+// Getter
+extern "C" void* get_frame_ptr(unsigned idx) {
+    return (void*)cv_buffer[idx % buff_size].data;
+}
+
+extern "C" unsigned get_throw_bgn_idx() {
+    return throw_bgn_idx;
+}
+
+extern "C" unsigned get_throw_end_idx() {
+    return throw_end_idx;
+}
+
+extern "C" bool get_throw_bgn() {
+    return throw_bgn;
+}
+
+extern "C" bool get_throw_end() {
+    return throw_end;
+}
+
+// Setter
+extern "C" void set_frame_rate(double frame_rate) {
+    ::frame_rate = frame_rate;
+}
+
+extern "C" void set_buff_size(unsigned buff_size) {
+    ::buff_size = buff_size;
+}
+
+extern "C" void set_exposure_time(unsigned exposure_time) {
+    ::exposure_time = exposure_time;
+}
+
+extern "C" void set_camera_gain(unsigned camera_gain) {
+    ::camera_gain = camera_gain;
+}
+
+extern "C" void set_avg_diffs(unsigned avg_diffs) {
+    ::avg_diffs = avg_diffs;
+}
+
+extern "C" void set_threshold_mult(double threshold_mult) {
+    ::threshold_mult = threshold_mult;
+}
+
+// Camera
+extern "C" int initialize() {
+
+    pMemoryBlock = new char*[buff_size];
+
+    cv_buffer = new cv::Mat[buff_size];
 
     try {
         // Instantiate and update SystemList
@@ -256,19 +309,37 @@ int main(int argc, char **argv) {
         bufferList = pDataStream->GetBufferList();
 
         // Create `buff_size` Buffers (encapsulates a single memory buffer) and add them to the BufferList
-        for (int i = 0; i < buff_size; ++i) {
-            pBuffer = new BGAPI2::Buffer();
+        for (unsigned i = 0; i < buff_size; ++i) {
+            pMemoryBlock[i] = (char*)new char[payloadsize];
+            pBuffer = new BGAPI2::Buffer(pMemoryBlock[i], (bo_uint64)payloadsize, NULL);
             bufferList->Add(pBuffer);
         }
     } catch (BGAPI2::Exceptions::IException &ex) {
         returncode = SUCCESS == returncode ? ERROR : returncode;
     }
 
+    return returncode;
+}
+
+extern "C" int start_acquisition() {
+
+    // Reset global variables
+    mean_diff = 0.0;
+    threshold = 0.0;
+    sum_thresh = 0.0;
+
+    frame_id = 0;
+    throw_bgn_idx = 0;
+    throw_end_idx = 0;
+    throw_bgn = false;
+    throw_end = false;
+
+    returncode = SUCCESS;
+
     try {
         // Allocate all of the Buffers to the input queue of the DataStream
-        for (BGAPI2::BufferList::iterator bufIterator = bufferList->begin(); bufIterator != bufferList->end(); bufIterator++) {
-            bufIterator->second->QueueBuffer();
-        }
+        bufferList->FlushAllToInputQueue();
+
     } catch (BGAPI2::Exceptions::IException &ex) {
         returncode = SUCCESS == returncode ? ERROR : returncode;
     }
@@ -289,6 +360,7 @@ int main(int argc, char **argv) {
 
     // Process the aquired frames in real-time (detect throw)
     BGAPI2::Buffer *pBufferFilled = NULL;
+    BGAPI2::Buffer *prev_pBufferFilled = NULL; // Previous Buffer object
     try {
         while (!throw_end) {
 
@@ -302,7 +374,7 @@ int main(int argc, char **argv) {
             } else {
 
                 // OpenCV matrix with Baumer BayerRG8 (OpenCV BayerBG) pixel format
-                cv_buffer[frame_id % buff_size] = cv::Mat(height, width, CV_8UC1, (void *)pBufferFilled->GetMemPtr());
+                cv_buffer[frame_id % buff_size] = cv::Mat(height, width, CV_8UC1, (void*)pBufferFilled->GetMemPtr());
 
                 if (frame_id != 0) { // Skip the first frame (no difference computation possible)
 
@@ -329,11 +401,8 @@ int main(int argc, char **argv) {
                                 throw_end_idx = frame_id;
 
                                 // Remove glitches (a single frame change is considered a glitch)
-                                // NOTE: Each removed glitch decrements the Buffer size.
-                                //       This is due to the fact, that the reference to the filled Buffer object is already lost, once a glitch is detected.
-                                //       So there is no way to queue the respective Buffer object again.
-                                //       This could be solved by keeping track of at least one of the filled Buffer objects.
                                 if ((throw_end_idx - throw_bgn_idx) == 1) {
+                                    prev_pBufferFilled->QueueBuffer();
                                     throw_bgn = false;
                                 } else {
                                     throw_end = true;
@@ -345,12 +414,14 @@ int main(int argc, char **argv) {
 
                 }
 
-                ++frame_id;
-
                 // If no throw is detected, release the Buffer
                 if (!throw_bgn) {
                     pBufferFilled->QueueBuffer();
+                } else {
+                    prev_pBufferFilled = pBufferFilled;
                 }
+
+                ++frame_id;
 
             }
 
@@ -367,16 +438,22 @@ int main(int argc, char **argv) {
         returncode = SUCCESS == returncode ? ERROR : returncode;
     }
 
-    // Save the frames from the captured throw (before discarding all the Buffers)
-    for (int i = throw_bgn_idx; i < (throw_end_idx - 1); ++i) { // Don't save the last two captured frames
-        // Transform Baumer BayerRG8 to BGR8 (Baumer BayerRG ≙ OpenCV BayerBG)
-        cv::cvtColor(cv_buffer[i % buff_size], cv_transformed, cv::COLOR_BayerBG2BGR);
-        cv::imwrite(output_path + std::to_string(i - throw_bgn_idx) + ".png", cv_transformed);
-    }
-
     try {
         // Stop the DataStream acquisition
         pDataStream->StopAcquisition();
+    } catch (BGAPI2::Exceptions::IException &ex) {
+        returncode = SUCCESS == returncode ? ERROR : returncode;
+    }
+
+    return returncode;
+}
+
+extern "C" int terminate() {
+
+    delete[] cv_buffer;
+
+    try {
+        // Stop the DataStream acquisition
         bufferList->DiscardAllBuffers();
     } catch (BGAPI2::Exceptions::IException &ex) {
         returncode = SUCCESS == returncode ? ERROR : returncode;
@@ -389,6 +466,14 @@ int main(int argc, char **argv) {
             bufferList->RevokeBuffer(pBuffer);
             delete pBuffer;
         }
+
+        for (unsigned i = 0; i < buff_size; ++i) {
+            if (pMemoryBlock[i]) {
+                delete[] pMemoryBlock[i];
+            }
+        }
+
+        delete[] pMemoryBlock;
 
         pDataStream->Close();
         pDevice->Close();

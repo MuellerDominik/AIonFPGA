@@ -1,4 +1,4 @@
-# aionfpga ~ camera interface
+# aionfpga ~ camera
 # Copyright (C) 2020 Dominik Müller and Nico Canzani
 
 # Requires CMake / GCC / G++ / Make
