@@ -22,7 +22,7 @@
 // | `deifne B4096                 
 // |------------------------------------------------------|
 
-`define B2304
+`define B1600
 
 // |------------------------------------------------------|
 // |If the FPGA has Uram. You can define URAM_EN parameter               
@@ -103,7 +103,7 @@
 // | `define DSP48_USAGE_LOW                
 // |------------------------------------------------------|
 
-`define DSP48_USAGE_LOW
+`define DSP48_USAGE_HIGH
 
 
 
