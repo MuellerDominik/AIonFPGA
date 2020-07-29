@@ -49,10 +49,10 @@ num_objects = len(objects)
 
 dir_sw = Path('/home/xilinx/AIonFPGA/sw')
 
-dir_app = dir_sw / 'aionfpga'
+dir_app = dir_sw / 'inference' / 'aionfpga'
 dir_dpu = dir_app / 'build'
 
-dir_cam = dir_sw / 'camera' / 'build'
+dir_cam = dir_sw / 'inference' / 'camera' / 'build'
 
 # todo: legacy, remove
 # dir_frames = Path(r'B:\aionfpga\frames')
