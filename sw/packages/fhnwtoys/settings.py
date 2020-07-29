@@ -45,7 +45,24 @@ objects = [
 
 num_objects = len(objects)
 
+# Directories ----------------------------------------------------------------
+
+dir_sw = Path('/home/xilinx/AIonFPGA/sw')
+
+dir_app = dir_sw / 'aionfpga'
+dir_dpu = dir_app / 'build'
+
+dir_cam = dir_sw / 'camera' / 'build'
+
+# todo: legacy, remove
+# dir_frames = Path(r'B:\aionfpga\frames')
+# dir_temp = Path(r'B:\aionfpga\temporary')
+
 # Camera ---------------------------------------------------------------------
+
+camera_name = 'camera'
+
+libcamera_file = f'lib{camera_name}.so'
 
 # Original (Baumer BayerRG8)
 raw_frmt = {'width': 1280, 'height': 1024, 'num_channels': 1} # RAW format
@@ -78,12 +95,21 @@ threshold_mult = 1.1
 # Maximum amount of frames to take into consideration
 max_num_frames = buff_size
 
-# Directories ----------------------------------------------------------------
+# DPU ------------------------------------------------------------------------
+dpu_name = 'dpu'
 
-# dir_frames = Path(r'B:\aionfpga\frames')
-# dir_temp = Path(r'B:\aionfpga\temporary')
+dpu_bit_file = f'{dpu_name}.bit'
+dpu_hwh_file = f'{dpu_name}.hwh'
+dpu_xclbin_file = f'{dpu_name}.xclbin'
 
-# Interpolations -------------------------------------------------------------
+kernel_name = 'fhnw_toys_0' # model name / net name
+
+kernel_conv_input = 'sequential_conv2d_Conv2D'
+kernel_fc_output = 'sequential_dense_1_MatMul'
+
+dpu_assembly_file = f'dpu_{kernel_name}.elf'
+
+# Enums ----------------------------------------------------------------------
 
 class Interpolation(IntEnum):
     NEAREST = cv2.INTER_NEAREST
@@ -120,5 +146,5 @@ class ReturnCodes(IntEnum):
     NOT_AVAILABLE = 17
 
 # todo: maybe rename to NeuralNetworkArchitectures
-class NeuralNetworks():
+class NeuralNetworks(IntEnum):
     pass
