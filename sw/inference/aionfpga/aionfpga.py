@@ -39,14 +39,14 @@ def main():
     from pynq_dpu import DpuOverlay
 
     # Set up the DPU IP
-    overlay = DpuOverlay('dpu.bit')
-    overlay.load_model('dpu_fhnw_toys_0.elf')
+    overlay = DpuOverlay(str(fh.dir_dpu / fh.dpu_bit_file))
+    overlay.load_model(str(fh.dir_dpu / fh.dpu_assembly_file))
 
     # Set up the Neural Network Runtime (N2Cube)
-    kernel_name = 'fhnw_toys_0'
+    kernel_name = fh.kernel_name
 
-    kernel_conv_input = 'sequential_conv2d_Conv2D'
-    kernel_fc_output = 'sequential_dense_1_MatMul'
+    kernel_conv_input = fh.kernel_conv_input
+    kernel_fc_output = fh.kernel_fc_output
 
     n2cube.dpuOpen()
     kernel = n2cube.dpuLoadKernel(kernel_name)
@@ -63,7 +63,7 @@ def main():
     # Bootscreen (Initialize Camera)
 
     # libcamera
-    libcamera = ctypes.CDLL('../camera/build/libcamera.so')
+    libcamera = ctypes.CDLL(fh.dir_cam / fh.libcamera_file)
 
     libcamera.get_frame_ptr.restype = ctypes.POINTER(ctypes.c_ubyte)
     libcamera.get_throw_bgn_idx.restype = ctypes.c_uint
@@ -82,6 +82,7 @@ def main():
     libcamera.start_acquisition.restype = ctypes.c_int
     libcamera.terminate.restype = ctypes.c_int
 
+    # todo: set global variables according to fhnwtoys.settings
 
     # Set up of variables
     frames = np.empty((fh.max_num_frames,) + fh.bgr_shape, dtype=np.uint8)
@@ -111,7 +112,9 @@ def main():
         # todo: error handling ('Unexpected Error, system reboot required.')
         start_acquisition = libcamera.start_acquisition()
 
-        start = datetime.now() # debug
+        start = [] # debug
+        end = [] # debug
+        start.append(datetime.now()) # debug
 
         throw_bgn_idx = libcamera.get_throw_bgn_idx()
         throw_end_idx = libcamera.get_throw_end_idx()
@@ -126,23 +129,37 @@ def main():
             frame_resized = cv2.resize(frames[idx], fh.inf_dsize, interpolation=fh.Interpolation.NEAREST)
             frame_inference = np.asarray(frame_resized / 255.0, dtype=np.float32)
 
+            # start.append(datetime.now()) # debug
             n2cube.dpuSetInputTensorInHWCFP32(task, kernel_conv_input, frame_inference, input_tensor_size)
-            # todo: either n2cube.dpuRunTask(.) or n2cube.dpuRunSoftmax(.) sometimes return NaN
             n2cube.dpuRunTask(task)
-            predictions[idx] = n2cube.dpuRunSoftmax(output_tensor_address, output_tensor_channel, output_tensor_size//output_tensor_channel, output_tensor_scale)
+
+            # Either n2cube.dpuRunTask(.) or n2cube.dpuRunSoftmax(.) sometimes returns all zeros except one NaN
+            # This section replaces the first occurrence of NaN in the prediction array with 1.0 and sets everything else to 0.0
+            prediction = n2cube.dpuRunSoftmax(output_tensor_address, output_tensor_channel, output_tensor_size//output_tensor_channel, output_tensor_scale)
+            nan = np.isnan(prediction)
+            if nan.any():
+                nan_idx = nan.argmax() # return the index of the first occurrence of NaN
+                prediction = np.zeros((fh.num_objects,), dtype=np.float32)
+                prediction[nan_idx] = 1.0
+            predictions[idx] = prediction
+            # end.append(datetime.now()) # debug
+
+        # start.append(datetime.now()) # debug
 
         window = sine_window(num_frames)
         weighted_predictions = np.matmul(window, predictions) / np.sum(window)
 
-        prediction = weighted_predictions.argmax()
+        prediction_idx = weighted_predictions.argmax()
 
-        end = datetime.now() # debug
+        end.append(datetime.now()) # debug
 
-        duration = end - start # debug
+        durations = [(e - s).total_seconds() for s, e in zip(start, end)] # debug
+        duration = sum(durations)/len(durations) # debug
 
         print(f'-' * 73) # debug
-        print(f'{num_frames} images processed in {duration} => Throughput = {num_frames / duration.total_seconds()} fps') # debug
-        print(f'Prediction = {fh.objects[prediction]} (Confidence = {weighted_predictions[prediction] * 100:.4f}%)') # debug
+        print(f'{num_frames} images processed in {duration} => Throughput = {num_frames / duration} fps') # debug
+        print(f'Prediction = {fh.objects[prediction_idx]} (Confidence = {weighted_predictions[prediction_idx] * 100:.4f}%)') # debug
+        # print(f'weighted_predictions = {weighted_predictions}') # debug
 
         # debug: show images
         # for i in range(num_frames):
