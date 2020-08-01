@@ -38,25 +38,31 @@ const int height = 1024;
 const unsigned payloadsize = (unsigned)(width * height);
 
 volatile double frame_rate = 200.0; // fps
-volatile unsigned buff_size = 600; // 600 ≙ 3 s @ 200 fps
+volatile unsigned buff_size = 200; // 200 ≙ 1 s @ 200 fps
 volatile unsigned exposure_time = 250; // us
 volatile unsigned camera_gain = 4;
 
 volatile unsigned avg_diffs = 8; // 8 diffs ≙ 40 ms @ 200 fps
 volatile double threshold_mult = 1.1;
 
+volatile unsigned frames_to_acquire = 44; // max. amount of frames to acquire
+
 // Parameters
 double mean_diff, threshold, sum_thresh;
 
 unsigned frame_id;
-unsigned throw_bgn_idx, throw_end_idx; // Index (frame_id) of the beginning/end of the throw
-bool throw_bgn, throw_end; // Begin/end of the throw
+// Index (frame_id) of the beginning/end of the throw
+volatile unsigned throw_bgn_idx;
+volatile unsigned throw_end_idx;
+// Begin/end of the throw
+volatile bool throw_bgn;
+volatile bool throw_end;
 
 int returncode = SUCCESS;
 
 // OpenCV
 cv::Mat* cv_buffer;
-cv::Mat cv_abs, cv_transformed;
+cv::Mat cv_abs;
 
 // Baumer
 BGAPI2::SystemList* systemList = NULL;
@@ -125,6 +131,10 @@ extern "C" void set_avg_diffs(unsigned avg_diffs) {
 
 extern "C" void set_threshold_mult(double threshold_mult) {
     ::threshold_mult = threshold_mult;
+}
+
+extern "C" void set_frames_to_acquire(unsigned frames_to_acquire) {
+    ::frames_to_acquire = frames_to_acquire;
 }
 
 // Camera
@@ -336,6 +346,11 @@ extern "C" int start_acquisition() {
 
     returncode = SUCCESS;
 
+    // Declare local variables
+    // Is set to true one frame before `throw_bgn` and used to detect glitches
+    // (using a separate variable prevents applications reading the global variables form getting a false positive)
+    bool throw_bgn_tmp = false;
+
     try {
         // Allocate all of the Buffers to the input queue of the DataStream
         bufferList->FlushAllToInputQueue();
@@ -392,21 +407,26 @@ extern "C" int start_acquisition() {
 
                         // Detect throw
                         if (mean_diff >= threshold) {
-                            if (!throw_bgn) {
+                            if (!throw_bgn_tmp) {
                                 throw_bgn_idx = frame_id;
+                                // Make sure a glitch is not misinterpreted as the beginning of a throw
+                                throw_bgn_tmp = true;
+                            } else if (!throw_bgn) { // throw_bgn_tmp has been set, but not throw_bgn
                                 throw_bgn = true;
+                            } else if ((frame_id - throw_bgn_idx - 1) == frames_to_acquire) {
+                                throw_end_idx = frame_id;
+                                throw_end = true;
+                                break; // not necessary (shows that the while loop execution is terminated here)
                             }
                         } else {
                             if (throw_bgn) {
                                 throw_end_idx = frame_id;
-
-                                // Remove glitches (a single frame change is considered a glitch)
-                                if ((throw_end_idx - throw_bgn_idx) == 1) {
-                                    prev_pBufferFilled->QueueBuffer();
-                                    throw_bgn = false;
-                                } else {
-                                    throw_end = true;
-                                }
+                                throw_end = true;
+                                break; // not necessary (shows that the while loop execution is terminated here)
+                            // Remove glitches (a single frame change is considered a glitch)
+                            } else if (throw_bgn_tmp) { // throw_bgn_tmp has been set, but not throw_bgn
+                                prev_pBufferFilled->QueueBuffer();
+                                throw_bgn_tmp = false;
                             }
                         }
 
@@ -415,7 +435,7 @@ extern "C" int start_acquisition() {
                 }
 
                 // If no throw is detected, release the Buffer
-                if (!throw_bgn) {
+                if (!throw_bgn_tmp) { // !throw_bgn && !throw_bgn_tmp
                     pBufferFilled->QueueBuffer();
                 } else {
                     prev_pBufferFilled = pBufferFilled;
