@@ -6,8 +6,10 @@ Copyright (C) 2020 Dominik Müller and Nico Canzani
 
 import sys
 import math
+# import time
 import ctypes
 
+from threading import Thread
 from datetime import datetime
 
 import cv2
@@ -15,25 +17,25 @@ import numpy as np
 
 import fhnwtoys.inference as fh
 
-def rect_window(N):
-    window = np.ones((fh.max_num_frames,), dtype=np.float32)
+def rect_window():
+    window = np.ones((fh.frames_to_consider,), dtype=np.float32)
     return window
 
-def sine_window(N):
-    window = np.zeros((fh.max_num_frames,), dtype=np.float32)
-    for n in range(N):
+def sine_window(N, num_frames):
+    window = np.zeros((fh.frames_to_consider,), dtype=np.float32)
+    for n in range(num_frames):
         window[n] = math.sin((n + 1) / (N + 1) * math.pi)
     return window
 
-def sine_squared_window(N):
-    window = np.zeros((fh.max_num_frames,), dtype=np.float32)
-    for n in range(N):
+def sine_squared_window(N, num_frames):
+    window = np.zeros((fh.frames_to_consider,), dtype=np.float32)
+    for n in range(num_frames):
         window[n] = math.sin((n + 1) / (N + 1) * math.pi)**2
     return window
 
 def main():
 
-    # Bootscreen (Initialize DPU)
+    # UI: Bootscreen (Initialize DPU)
 
     from dnndk import n2cube
     from pynq_dpu import DpuOverlay
@@ -60,9 +62,10 @@ def main():
     output_tensor_scale = n2cube.dpuGetOutputTensorScale(task, kernel_fc_output)
 
 
-    # Bootscreen (Initialize Camera)
+    # UI: Bootscreen (Initialize Camera)
 
     # libcamera
+    # todo: maybe set the argtypes
     libcamera = ctypes.CDLL(fh.dir_cam / fh.libcamera_file)
 
     libcamera.get_frame_ptr.restype = ctypes.POINTER(ctypes.c_ubyte)
@@ -77,6 +80,7 @@ def main():
     libcamera.set_camera_gain.restype = None
     libcamera.set_avg_diffs.restype = None
     libcamera.set_threshold_mult.restype = None
+    libcamera.set_frames_to_acquire.restype = None
 
     libcamera.initialize.restype = ctypes.c_int
     libcamera.start_acquisition.restype = ctypes.c_int
@@ -85,14 +89,14 @@ def main():
     # todo: set global variables according to fhnwtoys.settings
 
     # Set up of variables
-    frames = np.empty((fh.max_num_frames,) + fh.bgr_shape, dtype=np.uint8)
+    frames = np.empty((fh.frames_to_consider,) + fh.bgr_shape, dtype=np.uint8)
 
 
     # Initialize Camera
     initialize = libcamera.initialize()
 
     # todo: try until successful ('Camera Error, try to replug the camera.')
-    # maybe call terminate() after
+    # maybe call terminate() after initialization failure before retrying
     if initialize != fh.ReturnCodes.SUCCESS:
         try:
             return_code = fh.ReturnCodes(initialize).name
@@ -103,14 +107,22 @@ def main():
     else:
         print('================================= READY =================================')
 
+    # UI: Bootscreen (READY)
+
     # while True:
     for i in range(5):
         # Reset predictions
-        predictions = np.zeros((fh.max_num_frames, fh.num_objects), dtype=np.float32)
+        predictions = np.zeros((fh.frames_to_consider, fh.num_objects), dtype=np.float32)
 
         # Start acquisition
         # todo: error handling ('Unexpected Error, system reboot required.')
-        start_acquisition = libcamera.start_acquisition()
+        # start_acquisition = libcamera.start_acquisition()
+        t = Thread(target=libcamera.start_acquisition)
+        t.start()
+
+        # Wait until the throw has ended
+        while not libcamera.get_throw_end():
+            pass
 
         start = [] # debug
         end = [] # debug
@@ -127,7 +139,7 @@ def main():
             # Transform Baumer BayerRG8 to BGR8 (Baumer BayerRG ≙ OpenCV BayerBG)
             frames[idx] = cv2.cvtColor(raw_frame, cv2.COLOR_BayerBG2BGR)
             frame_resized = cv2.resize(frames[idx], fh.inf_dsize, interpolation=fh.Interpolation.NEAREST)
-            frame_inference = np.asarray(frame_resized / 255.0, dtype=np.float32)
+            frame_inference = np.asarray(frame_resized / 255.0, dtype=np.float32) # use float32 division
 
             # start.append(datetime.now()) # debug
             n2cube.dpuSetInputTensorInHWCFP32(task, kernel_conv_input, frame_inference, input_tensor_size)
@@ -144,25 +156,38 @@ def main():
             predictions[idx] = prediction
             # end.append(datetime.now()) # debug
 
+            if idx == fh.frames_to_consider - 1:
+                break
+
         # start.append(datetime.now()) # debug
 
-        window = sine_window(num_frames)
-        weighted_predictions = np.matmul(window, predictions) / np.sum(window)
+        num_frames_considered = idx + 1 # maybe use min(fh.frames_to_consider, num_frames)
 
-        prediction_idx = weighted_predictions.argmax()
+        window = sine_window(num_frames, num_frames_considered)
+        weighted_prediction = np.matmul(window, predictions) / np.sum(window)
+
+        prediction_idx = weighted_prediction.argmax()
 
         end.append(datetime.now()) # debug
 
         durations = [(e - s).total_seconds() for s, e in zip(start, end)] # debug
         duration = sum(durations)/len(durations) # debug
 
-        print(f'-' * 73) # debug
-        print(f'{num_frames} images processed in {duration} => Throughput = {num_frames / duration} fps') # debug
-        print(f'Prediction = {fh.objects[prediction_idx]} (Confidence = {weighted_predictions[prediction_idx] * 100:.4f}%)') # debug
-        # print(f'weighted_predictions = {weighted_predictions}') # debug
+        print(f'-' * 80) # debug
+        print(f'{num_frames_considered} / {num_frames} images processed in {duration} => Throughput = {num_frames_considered / duration} fps') # debug
+        print(f'Prediction = {fh.objects[prediction_idx]} (Confidence = {weighted_prediction[prediction_idx] * 100:.4f}%)') # debug
+        # print(f'weighted_prediction = {weighted_prediction}') # debug
+
+        # UI: Prepare data fo the UI
+        
+        
+        # UI: Show results
+
+        # Wait until the camera thread (process due to ctypes) is terminated
+        t.join()
 
         # debug: show images
-        # for i in range(num_frames):
+        # for i in range(num_frames_considered):
         #     cv2.imshow('debug', frames[i])
         #     cv2.waitKey(0)
         # cv2.destroyAllWindows()
