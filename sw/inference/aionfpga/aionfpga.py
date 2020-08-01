@@ -7,6 +7,7 @@ Copyright (C) 2020 Dominik Müller and Nico Canzani
 import sys
 import math
 # import time
+import base64
 import ctypes
 
 from threading import Thread
@@ -176,7 +177,7 @@ def main():
 
         num_frames_considered = min(fh.frames_to_consider, num_frames)
 
-        window = sine_window(num_frames, num_frames_considered)
+        window = sine_window(num_frames, num_frames_considered) # weighting
         weighted_prediction = np.matmul(window, predictions) / np.sum(window)
 
         # debug ---------------------------------------------------------------------------------
@@ -198,6 +199,9 @@ def main():
         weighted_prediction_sorted = np.sort(weighted_prediction_percent)[::-1]
         weighted_prediction_argsorted = np.argsort(weighted_prediction_percent)[::-1]
 
+        # this is the index of the best guess (computed by weighting the `fh.frames_to_consider` frames)
+        guess_idx = weighted_prediction_argsorted[0]
+
         relevant_pct_ui = np.asarray(weighted_prediction_percent >= 1.0).nonzero()[0] # value of prediction must be at least 1.0 %
         relevant_pct_ui_len = relevant_pct_ui.shape[0]
         predictions_ui_len = min(4, relevant_pct_ui_len) # show at most Top4
@@ -208,10 +212,20 @@ def main():
             predictions_ui.append(fh.objects_ui[w])
             percentages_ui[i] = weighted_prediction_percent[w]
 
+        # the object names
         predictions_ui.append('Others')
 
+        # the percentages
         percentages_ui[-1] = np.sum(weighted_prediction_sorted[predictions_ui_len:])
         percentages_ui = lrm_round(percentages_ui)
+
+        # the frame
+        wighted_guesses = np.multiply(window, predictions[:,guess_idx])
+        frame_ui_idx = wighted_guesses.argmax()
+
+        frame_ui = cv2.resize(frames[frame_ui_idx], (1024,819), interpolation=fh.Interpolation.NEAREST)
+        _, buf = cv2.imencode('.png', frame_ui)
+        frame_ui_b64 = base64.b64encode(buf) # the image
 
         # debug ---------------------------------------------------------------------------------
         print(f'-' * 80) # debug
