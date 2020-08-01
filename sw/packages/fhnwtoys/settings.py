@@ -85,15 +85,18 @@ inf_dsize = (inf_frmt['width'], inf_frmt['height'])
 
 # Camera settings
 frame_rate = 200.0 # fps
-buff_size = 600 # 600 ≙ 3 s @ 200 fps
+buff_size = 200 # 200 ≙ 1 s @ 200 fps
 exposure_time = 250 # us
 camera_gain = 4
 
 avg_diffs = 8 # 8 diffs ≙ 40 ms @ 200 fps
 threshold_mult = 1.1
 
-# Maximum amount of frames to take into consideration
-max_num_frames = buff_size
+# Max. amount of frames to take into consideration
+frames_to_consider = 22
+
+# Max. amount of frames to acquire
+frames_to_acquire = 2 * frames_to_consider
 
 # DPU ------------------------------------------------------------------------
 dpu_name = 'dpu'
