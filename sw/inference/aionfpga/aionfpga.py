@@ -33,9 +33,20 @@ def sine_squared_window(N, num_frames):
         window[n] = math.sin((n + 1) / (N + 1) * math.pi)**2
     return window
 
+# returns a list of the rounded percentages using the largest remainder method
+def lrm_round(series):
+    floored_series = np.floor(series)
+    decimal_series = series - floored_series
+    decimal_series_argsorted = np.argsort(decimal_series)[::-1]
+    difference = 100 - np.sum(floored_series, dtype=np.uint8)
+    for idx in decimal_series_argsorted[0:difference]:
+        floored_series[idx] += 1
+    return floored_series.astype(np.uint8).tolist()
+
 def main():
 
     # UI: Bootscreen (Initialize DPU)
+
 
     from dnndk import n2cube
     from pynq_dpu import DpuOverlay
@@ -64,6 +75,7 @@ def main():
 
     # UI: Bootscreen (Initialize Camera)
 
+
     # libcamera
     # todo: maybe set the argtypes
     libcamera = ctypes.CDLL(fh.dir_cam / fh.libcamera_file)
@@ -88,9 +100,9 @@ def main():
 
     # todo: set global variables according to fhnwtoys.settings
 
+
     # Set up of variables
     frames = np.empty((fh.frames_to_consider,) + fh.bgr_shape, dtype=np.uint8)
-
 
     # Initialize Camera
     initialize = libcamera.initialize()
@@ -109,24 +121,29 @@ def main():
 
     # UI: Bootscreen (READY)
 
+
     # while True:
-    for i in range(5):
+    for ii in range(5): # debug
         # Reset predictions
         predictions = np.zeros((fh.frames_to_consider, fh.num_objects), dtype=np.float32)
 
         # Start acquisition
         # todo: error handling ('Unexpected Error, system reboot required.')
         # start_acquisition = libcamera.start_acquisition()
+
+        # Start acquisition (Threaded)
         t = Thread(target=libcamera.start_acquisition)
         t.start()
 
-        # Wait until the throw has ended
+        # Wait until the throw has ended (the Ultra96-V2 is not powerful enough to process the data during the acquisition)
         while not libcamera.get_throw_end():
             pass
 
-        start = [] # debug
-        end = [] # debug
-        start.append(datetime.now()) # debug
+        # debug ---------------------------------------------------------------------------------
+        # start = [] # debug
+        # end = [] # debug
+        # start.append(datetime.now()) # debug
+        # debug ---------------------------------------------------------------------------------
 
         throw_bgn_idx = libcamera.get_throw_bgn_idx()
         throw_end_idx = libcamera.get_throw_end_idx()
@@ -141,7 +158,6 @@ def main():
             frame_resized = cv2.resize(frames[idx], fh.inf_dsize, interpolation=fh.Interpolation.NEAREST)
             frame_inference = np.asarray(frame_resized / 255.0, dtype=np.float32) # use float32 division
 
-            # start.append(datetime.now()) # debug
             n2cube.dpuSetInputTensorInHWCFP32(task, kernel_conv_input, frame_inference, input_tensor_size)
             n2cube.dpuRunTask(task)
 
@@ -154,43 +170,68 @@ def main():
                 prediction = np.zeros((fh.num_objects,), dtype=np.float32)
                 prediction[nan_idx] = 1.0
             predictions[idx] = prediction
-            # end.append(datetime.now()) # debug
 
             if idx == fh.frames_to_consider - 1:
                 break
 
-        # start.append(datetime.now()) # debug
-
-        num_frames_considered = idx + 1 # maybe use min(fh.frames_to_consider, num_frames)
+        num_frames_considered = min(fh.frames_to_consider, num_frames)
 
         window = sine_window(num_frames, num_frames_considered)
         weighted_prediction = np.matmul(window, predictions) / np.sum(window)
 
-        prediction_idx = weighted_prediction.argmax()
+        # debug ---------------------------------------------------------------------------------
+        # prediction_idx = weighted_prediction.argmax() # debug
 
-        end.append(datetime.now()) # debug
+        # end.append(datetime.now()) # debug
+        # durations = [(e - s).total_seconds() for s, e in zip(start, end)] # debug
+        # duration = sum(durations)/len(durations) # debug
 
-        durations = [(e - s).total_seconds() for s, e in zip(start, end)] # debug
-        duration = sum(durations)/len(durations) # debug
-
-        print(f'-' * 80) # debug
-        print(f'{num_frames_considered} / {num_frames} images processed in {duration} => Throughput = {num_frames_considered / duration} fps') # debug
-        print(f'Prediction = {fh.objects[prediction_idx]} (Confidence = {weighted_prediction[prediction_idx] * 100:.4f}%)') # debug
+        # print(f'-' * 80) # debug
+        # print(f'{num_frames_considered} / {num_frames} images processed in {duration} => Throughput = {num_frames_considered / duration} fps') # debug
+        # print(f'Prediction = {fh.objects[prediction_idx]} (Confidence = {weighted_prediction[prediction_idx] * 100:.4f}%)') # debug
         # print(f'weighted_prediction = {weighted_prediction}') # debug
+        # print(np.sum(weighted_prediction))
+        # debug ---------------------------------------------------------------------------------
 
-        # UI: Prepare data fo the UI
-        
-        
+        # UI: Prepare data for the UI
+        weighted_prediction_percent = weighted_prediction * 100
+        weighted_prediction_sorted = np.sort(weighted_prediction_percent)[::-1]
+        weighted_prediction_argsorted = np.argsort(weighted_prediction_percent)[::-1]
+
+        relevant_pct_ui = np.asarray(weighted_prediction_percent >= 1.0).nonzero()[0] # value of prediction must be at least 1.0 %
+        relevant_pct_ui_len = relevant_pct_ui.shape[0]
+        predictions_ui_len = min(4, relevant_pct_ui_len) # show at most Top4
+
+        predictions_ui = [] # the names
+        percentages_ui = np.empty((predictions_ui_len + 1,), dtype=np.float32) # the percentages (+1 for 'Others')
+        for i, w in enumerate(weighted_prediction_argsorted[0:predictions_ui_len]):
+            predictions_ui.append(fh.objects_ui[w])
+            percentages_ui[i] = weighted_prediction_percent[w]
+
+        predictions_ui.append('Others')
+
+        percentages_ui[-1] = np.sum(weighted_prediction_sorted[predictions_ui_len:])
+        percentages_ui = lrm_round(percentages_ui)
+
+        # debug ---------------------------------------------------------------------------------
+        print(f'-' * 80) # debug
+        print(predictions_ui) # debug
+        print(percentages_ui) # debug
+        print(f'-' * 80) # debug
+        # debug ---------------------------------------------------------------------------------
+
         # UI: Show results
+
 
         # Wait until the camera thread (process due to ctypes) is terminated
         t.join()
 
-        # debug: show images
-        # for i in range(num_frames_considered):
-        #     cv2.imshow('debug', frames[i])
+        # debug ---------------------------------------------------------------------------------
+        # for iii in range(num_frames_considered):
+        #     cv2.imshow('debug', frames[iii])
         #     cv2.waitKey(0)
         # cv2.destroyAllWindows()
+        # debug ---------------------------------------------------------------------------------
 
     # Terminate Camera
     # todo: error handling (not really required, will never be reached)
