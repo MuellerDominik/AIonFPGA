@@ -35,13 +35,23 @@ objects = [
 ]
 
 # list `objects_san` is dynamically created in `__init__.py`
-# objects_san = ['nerf-dart', 'american-football', 'table-tennis-ball',
+# objects_san = [
+#     'nerf-dart', 'american-football', 'table-tennis-ball',
 #     'shuttlecock', 'sporf', 'arrow', 'hand-featherball', 'floorball',
 #     'spiky-ball', 'tesafilm', 'sponge', 'lego-duplo-brick-red',
 #     'lego-duplo-brick-green', 'lego-duplo-figure', 'foam-dice',
 #     'infant-shoe', 'stuffed-bunny', 'goalkeeper-glove', 'hemp-cord',
 #     'paper-ball', 'beer-cap', 'water-bottle'
 # ]
+
+objects_ui = [
+    'Nerf Dart', 'American Football', 'Table Tennis Ball',
+    'Shuttlecock', 'Sporf', 'Arrow', 'Hand Featherball', 'Floorball',
+    'Spiky Ball', 'Tesafilm', 'Sponge', 'Red Duplo Brick',
+    'Green Duplo Brick', 'Duplo Figure', 'Foam Dice',
+    'Infant Shoe', 'Stuffed Bunny', 'Goalkeeper Glove', 'Hemp Cord',
+    'Paper Ball', 'Beer Cap', 'Water Bottle'
+]
 
 num_objects = len(objects)
 
