@@ -1,0 +1,9 @@
+[Unit]
+Description=AIonFPGA
+
+[Service]
+Type=simple
+ExecStart=/home/xilinx/AIonFPGA/mpsoc/pynq-setup/start_app.sh
+
+[Install]
+WantedBy=multi-user.target

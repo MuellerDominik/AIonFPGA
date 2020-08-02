@@ -14,9 +14,14 @@ DPU_HWH = ../dpu/build/DPU-PYNQ/boards/Ultra96/dpu.hwh
 DPU_BIT = ../dpu/build/DPU-PYNQ/boards/Ultra96/dpu.bit
 
 DPU_MODEL = ../cnn-model/build/dpu_*.elf
-DPU_MODEL_DIR = $(HOME_BOARD)/AIonFPGA/sw/inference/aionfpga
 
-DPU_INSTALL_DIR = /usr/local/lib/python3.6/dist-packages/pynq_dpu/overlays
+SERVICE_DIR = $(HOME_BOARD)/AIonFPGA/mpsoc/pynq-setup
+SERVICE_FILE = aionfpga.service
+SERVICE_SH_FILE = start_app.sh
+
+AI_REPO = https://github.com/MuellerDominik/AIonFPGA.git
+
+DPU_INSTALL_DIR = $(APP_DIR)/build
 
 SSH_DIR = /home/$$USER/.ssh
 PUBKEY := $(shell find $(SSH_DIR) -name "*.pub")
@@ -68,30 +73,29 @@ install-tools:
 	apt-get autoremove
 	pip3 install PySimpleGUI
 	EOF
-# upgrade sometimes not working
 
 .PHONY: install-aionfpga
 .ONESHELL:
 install-aionfpga:
 	@ssh $(USER_BOARD)@$(IP) /bin/bash << EOF
-	git clone https://github.com/MuellerDominik/AIonFPGA.git $(HOME_BOARD)/AIonFPGA
-	cd $(HOME_BOARD)/AIonFPGA/sw/inference/camera && ./install.sh
+	git clone $(AI_REPO) $(HOME_BOARD)/AIonFPGA
+	mkdir $(DPU_INSTALL_DIR)
 	EOF
 	@ssh $(ROOT_BOARD)@$(IP) /bin/bash << EOF
+	mv $(SERVICE_DIR)/$(SERVICE_FILE) /etc/systemd/system/
+	cd $(HOME_BOARD)/AIonFPGA/sw/inference/camera && ./install.sh
 	cd $(HOME_BOARD)/AIonFPGA/sw/packages && pip3 install -e .
-	chmod 4775 $(APPLICATION)
-	chown root $(APPLICATION)
-	chgrp root $(APPLICATION)
+	chmod +x $(APPLICATION)
+	systemctl enable $(SERVICE_FILE)
 	EOF
-	@scp $(DPU_BIT) $(DPU_HWH) $(DPU_XCLBIN) $(ROOT_BOARD)@$(IP):$(DPU_INSTALL_DIR)
-	@scp $(DPU_MODEL) $(USER_BOARD)@$(IP):$(DPU_MODEL_DIR)
+	@scp $(DPU_MODEL) $(DPU_BIT) $(DPU_HWH) $(DPU_XCLBIN) $(USER_BOARD)@$(IP):$(DPU_INSTALL_DIR)
 
 .PHONY: help
 help:
 	@echo
+	@echo 'exchange-key:		Send your public key to the ULTRA96V2 board, to avoid password requests'
 	@echo 'rm-background-tasks:	Remove Chromium and deactivate jupyter notebook to reduce background processing'
-	@echo 'exchange-key:		Send your public key to the ULTRA96V2 board, to avoid password request'
-	@echo 'install-tools:		Copy the .deb files to the board and install remotely'
 	@echo 'install-dnndk:		Download the DPU-PYNQ Repo and install: pynq xrt ubuntu_pkg opencv protobuf json_c dpu_clk glog'
-	@echo 'install-dpu:		Copy dpu.bit, dpu.hwh, dpu.xclbin and dpu_fhnw_toys_0.elf to the target'
+	@echo 'install-tools:		Install the .deb files on the board for baumer and some other packages'
+	@echo 'install-aionfpga:	Get AIonFPGA repo from Github, enable aionfpga.service to run AI Application at boot and copy dpu.bit, dpu.hwh, dpu.xclbin and dpu_fhnw_toys_0.elf to the target'
 	@echo 
