@@ -38,7 +38,7 @@ clean-dpu:
 	@make -C $(PYNQ_BOARD_DIR) clean
 
 .PHONY: clean
-clean-all:
+clean:
 	@rm -rf $(BUILD_DIR)
 
 .PHONY: help
