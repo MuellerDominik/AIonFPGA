@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source and start conda environment
-source /opt/vitis_ai/conda/etc/profile.d/conda.sh
+. /opt/vitis_ai/conda/etc/profile.d/conda.sh
 conda activate vitis-ai-tensorflow
 
 # change to directory to where the input function is located
