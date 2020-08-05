@@ -9,7 +9,7 @@ export MODEL_NAME=fhnw_toys_0
 export BUILD_DIR=$HERE/mpsoc/cnn-model/build
 export PYCACHE=$HERE/mpsoc/cnn-model/__pycache__
 
-export FROZEN_GRAPH=$HERE/sw/training/build/frozen_graph.pb
+export FROZEN_GRAPH=$HERE/sw/training/build/cnn/frozen_model/frozen_graph.pb
 export FROZEN_GRAPH_DUMP=$BUILD_DIR/quantize_eval_model.pb
 export QUANT_MODEL=$BUILD_DIR/deploy_model.pb
 
