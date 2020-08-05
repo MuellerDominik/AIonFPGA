@@ -20,7 +20,6 @@ database = 'aionfpga' # default to this database
 
 # Tables
 tab_frames = 'frames'
-tab_settings = 'settings'
 
 # Objects --------------------------------------------------------------------
 
@@ -57,16 +56,43 @@ num_objects = len(objects)
 
 # Directories ----------------------------------------------------------------
 
-dir_sw = Path('/home/xilinx/AIonFPGA/sw')
+# Inference
+dir_repo = Path('/home/xilinx/AIonFPGA') # location of the cloned repository
+
+dir_sw = dir_repo / 'sw'
 
 dir_app = dir_sw / 'inference' / 'aionfpga'
+dir_graphics = dir_app / 'graphics' # for the UI
+
 dir_dpu = dir_app / 'build'
 
 dir_cam = dir_sw / 'inference' / 'camera' / 'build'
 
-# todo: legacy, remove
-# dir_frames = Path(r'B:\aionfpga\frames')
-# dir_temp = Path(r'B:\aionfpga\temporary')
+# Training
+dir_training = dir_sw / 'training'
+dir_training_build = dir_training / 'build'
+
+# - Dataset
+dir_dataset = dir_training_build / 'dataset'
+
+dir_frames = dir_dataset / 'frames'
+dir_frames_augmented = dir_dataset / 'frames_augmented'
+
+dir_training_dataset = dir_dataset / 'training'
+dir_validation_dataset = dir_dataset / 'validation'
+dir_test_dataset = dir_dataset / 'test'
+dir_calibration_dataset = dir_dataset / 'calibration'
+
+# - CNN
+dir_cnn = dir_training_build / 'cnn'
+
+dir_model = dir_cnn / 'model'
+dir_frozen_model = dir_cnn / 'frozen_model'
+
+dir_checkpoint = dir_cnn / 'checkpoint'
+dir_model_without_opt = dir_cnn / 'model_without_opt'
+dir_hdf5 = dir_cnn / 'hdf5'
+dir_weights = dir_cnn / 'weights'
 
 # Camera ---------------------------------------------------------------------
 
@@ -115,12 +141,30 @@ dpu_bit_file = f'{dpu_name}.bit'
 dpu_hwh_file = f'{dpu_name}.hwh'
 dpu_xclbin_file = f'{dpu_name}.xclbin'
 
+# 0 has to be there (Xilinx will remove any trailing s'es)
 kernel_name = 'fhnw_toys_0' # model name / net name
 
 kernel_conv_input = 'sequential_conv2d_Conv2D'
 kernel_fc_output = 'sequential_dense_1_MatMul'
 
 dpu_assembly_file = f'dpu_{kernel_name}.elf'
+
+# Dataset --------------------------------------------------------------------
+
+batch_size = 32
+batch_size_calibration = 22
+
+training_frames_name = 'fhnw_toys_training_frames'
+training_labels_name = 'fhnw_toys_training_labels'
+
+validation_frames_name = 'fhnw_toys_validation_frames'
+validation_labels_name = 'fhnw_toys_validation_labels'
+
+test_frames_name = 'fhnw_toys_test_frames'
+test_labels_name = 'fhnw_toys_test_labels'
+
+calibration_frames_name = 'fhnw_toys_calibration_frames'
+calibration_labels_name = 'fhnw_toys_calibration_labels'
 
 # Enums ----------------------------------------------------------------------
 
@@ -157,6 +201,11 @@ class ReturnCodes(IntEnum):
     ABORT = 15
     INVALID_BUFFER = 16
     NOT_AVAILABLE = 17
+
+class DatasetConfig(IntEnum):
+    ALL = 0
+    PARTIALLY_VISIBLE_ONLY = 1 # do not use
+    FULLY_VISIBLE_ONLY = 2
 
 # todo: maybe rename to NeuralNetworkArchitectures
 class NeuralNetworks(IntEnum):

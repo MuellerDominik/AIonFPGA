@@ -4,11 +4,45 @@
 Copyright (C) 2020 Dominik Müller and Nico Canzani
 '''
 
-import os
+import random
 
 import MySQLdb
 
+from tensorflow.keras import utils
+
 from .settings import *
+
+# Classes --------------------------------------------------------------------
+
+class Dataset_Generator(utils.Sequence):
+    def __init__(self, frames_name, labels_name, directory, num_batches, batch_size):
+        self.frames_name = frames_name
+        self.labels = np.load(directory / f'{labels_name}.npy')
+        self.directory = directory
+        self.num_batches = num_batches
+        self.batch_size = batch_size
+
+    def __len__(self):
+        return self.num_batches
+
+    def __getitem__(self, idx):
+        start = idx * self.batch_size
+        end = start + self.batch_size
+
+        frames = np.load(self.directory / f'{self.frames_name}_batch_{idx}_of_{self.num_batches}.npy')
+
+        batch_x = frames.astype(np.float32) / 255.0
+        batch_y = np.asarray(self.labels[start:end])
+
+        return batch_x, batch_y
+
+class RNG():
+    def __init__(self, seed):
+        self.seed = seed
+        self.rand = random.Random(seed)
+
+    def shuffle(self, x): # shuffle x in place
+        return self.rand.shuffle(x)
 
 # Functions ------------------------------------------------------------------
 
@@ -18,11 +52,6 @@ def repl(string, rep):
         if o in string:
             string = string.replace(o, n)
     return string
-
-# Lambda Functions -----------------------------------------------------------
-
-# Clear Screen (CLS) on Windows
-clear = lambda: os.system('cls')
 
 # Database Functions ---------------------------------------------------------
 
