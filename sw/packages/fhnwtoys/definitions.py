@@ -4,9 +4,12 @@
 Copyright (C) 2020 Dominik Müller and Nico Canzani
 '''
 
+import os
 import random
+import shutil
 
 import MySQLdb
+import numpy as np
 
 from tensorflow.keras import utils
 
@@ -15,7 +18,8 @@ from .settings import *
 # Classes --------------------------------------------------------------------
 
 class Dataset_Generator(utils.Sequence):
-    def __init__(self, frames_name, labels_name, directory, num_batches, batch_size):
+    def __init__(self, frames_name, labels_name, directory, num_batches,
+                 batch_size):
         self.frames_name = frames_name
         self.labels = np.load(directory / f'{labels_name}.npy')
         self.directory = directory
@@ -29,7 +33,8 @@ class Dataset_Generator(utils.Sequence):
         start = idx * self.batch_size
         end = start + self.batch_size
 
-        frames = np.load(self.directory / f'{self.frames_name}_batch_{idx}_of_{self.num_batches}.npy')
+        name = f'{self.frames_name}_batch_{idx}_of_{self.num_batches}.npy'
+        frames = np.load(self.directory / name)
 
         batch_x = frames.astype(np.float32) / 255.0
         batch_y = np.asarray(self.labels[start:end])
@@ -44,7 +49,7 @@ class RNG():
     def shuffle(self, x): # shuffle x in place
         return self.rand.shuffle(x)
 
-# Functions ------------------------------------------------------------------
+# General Functions ----------------------------------------------------------
 
 # replace 'o_n' with 'n_n' (rep=[(o_0, n_0), ..., (o_n, n_n)]), if in 'string'
 def repl(string, rep):
@@ -52,6 +57,50 @@ def repl(string, rep):
         if o in string:
             string = string.replace(o, n)
     return string
+
+# Training Functions ---------------------------------------------------------
+
+# Creates an entire directory tree
+def mkdir(path):
+    try:
+        os.makedirs(path)
+    except FileExistsError:
+        pass
+
+# Deletes an entire directory tree
+def rmdir(path):
+    try:
+        shutil.rmtree(path)
+    except FileNotFoundError:
+        pass
+# Deletes and creates an entire directory tree
+def recreatedir(path):
+    rmdir(path)
+    mkdir(path)
+
+# Verification Functions -----------------------------------------------------
+
+# numpy arrays predictions and labels and ineteger num_classes
+def top_k(predictions, labels, num_classes):
+    num_predictions = len(predictions)
+
+    top_k = np.zeros((num_classes,), dtype=np.float64)
+
+    for pred, label in zip(predictions, labels):
+        pred_sorted = np.sort(pred)
+        pred_sorted_reversed = pred_sorted[::-1]
+        for idx, p in enumerate(pred_sorted_reversed):
+            # one-dimensional tuple with a numpy array
+            # that contains the corresponding index
+            check = np.where(pred == p)
+            if len(check) != 1 or len(check[0]) != 1:
+                raise ValueError('Either the dimensions of the input is '\
+                                 'wrong OR there are duplicates in the '\
+                                 'array and thus the indices cannot be '\
+                                 'precisely determined!')
+            if check[0][0] == label: # get the corresponding index from check
+                top_k[idx:] += 1
+    return top_k / num_predictions
 
 # Database Functions ---------------------------------------------------------
 
@@ -98,21 +147,22 @@ def fetch_rows(table, column, value, fields, database=database):
     query = f"SELECT {fields} FROM {table} WHERE {column} = '{value}'"
     return db_fetch_rows(query, database)
 
+# fetch 'fields' from rows where 'columns' are equal to 'values' in 'table'
+def fetch_rows_and(table, columns, values, fields, database=database):
+    query = f"SELECT {fields} FROM {table} WHERE {columns[0]} = '{values[0]}'"
+    columns.pop(0); values.pop(0)
+    for c, v in zip(columns, values):
+        query += f" AND {c} = '{values[0]}'"
+    return db_fetch_rows(query, database)
+
 # fetch 'fields' from all rows in 'table'
 def fetch_all_rows_fields(table, fields, database=database):
     query = f"SELECT {fields} FROM {table}"
     return db_fetch_rows(query, database)
 
 # returns all rows from 'table'
-def fetch_all_rows(table, database = database):
+def fetch_all_rows(table, database=database):
     query = f"SELECT * FROM {table}"
-    return db_fetch_rows(query, database)
-
-def fetch_rows_and(table, columns, values, fields, database=database):
-    query = f"SELECT {fields} FROM {table} WHERE {columns[0]} = '{values[0]}'"
-    columns.pop(0); values.pop(0)
-    for c, v in zip(columns, values):
-        query += f" AND {c} = '{values[0]}'"
     return db_fetch_rows(query, database)
 
 # set 'field' of 'row' to 'value' in 'table'

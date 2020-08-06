@@ -16,7 +16,7 @@ host = '<host>'
 port = 3306
 user = '<user>'
 passwd = '<password>'
-database = 'aionfpga' # default to this database
+database = 'aionfpga' # defaults to this database
 
 # Tables
 tab_frames = 'frames'
@@ -94,6 +94,10 @@ dir_model_without_opt = dir_cnn / 'model_without_opt'
 dir_hdf5 = dir_cnn / 'hdf5'
 dir_weights = dir_cnn / 'weights'
 
+# Verification
+dir_verification = dir_repo / 'verification'
+dir_verification_build = dir_verification / 'build'
+
 # Camera ---------------------------------------------------------------------
 
 camera_name = 'camera'
@@ -149,7 +153,9 @@ kernel_fc_output = 'sequential_dense_1_MatMul'
 
 dpu_assembly_file = f'dpu_{kernel_name}.elf'
 
-# Dataset --------------------------------------------------------------------
+# Dataset / Predictions ------------------------------------------------------
+
+seed = 0x41496F6E46504741 # AIonFPGA
 
 batch_size = 32
 batch_size_calibration = 22
@@ -165,6 +171,9 @@ test_labels_name = 'fhnw_toys_test_labels'
 
 calibration_frames_name = 'fhnw_toys_calibration_frames'
 calibration_labels_name = 'fhnw_toys_calibration_labels'
+
+training_predictions_name = 'fhnw_toys_training_predictions'
+inference_predictions_name = 'fhnw_toys_inference_predictions'
 
 # Enums ----------------------------------------------------------------------
 
@@ -207,6 +216,9 @@ class DatasetConfig(IntEnum):
     PARTIALLY_VISIBLE_ONLY = 1 # do not use
     FULLY_VISIBLE_ONLY = 2
 
-# todo: maybe rename to NeuralNetworkArchitectures
-class NeuralNetworks(IntEnum):
+class Verification(IntEnum):
+    TRAINING = 0
+    INFERENCE = 0
+
+class NeuralNetworkArchitectures(IntEnum):
     pass
