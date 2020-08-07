@@ -126,7 +126,7 @@ def main():
         meas_time['Resize']['end'].append(datetime.now())
 
         meas_time['Normalize']['start'].append(datetime.now())
-        frame_inference = np.asarray(frame_resized / 255.0, dtype=np.float32)
+        frame_inference = frame_resized.astype(np.float32) / 255.0
         meas_time['Normalize']['end'].append(datetime.now())
 
         meas_time['Run inference']['start'].append(datetime.now())
