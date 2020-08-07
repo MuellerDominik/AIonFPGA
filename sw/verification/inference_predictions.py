@@ -98,5 +98,5 @@ def main(config=fh.DatasetConfig.ALL):
     np.save(build_dir / out_file_name, prediction_array)
 
 if __name__ == '__main__':
-    config = fh.config
+    config = fh.dataset_config
     main(config)
