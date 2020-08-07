@@ -25,13 +25,20 @@ batch_start = 0
 # batch end is not included, E.g.: you have batch_3...50 -> batch_end = 51
 batch_end = 525
 
-build_dir = fh.dir_verification
-out_file_name = f'{fh.inference_predictions_name}.npy'
+def main(config=fh.DatasetConfig.ALL):
 
-num_labels = len(np.load(fh.dir_test_dataset / f'{fh.test_labels_name}.npy'))
-num_batches = math.ceil(num_labels / batch_size)
+    if config == fh.DatasetConfig.ALL:
+        out_file_name = f'{fh.inference_predictions_name}.npy'
+    elif config == fh.DatasetConfig.FULLY_VISIBLE_ONLY:
+        out_file_name = f'{fh.inference_fvo_predictions_name}.npy'
+    else: # fh.DatasetConfig.PARTIALLY_VISIBLE_ONLY
+        raise ValueError('This configuration has no use case!')
 
-def main():
+    build_dir = fh.dir_verification
+
+    num_labels = len(np.load(fh.dir_test_dataset / f'{fh.test_labels_name}.npy'))
+    num_batches = math.ceil(num_labels / batch_size)
+
     # Set up the DPU IP
     overlay = DpuOverlay(str(fh.dir_dpu / fh.dpu_bit_file))
     overlay.load_model(str(fh.dir_dpu / fh.dpu_assembly_file))
@@ -58,7 +65,7 @@ def main():
         prediction_array = np.empty((num_labels, num_objects), dtype=np.float32)
     else:
         if os.path.isfile(build_dir / out_file_name):
-            prediction_array =np.load(build_dir / out_file_name)
+            prediction_array = np.load(build_dir / out_file_name)
         else:
             raise FileNotFoundError(f"File {out_file_name} does not exist, start first with batch 0")
 
@@ -86,9 +93,10 @@ def main():
             prediction_array[i * batch_size + j] = prediction
 
     end = datetime.now()
-    print(f'Total time for all batches was: {end - start}')
+    print(f'Total time for all batches needed: {end - start}')
 
     np.save(build_dir / out_file_name, prediction_array)
 
 if __name__ == '__main__':
-    main()
+    config = fh.config
+    main(config)
