@@ -4,10 +4,9 @@
 Copyright (C) 2020 Dominik Müller and Nico Canzani
 '''
 
-import cv2
-
-from enum import IntEnum
 from pathlib import Path
+
+from .enums import *
 
 # Database -------------------------------------------------------------------
 
@@ -58,6 +57,7 @@ num_objects = len(objects)
 
 # Inference
 dir_repo = Path('/home/xilinx/AIonFPGA') # location of the cloned repository
+dir_repo = Path(r'B:\aionfpga\AIonFPGA') # WINDOWS
 
 dir_sw = dir_repo / 'sw'
 
@@ -138,7 +138,8 @@ frames_to_consider = 22
 # Max. amount of frames to acquire
 frames_to_acquire = 2 * frames_to_consider
 
-# DPU ------------------------------------------------------------------------
+# Inference ------------------------------------------------------------------
+
 dpu_name = 'dpu'
 
 dpu_bit_file = f'{dpu_name}.bit'
@@ -153,7 +154,9 @@ kernel_fc_output = 'sequential_dense_1_MatMul'
 
 dpu_assembly_file = f'dpu_{kernel_name}.elf'
 
-# Dataset / Predictions ------------------------------------------------------
+# Dataset / Verification -----------------------------------------------------
+
+config = DatasetConfig.ALL
 
 seed = 0x41496F6E46504741 # AIonFPGA
 
@@ -173,52 +176,9 @@ calibration_frames_name = 'fhnw_toys_calibration_frames'
 calibration_labels_name = 'fhnw_toys_calibration_labels'
 
 training_predictions_name = 'fhnw_toys_training_predictions'
+# fully visible only (fvo) predictions
+training_fvo_predictions_name = 'fhnw_toys_training_fvo_predictions'
+
 inference_predictions_name = 'fhnw_toys_inference_predictions'
-
-# Enums ----------------------------------------------------------------------
-
-class Interpolation(IntEnum):
-    NEAREST = cv2.INTER_NEAREST
-    LINEAR = cv2.INTER_LINEAR
-    CUBIC = cv2.INTER_CUBIC
-    AREA = cv2.INTER_AREA
-    LANCZOS4 = cv2.INTER_LANCZOS4
-    LINEAR_EXACT = cv2.INTER_LINEAR_EXACT
-    # MAX = cv2.INTER_MAX # interpolation not working
-    # FILL_OUTLIERS = cv2.WARP_FILL_OUTLIERS # interpolation not working
-    # INVERSE_MAP = cv2.WARP_INVERSE_MAP # interpolation not working
-
-class ReturnCodes(IntEnum):
-    SUCCESS = 0
-
-    ERROR = 1 # Generic error
-
-    NO_SYSTEMS = 2 # Producers
-    NO_INTERFACES = 3
-    NO_DEVICES = 4
-    NO_DATASTREAMS = 5
-
-    NOT_INITIALIZED = 6
-    NOT_IMPLEMENTED = 7
-    RESOURCE_IN_USE = 8
-    ACCESS_DENIED = 9
-    INVALID_HANDLE = 10
-    OBJECT_INVALIDID = 11
-    NO_DATA = 12
-    INVALID_PARAMETER = 13
-    LOW_LEVEL = 14
-    ABORT = 15
-    INVALID_BUFFER = 16
-    NOT_AVAILABLE = 17
-
-class DatasetConfig(IntEnum):
-    ALL = 0
-    PARTIALLY_VISIBLE_ONLY = 1 # do not use
-    FULLY_VISIBLE_ONLY = 2
-
-class Verification(IntEnum):
-    TRAINING = 0
-    INFERENCE = 0
-
-class NeuralNetworkArchitectures(IntEnum):
-    pass
+# fully visible only (fvo) predictions
+inference_fvo_predictions_name = 'fhnw_toys_inference_fvo_predictions'
