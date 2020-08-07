@@ -57,7 +57,6 @@ num_objects = len(objects)
 
 # Inference
 dir_repo = Path('/home/xilinx/AIonFPGA') # location of the cloned repository
-dir_repo = Path(r'B:\aionfpga\AIonFPGA') # WINDOWS
 
 dir_sw = dir_repo / 'sw'
 
@@ -95,8 +94,7 @@ dir_hdf5 = dir_cnn / 'hdf5'
 dir_weights = dir_cnn / 'weights'
 
 # Verification
-dir_verification = dir_repo / 'verification'
-dir_verification_build = dir_verification / 'build'
+dir_verification = dir_sw / 'verification'
 
 # Camera ---------------------------------------------------------------------
 
@@ -156,7 +154,8 @@ dpu_assembly_file = f'dpu_{kernel_name}.elf'
 
 # Dataset / Verification -----------------------------------------------------
 
-config = DatasetConfig.ALL
+dataset_config = DatasetConfig.ALL # Include all frames
+verification = Verification.TRAINING # Verify the training
 
 seed = 0x41496F6E46504741 # AIonFPGA
 

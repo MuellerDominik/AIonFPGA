@@ -51,7 +51,7 @@ class DatasetConfig(IntEnum):
 
 class Verification(IntEnum):
     TRAINING = 0
-    INFERENCE = 0
+    INFERENCE = 1
 
 class NeuralNetworkArchitectures(IntEnum):
     pass

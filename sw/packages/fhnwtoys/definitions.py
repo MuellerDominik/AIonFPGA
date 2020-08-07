@@ -87,19 +87,11 @@ def top_k(predictions, labels, num_classes):
     top_k = np.zeros((num_classes,), dtype=np.float64)
 
     for pred, label in zip(predictions, labels):
-        pred_sorted = np.sort(pred)
-        pred_sorted_reversed = pred_sorted[::-1]
-        for idx, p in enumerate(pred_sorted_reversed):
-            # one-dimensional tuple with a numpy array
-            # that contains the corresponding index
-            check = np.where(pred == p)
-            if len(check) != 1 or len(check[0]) != 1:
-                raise ValueError('Either the dimensions of the input is '\
-                                 'wrong OR there are duplicates in the '\
-                                 'array and thus the indices cannot be '\
-                                 'precisely determined!')
-            if check[0][0] == label: # get the corresponding index from check
-                top_k[idx:] += 1
+        unique_v, unique_c = np.unique(pred, return_counts=True)
+        pos = np.asarray(unique_v == pred[label]).nonzero()[0][0]
+        idx = sum(unique_c[pos:]) - 1 # top k - 1 (-1: array index)
+        top_k[idx:] += 1
+
     return top_k / num_predictions
 
 # Database Functions ---------------------------------------------------------
