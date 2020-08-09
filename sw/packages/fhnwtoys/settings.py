@@ -115,17 +115,25 @@ bgr_shape = (bgr_frmt['height'], bgr_frmt['width'], bgr_frmt['num_channels'])
 
 # Inference
 inf_width = 320 # px
-inf_height = int(inf_width // ar)
+inf_height = int(inf_width / ar)
 inf_frmt = {'width': inf_width, 'height': inf_height, 'num_channels': 3}
 # Inference shape tuple: (height, width, num_channels)
 inf_shape = (inf_frmt['height'], inf_frmt['width'], inf_frmt['num_channels'])
 inf_dsize = (inf_frmt['width'], inf_frmt['height'])
 
+# UI
+ui_width = 1024 # px
+ui_height = int(ui_width / ar)
+ui_frmt = {'width': ui_width, 'height': ui_height, 'num_channels': 3}
+# UI shape tuple: (height, width, num_channels)
+ui_shape = (ui_frmt['height'], ui_frmt['width'], ui_frmt['num_channels'])
+ui_dsize = (ui_frmt['width'], ui_frmt['height'])
+
 # Camera settings
 frame_rate = 200.0 # fps
 buff_size = 200 # 200 ≙ 1 s @ 200 fps
-exposure_time = 250 # us
-camera_gain = 4
+exposure_time = 250.0 # us
+camera_gain = 4.0
 
 avg_diffs = 8 # 8 diffs ≙ 40 ms @ 200 fps
 threshold_mult = 1.1

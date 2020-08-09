@@ -39,8 +39,8 @@ const unsigned payloadsize = (unsigned)(width * height);
 
 volatile double frame_rate = 200.0; // fps
 volatile unsigned buff_size = 200; // 200 ≙ 1 s @ 200 fps
-volatile unsigned exposure_time = 250; // us
-volatile unsigned camera_gain = 4;
+volatile double exposure_time = 250.0; // us
+volatile double camera_gain = 4.0;
 
 volatile unsigned avg_diffs = 8; // 8 diffs ≙ 40 ms @ 200 fps
 volatile double threshold_mult = 1.1;
@@ -117,11 +117,11 @@ extern "C" void set_buff_size(unsigned buff_size) {
     ::buff_size = buff_size;
 }
 
-extern "C" void set_exposure_time(unsigned exposure_time) {
+extern "C" void set_exposure_time(double exposure_time) {
     ::exposure_time = exposure_time;
 }
 
-extern "C" void set_camera_gain(unsigned camera_gain) {
+extern "C" void set_camera_gain(double camera_gain) {
     ::camera_gain = camera_gain;
 }
 
@@ -139,10 +139,6 @@ extern "C" void set_frames_to_acquire(unsigned frames_to_acquire) {
 
 // Camera
 extern "C" int initialize() {
-
-    pMemoryBlock = new char*[buff_size];
-
-    cv_buffer = new cv::Mat[buff_size];
 
     try {
         // Instantiate and update SystemList
@@ -314,6 +310,8 @@ extern "C" int initialize() {
         pDataStream = (*datastreamList)[sDataStreamID];
     }
 
+    pMemoryBlock = new char*[buff_size];
+
     try {
         // Get BufferList
         bufferList = pDataStream->GetBufferList();
@@ -328,26 +326,32 @@ extern "C" int initialize() {
         returncode = SUCCESS == returncode ? ERROR : returncode;
     }
 
+    cv_buffer = new cv::Mat[buff_size];
+
     return returncode;
 }
 
-extern "C" int start_acquisition() {
-
+// separate function to avoid race conditions, if parallel processing is used
+extern "C" void reset_global_variables() {
     // Reset global variables
-    mean_diff = 0.0;
-    threshold = 0.0;
+    mean_diff = 0.0; // not really necessary
+    threshold = 0.0; // not really necessary
     sum_thresh = 0.0;
 
     frame_id = 0;
-    throw_bgn_idx = 0;
-    throw_end_idx = 0;
+    throw_bgn_idx = 0; // could be used as a sanity check
+    throw_end_idx = 0; // could be used as a sanity check
     throw_bgn = false;
     throw_end = false;
 
-    returncode = SUCCESS;
+    returncode = SUCCESS; // changes if something fails
+}
 
-    // Declare local variables
-    // Is set to true one frame before `throw_bgn` and used to detect glitches
+// reset_global_variables() needs to be called manually afterwards (to avaoid race conditions)
+extern "C" int start_acquisition() {
+
+    // Local variables
+    // `throw_bgn_tmp` is set to true one frame before `throw_bgn` and used to detect glitches
     // (using a separate variable prevents applications reading the global variables form getting a false positive)
     bool throw_bgn_tmp = false;
 
