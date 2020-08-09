@@ -1,40 +1,13 @@
-//Setting the arch of DPU, For more details, Please read the PG338 
+//Setting the arch of DPU, for more details, please read the PG338 
 
 
-/*====== Architecture Options ======*/
-// |------------------------------------------------------|
-// | Support 8 DPU size
-// +------------------------------------------------------+
-// | `define B512               
-// +------------------------------------------------------+
-// | `deifne B800                 
-// +------------------------------------------------------+
-// | `deifne B1024                 
-// +------------------------------------------------------+
-// | `deifne B1152                 
-// +------------------------------------------------------+
-// | `deifne B1600                 
-// +------------------------------------------------------+
-// | `deifne B2304                 
-// +------------------------------------------------------+
-// | `deifne B3136                 
-// +------------------------------------------------------+
-// | `deifne B4096                 
-// |------------------------------------------------------|
+// Define architecture, B2304 has best performance on ZU3EG
+`define B2304
 
-`define B1600
-
-// |------------------------------------------------------|
-// |If the FPGA has Uram. You can define URAM_EN parameter               
-// +------------------------------------------------------+
-// | for zcu104 : `define URAM_ENABLE               
-// +------------------------------------------------------+
-// | for zcu102 : `define URAM_DISABLE                 
-// |------------------------------------------------------|
-
+// No URAM on Ultrascale+ ZU3EG
 `define URAM_DISABLE 
 
-//config URAM
+// Config URAM
 `ifdef URAM_ENABLE
     `define def_UBANK_IMG_N          5
     `define def_UBANK_WGT_N          17
@@ -45,67 +18,20 @@
     `define def_UBANK_BIAS           0
 `endif
 
-// |------------------------------------------------------|
-// | RAM Usage Configuration              
-// +------------------------------------------------------+
-// | RAM Usage High : `define RAM_USAGE_HIGH               
-// +------------------------------------------------------+
-// | RAM Usage Low  : `define RAM_USAGE_LOW                 
-// |------------------------------------------------------|
+// Using more Block RAM for higher performance
+`define RAM_USAGE_HIGH
 
-`define RAM_USAGE_LOW
+// Use, when the number of input channels is much lower than the available channel parallelism (case in most cnn's).
+`define CHANNEL_AUGMENTATION_ENABLE
 
-// |------------------------------------------------------|
-// | Channel Augmentation Configuration
-// +------------------------------------------------------+
-// | Enable  : `define CHANNEL_AUGMENTATION_ENABLE              
-// +------------------------------------------------------+
-// | Disable : `define CHANNEL_AUGMENTATION_DISABLE                
-// |------------------------------------------------------|
-
-`define CHANNEL_AUGMENTATION_DISABLE
-
-// |------------------------------------------------------|
-// | DepthWiseConv Configuration
-// +------------------------------------------------------+
-// | Enable  : `define DWCV_ENABLE              
-// +------------------------------------------------------+
-// | Disable : `define DWCV_DISABLE               
-// |------------------------------------------------------|
-
+// In depthwise separable convolution, the operation is performed in two steps: depthwise convolution and pointwise convolution. Enabled: performance is better but more resources are needed.
 `define DWCV_ENABLE
 
-// |------------------------------------------------------|
-// | Pool Average Configuration
-// +------------------------------------------------------+
-// | Enable  : `define POOL_AVG_ENABLE              
-// +------------------------------------------------------+
-// | Disable : `define POOL_AVG_DISABLE                
-// |------------------------------------------------------|
-
+// Run average pooling operation on the DPU, faster
 `define POOL_AVG_ENABLE
 
-// |------------------------------------------------------|
-// | RELU Type Configuration
-// +------------------------------------------------------+
-// | `define RELU_RELU6
-// +------------------------------------------------------+
-// | `define RELU_LEAKYRELU_RELU6
-// |------------------------------------------------------|
-
+// LeakyReLU becomes available as an activation function
 `define RELU_LEAKYRELU_RELU6
 
-// |------------------------------------------------------|
-// | DSP48 Usage Configuration
-// +------------------------------------------------------+
-// | `define DSP48_USAGE_HIGH              
-// +------------------------------------------------------+
-// | `define DSP48_USAGE_LOW                
-// |------------------------------------------------------|
-
-`define DSP48_USAGE_HIGH
-
-
-
-
- 
+// Not enough DSPs available to set high with B2304 architecture on ZU3EG chip
+`define DSP48_USAGE_LOW
