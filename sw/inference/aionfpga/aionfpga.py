@@ -230,7 +230,7 @@ def main():
         percentages_ui = lrm_round(percentages_ui)
 
         # the frame
-        wighted_guesses = np.multiply(window, predictions[:,guess_idx])
+        wighted_guesses = np.multiply(window, predictions[:, guess_idx])
         frame_ui_idx = wighted_guesses.argmax()
 
         frame_ui_resized = cv2.resize(frames[frame_ui_idx], fh.ui_dsize, interpolation=fh.Interpolation.NEAREST)
