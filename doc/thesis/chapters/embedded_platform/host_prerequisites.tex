@@ -1,0 +1,19 @@
+\section{Host Prerequisites}
+\label{sec:embedded_platform:host_prerequisites}
+\todo[inline]{all}
+
+\subsection{Hardware Prerequisites}
+\label{subsec:embedded_platform:host_prerequisites:hardware_prerequisites}
+
+\subsection{Xilinx Tools}
+\label{subsec:embedded_platform:host_prerequisites:xilinx_tools}
+% Short intro, how Xilinx works with Vivado, Vitis and Vitis AI.
+% Explain, which tools were used, also explain requirements host and other installed tools (bsp docker)
+The Xilinx tools are not added to the path while installing.
+Therefore, a shell script, located in the installation directory needs to be sourced.
+For Petalinux, it could look like this:
+\begin{lstlisting}[style=bash, caption={}, label=lst:]
+  source /opt/xilinx/petalinux/2019.2/settings.sh
+\end{lstlisting}
+% Install in default location, because of hardcoded paths.
+% Petalinux using yocto

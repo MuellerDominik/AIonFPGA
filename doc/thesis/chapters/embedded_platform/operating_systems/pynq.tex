@@ -1,0 +1,27 @@
+\subsection{PYNQ}
+\label{subsec:embedded_platform:operating_systems:pynq}
+
+PYNQ is an open-source project from Xilinx.
+The name is a combination of Python and Zynq, the xilinx processor family.
+The main goal of PYNQ is to make it easier for developers to design applications for the Zynq devices. 
+Specially, PYNQ works with Overlays, which allow using programmable logic without knowledge of programming in vhdl/verilog.
+Avnet distributes a prebuilt image for the Ultra96v2 board.
+% cite: https://pynq.readthedocs.io/en/v2.5.1/
+
+\paragraph{Build PYNQ}
+Avnet provides source files and instructions for building PYNQ to run on the Ultra96v2 board.
+First, the \texttt{Ultra96-PYNQ} repository are cloned and checked out on the prefered version.
+PYNQ version 2.5 needs Xilinx tools 2019.1.
+The \texttt{PYNQ} repository is needed as well.
+The setup\_host.sh script in the repository allows to install all required tools on the host.
+As a next step the operating system can be built by the make command and the directory as a parameter.
+It is possible to add recipes in the folder \texttt{Ultra96/petalinux\_bsp\_v2/meta-user} to install user specific applications. 
+% cite: https://github.com/Avnet/Ultra96-PYNQ
+
+\paragraph{Setup PYNQ}
+The wifi configuration scripts (\texttt{interfaces} and \texttt{wpa\_supplicant.conf}) are copied to the SD card to communicate via \acrfull{ssh} after first boot.
+To work without password exchanges on the board, the public key for both the Root and the Xilinx user is exchanged.
+In a next step, some required packages are installed such as matplotlib or PysimpleGUI.
+After this, PYNQ is patched to be compatible with Vitis AI.
+This is done by the \texttt{DPU-PYNQ} repository from Xilinx.
+This repository contains a makefile which updates pynq, installs \acrfull{xrt} at version 2019.2 and a small Python script to control the DPU clocks.
