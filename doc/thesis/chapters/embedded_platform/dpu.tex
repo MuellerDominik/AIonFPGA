@@ -1,6 +1,17 @@
 \section{DPU}
 \label{sec:embedded_platform:dpu}
-% Infos about Xilinx DPU
+The Xilinx \acrfull{dpu} is developed to run convolutional neural networks on an \acrshort{fpga} of the Zynq UltraScale+ or Zynq-7000 family.
+Due to parallelization of the calculations in a neural network, the inference can be accelerated considerably.
+The \acrshort{dpu} is configured by an AXI slave interface and accesses instructions by a AXI master interface.
+The \acrshort{dpu} can be configured to make best use of the size of the \acrshort{fpga}.
+The encrypted \acrshort{rtl} design files are available on Github.
+To use the \acrshort{dpu}, a device driver is required.
+This driver is included in the Xilinx \acrfull{dnndk} toolchain.
+
+\acrshort{dnndk} is a full-stack deep learning toolchain for inference with the \acrshort{dpu}.
+It contains a \acrfull{decent}, \acrfull{n2cube}, \acrfull{dnnc} and a \acrshort{dpu} profiler.
+\todo[inline]{n2cube problem with exponent}
+% cite: https://www.xilinx.com/support/documentation/ip_documentation/dpu/v3_1/pg338-dpu.pdf
 
 \subsection{Configuration}
 \label{subsec:embedded_platform:dpu:configuration}

@@ -28,15 +28,15 @@ The \texttt{bdf} (board definition files) repository contains one folder for eac
 The \texttt{hdl} repo is needed to use the programmable logic on Ultrascale+ MPsoC.
 In the \texttt{petalinux} archive are, amongst other things, the configurations of the petalinux operating system.
 To be able to build a Vitis platform, the \texttt{vits} archive is needed as well.
-The \texttt{vitis} folder contains several Makefiles which refer to the other three repositories.
+The \texttt{vitis} folder contains several makefiles which refer to the other three repositories.
 The repositories \texttt{hdl} and \texttt{petalinux} need to be checked out on the same branch as the Xilinx tools are.
 
-The building process can be started by the Makefile in the vitis folder.
+The building process can be started by the makefile in the vitis folder.
 Which board is used, needs to be given as a parameter.
 Building the platform needs several hours, approximately \SI{200}{GB} disk space and a minimum of \SI{32}{GB} RAM is required.
 After the process is done, the platform is located in the platform\_repo directory.
 
-The Makefile from Avnet creates a sysroot by default.
+The makefile from Avnet creates a sysroot by default.
 Because all header and library files are included in this directory structure, cross compiling an application is possible.
 
 \paragraph{Configure own Vitis Platform}
@@ -61,7 +61,7 @@ Furthermore, the boot label should be set for the boot partition.
 In a next step, the created partitions need to be formated.
 In a shell script, it can be done like this:
 
-\begin{lstlisting}[style=bash, caption={}, label=lst:]
+\begin{lstlisting}[style=bash, caption={}, label=lst:create_partitions]
   DISK=/dev/sdb
   PART= # p
 
