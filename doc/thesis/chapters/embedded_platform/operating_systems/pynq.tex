@@ -42,4 +42,7 @@ A systemd service contains in minimum a description in the [Unit] section, a typ
 To be able to run a graphical application, the executed command is a shell script.
 The shell script exports the display and then starts the \acrshort{ai} application.
 
-
+For the service to be executed at startup, it must be activated with the following command:
+\begin{lstlisting}[style=bash, caption={}, label=lst:start_service]
+  systemctl enable aionfpga.service
+\end{lstlisting}
