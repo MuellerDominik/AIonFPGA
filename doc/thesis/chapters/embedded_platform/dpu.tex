@@ -156,9 +156,17 @@ With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3E
 
 The \texttt{DPU-PYNQ} repository from Xilinx which is used to patch PYNQ can be used to build the \acrshort{dpu} as well.
 It needs to be cloned to the host computer.
+By cloning the repository the \texttt{Vitis-AI} repository is cloned as a submodule.
+It contains the \texttt{DPU-TRD} folder to build a \acrshort{dpu}.
 In a next step the created configuration files need to be copied to the \texttt{boards/Ultra96} directory.
 Now, the Xilinx tools Vitis and \acrshort{xrt} must be sourced as shown in listing \ref{lst:source_tools}.
-The makefile checks if all required tools are installed and starts Vivado.
+The makefile checks if all required tools are installed and sourced and then starts Vivado.
 During the building process which can take more than an hour the bitstream is generated. 
 After running the makefile in the \texttt{boards} directory with the parameter BOARD=Ultra96, the files \texttt{dpu.bit}, \texttt{dpu.hwh} and \texttt{dpu.xclbin} are created and located in the same directory as the configuration files where stored.
 Those files can be copied to the board and the customized \acrshort{dpu} is ready to use.
+
+When working with Petalinux the generated \texttt{BOOT.BIN} is of interrest as well.
+This file is locaded in the \texttt{boards/Ultra96/binary\_container\_1/sd\_card} directory.
+The \texttt{BOOT.BIN} is responsible to load the \acrshort{dpu} on boot with the \texttt{.xclbin} file.
+The \texttt{.xclbin} file file should be located at \texttt{/usr/lib} on the board.
+Using PYNQ the \acrshort{fpga} can be programmed while starting the application.
