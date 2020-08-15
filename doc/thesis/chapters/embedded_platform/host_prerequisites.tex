@@ -55,10 +55,10 @@ It is a development tool that contains everything necessary to build, develop, t
 In the background Petalinux is running Yocto functions.
 The goal of Petalinux is to make it easier for developers to build your own embedded Linux \cite{petalinux_user_guide}.
 
-\paragraph{\acrlong{xrt}}
+\paragraph{\acrfull{xrt}}
 In the \acrfull{xrt} a combination of userspace and kernel driver components are included.
 The advantage of \acrshort{xrt} for the user is that there is very little porting effort when migrating an application from PCIe based platforms to MPSoC based edge platforms or from one edge platform to another.
-When working with Vitis AI it handels the \acrshort{xrt} in the background \cite{xrt_overview}.
+When working with Vitis AI it handles the \acrshort{xrt} in the background \cite{xrt_overview}.
 
 \paragraph{Versions}
 Xilinx releases two to three versions per year.
@@ -67,13 +67,14 @@ It is important to use the same version for Petalinux, \acrshort{xrt} and Vitis.
 Vitis was first released on version 2019.2.
 
 \paragraph{Using Xilinx Tools}
+While installing Vitis, Vivado is installed as well by default.
 The Xilinx tools are not added to the path when installed.
 Therefore, a shell script, located in the installation directory needs to be sourced.
-For Petalinux, it could look like this:
+For example sourcing Petalinux could look like this:
 \begin{lstlisting}[style=bash, caption={}, label=lst:source_tools]
-  source /opt/xilinx/petalinux/2019.2/settings.sh
+  source /tools/petalinux/2019.2/settings.sh
 \end{lstlisting}
-Avnet expexts that the user installs the tools in the default directory.
+Avnet expects that the user installs the tools in the default directory.
 For Vitis it is \texttt{/tools/Xilinx}, for Petalinux \texttt{/tools}.
 To avoid problems it is recommended to not change the default directory.
 % Install in default location, because of hardcoded paths.

@@ -5,8 +5,7 @@ PYNQ is an open-source project from Xilinx.
 The name is a combination of Python and Zynq, the Xilinx processor family.
 The main goal of PYNQ is to make it easier for developers to design applications for the Zynq devices. 
 Specially, PYNQ works with Overlays, which allow using programmable logic without knowledge of programming in vhdl/verilog.
-Avnet distributes a prebuilt image for the Ultra96v2 board.
-% cite: https://pynq.readthedocs.io/en/v2.5.1/
+Avnet distributes a prebuilt image for the Ultra96v2 board \cite{pynq_intro}.
 
 \paragraph{Build PYNQ}
 Avnet provides source files and instructions for building PYNQ to run on the Ultra96v2 board.
@@ -15,8 +14,7 @@ PYNQ version 2.5 needs Xilinx tools 2019.1.
 The \texttt{PYNQ} repository is needed as well.
 The setup\_host.sh script in the repository allows to install all required tools on the host.
 As a next step the operating system can be built by the make command and the directory as a parameter.
-It is possible to add recipes in the folder \texttt{Ultra96/petalinux\_bsp\_v2/meta-user} to install user specific applications. 
-% cite: https://github.com/Avnet/Ultra96-PYNQ
+It is possible to add recipes in the folder \texttt{Ultra96/petalinux\_bsp\_v2/meta-user} to install user specific applications \cite{avnet_pynq_github}. 
 
 \paragraph{Setup PYNQ}
 The wifi configuration scripts (\texttt{interfaces} and \texttt{wpa\_supplicant.conf}) are copied to the SD card to communicate via \acrfull{ssh} after first boot.
@@ -36,13 +34,12 @@ This service can be started manually by the command
   systemctl start aionfpga.service
 \end{lstlisting}
 \todo[inline]{Better just write without listing?}
-A systemd service contains in minimum a description in the [Unit] section, a type and the command to execute in the [Service] section and other configurations in the [Install] section.
-% cite: https://www.freedesktop.org/software/systemd/man/systemd.service.html
+A systemd service contains in minimum a description in the [Unit] section, a type and the command to execute in the [Service] section and other configurations in the [Install] section \cite{systemd}. \todo[inline]{Author is dl8uf (pseudonym)}
 \todo[inline]{graphical.target and not multi-user.target?}
 To be able to run a graphical application, the executed command is a shell script.
 The shell script exports the display and then starts the \acrshort{ai} application.
 
 For the service to be executed at startup, it must be activated with the following command:
-\begin{lstlisting}[style=bash, caption={}, label=lst:start_service]
+\begin{lstlisting}[style=bash, caption={}, label=lst:enable_service]
   systemctl enable aionfpga.service
 \end{lstlisting}

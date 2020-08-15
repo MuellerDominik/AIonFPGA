@@ -10,12 +10,12 @@ Table \ref{tab:compare_os} shows a quick overview of the main functions and prop
     \toprule
     \textbf{} & \textbf{PYNQ} & \textbf{Petalinux} \\
     \midrule
-    Kernelversion & 4.19.0 & 4.19.0 \\ % cite: , cite https://www.xilinx.com/support/answers/72293.html
-    Basic distribution & ubuntu & none \\ % cite: https://www.xilinx.com/publications/events/xtd/05_Xilinx_Pynq_framework_to_support_Python_and_IIOT.pdf
-    Supporting Baumer Camera & (yes) & no \\ % cite https://www.baumer.com/medias/__secure__/Baumer_Digital-Industrial-Cameras_EN_20200514_BR_11228587.pdf?mediaPK=8828642721822
+    Kernelversion & 4.19.0 & 4.19.0 \cite{petalinux_2019_1_release_notes} \\
+    Basic distribution & Ubuntu \cite{pynq_presentation} & none \\
+    Supporting Baumer Camera & (yes) \cite{baumer_prog_guide} & no \\
     Wifi function & yes & (yes) \\
     Package manager & \acrshort{apt} & none, installable \\
-    dpu initialization & with overlays at runtime & while booting \\ % cite: , cite: https://pynq.readthedocs.io/en/v2.5.1/pynq_overlays.html
+    dpu initialization & with overlays at runtime \cite{pynq_overlays} & while booting \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -29,9 +29,9 @@ The workaround is to use the installing package for a Rock64 board which Baumer 
 A Rock64 development board consists of a Quad-Core ARM Cortex A53 processor just as the Ultrascale+ family.
 Further mysqlclient and pq5 has to be installed to use the Baumer camera.
 
-Altough, both \acrshort{os} officially support wifi petalinux has connecting problems due to a faulty root filesystem.
+Although, both \acrshort{os} officially support wifi petalinux has connecting problems due to a faulty root filesystem.
 
 On PYNQ the \acrfull{apt} is installed.
-This is the default package manager on many debian distributions.
+This is the default package manager on many Debian distributions.
 Recipes can be added as described in section \ref{subsec:embedded_platform:operating_systems:petalinux} to use a package manager on petalinux.
 

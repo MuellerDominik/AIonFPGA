@@ -7,9 +7,8 @@ It is recommended to work with the so called target platform.
 The target platform is a combination of hardware and software components.
 The most important hardware component is a proprietary file format, called XSA.
 XSA stands for Xilinx Support Archive and contains one or more hwh files, bit files, driver files and other meta-data files.
-In a hardware hand-off file (hwh file), information about Vivado tool version and the board tag are safed.
-Furthermore, hwh files contain IP-instance, name and paramters, as well as Memory Map information of the processors.
-% cite: https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_1/ug1400-vitis-embedded.pdf
+In a hardware hand-off file (hwh file), information about Vivado tool version and the board tag are saved.
+Furthermore, hwh files contain IP-instance, name and parameters, as well as Memory Map information of the processors \cite{vitis_user_guide}.
 
 It is also possible to download the pre-built platform from Element14.
 However, to customize the working environment, it is needed to build the platform by hand.
@@ -25,8 +24,8 @@ Four repositories are needed from Avnet.
 \end{itemize}
 
 The \texttt{bdf} (board definition files) repository contains one folder for each of their development boards.
-The \texttt{hdl} repo is needed to use the programmable logic on Ultrascale+ MPsoC.
-In the \texttt{petalinux} archive are, amongst other things, the configurations of the petalinux operating system.
+The \texttt{hdl} repo is needed to use the programmable logic on UltraScale+ MPsoC.
+In the \texttt{petalinux} archive are, among other things, the configurations of the Petalinux operating system.
 To be able to build a Vitis platform, the \texttt{vits} archive is needed as well.
 The \texttt{vitis} folder contains several makefiles which refer to the other three repositories.
 The repositories \texttt{hdl} and \texttt{petalinux} need to be checked out on the same branch as the Xilinx tools are.
@@ -44,14 +43,14 @@ The platform can be customized according to individual needs.
 First a new petalinux project is created.
 The generated folder \texttt{project-spec/meta-user} contains recipes to add or remove programs such as OpenCV or a package manager.
 Own recipes can be created by the \texttt{petalinux-create -t apps} command.
-It is possible to create a component from an existing content or from a pre-defined application template.
-% cite: https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_1/ug1157-petalinux-tools-command-line-guide.pdf
-After adding all recipes, the \texttt{petalinux-config} and \texttt{petalinux-build} command create the customized root filesystem, the boot files and the Linux kernel. % cite: https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_1/ug1144-petalinux-tools-reference-guide.pdf
+It is possible to create a component from an existing content or from a pre-defined application template \cite{petalinux_commandline_guide}.
+
+After adding all recipes, the \texttt{petalinux-config} and \texttt{petalinux-build} command create the customized root filesystem, the boot files and the Linux kernel \cite{petalinux_user_guide}.
 
 The first stage bootloader, the device tree blob and u-boot are stored in the \texttt{BOOT.BIN} file by default configuration.
-They are needed to first initalize the board and load the kernel image. % cite: https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841976/Prepare+boot+image
-The kernel image is in the \texttt{Image.ub} file. % cite: https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842374/U-Boot+Images
-They are located in the \texttt{petalinux/projects/ultra96v2\_oob\_2019\_2/images/linux} directory
+They are needed to first initialize the board and load the kernel image \cite{xilinx_wiki_boot}.
+The kernel image is in the \texttt{Image.ub} file \cite{xilinx_wiki_uboot}.
+They are located in the \texttt{petalinux/projects/ultra96v2\_oob\_2019\_2/images/linux} directory.
 
 \paragraph{Flash SD Card}
 The first step is to create the partitions for the boot files and for the root filesystem.
@@ -77,7 +76,7 @@ In a shell script, it can be done like this:
   sudo mkfs -t ext4 -L rootfs $DISK${PART}2
 \end{lstlisting}
 
-The SD card is now ready to save the petalinux.
+The SD card is now ready to save the \acrshort{os}.
 The \texttt{BOOT.BIN} and \texttt{Image.ub} can be copied to the boot partition and the \texttt{rootfs.tar.gz} extracted to the rootfs partition.
 
 \paragraph{Setup}

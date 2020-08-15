@@ -1,6 +1,6 @@
 \section{DPU}
 \label{sec:embedded_platform:dpu}
-\todo[inline]{Split DPU into two files}
+\todo[inline]{maybe split DPU into two files}
 The Xilinx \acrfull{dpu} is developed to run convolutional neural networks on an \acrshort{fpga} of the Zynq UltraScale+ or Zynq-7000 family.
 Due to parallelization of the calculations in a neural network, the inference can be accelerated considerably.
 The \acrshort{dpu} is configured by an AXI slave interface and accesses instructions by a AXI master interface.
@@ -8,11 +8,9 @@ It can be configured to make best use of the size of the \acrshort{fpga}.
 The encrypted \acrshort{rtl} design files are available on Github.
 To use the \acrshort{dpu}, a device driver is required.
 This driver is included in the Xilinx \acrshort{dnndk} toolchain.
-% cite: https://www.xilinx.com/support/documentation/ip_documentation/dpu/v3_1/pg338-dpu.pdf
 
 \acrfull{dnndk} is a full-stack deep learning toolchain for inference with the \acrlong{dpu}.
-It contains a \acrfull{decent}, \acrfull{n2cube}, \acrfull{dnnc} and a \acrshort{dpu} profiler.
-% cite: https://www.xilinx.com/support/documentation/ip_documentation/dpu/v3_1/pg338-dpu.pdf
+It contains a \acrfull{decent}, \acrfull{n2cube}, \acrfull{dnnc} and a \acrshort{dpu} profiler \cite{dpu_product_guide}.
 
 \subsection{Configuration}
 \label{subsec:embedded_platform:dpu:configuration}
@@ -26,12 +24,11 @@ On a ZU7 device it is possible to implement two cores while on a ZU9 even three 
 \paragraph{Clock}
 The clock frequency is set in the \texttt{prj\_config} file as well.
 For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
-Because of a hardware design mistake on the Ultra96V2 board, the maximum frequency lies at \SI{300}{MHz}.
+Because of a hardware design mistake on the Ultra96V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
 On higher frequencies the \acrfull{pmic} reboots the hole system.
-It is possible to fix this issue, but it needs both a hardware and a software change.
-% cite: https://www.element14.com/community/groups/power-management/blog/2020/01/23/infineon-pmic-updates-to-avnet-products
+It is possible to fix this issue, but it needs both a hardware and a software change \cite{pmic_issue}.
 The frequency can be set  by the setting a variable like this: freqHz=150000000:DPUCZDX8G\_1.aclk.
-Another way is using the predifined frequencies from xilinx.
+Another way is using the predefined frequencies from Xilinx.
 Table \ref{tab:frequencies_ids} shows the possibilities.
 
 \begin{table}[hb]
@@ -56,7 +53,6 @@ Table \ref{tab:frequencies_ids} shows the possibilities.
 To use the ID, replace freqHz with id and 15000000 with 0.
 Besides this clock the ap\_clk\_2 must be set as well.
 This one should have double frequency of the aclk and is the one which should not exceed \SI{300}{MHz}.
-% cite: https://www.xilinx.com/support/documentation/ip_documentation/dpu/v3_1/pg338-dpu.pdf
 
 \paragraph{\acrshort{dpu} Architecture}
 The following configurations are set in the \texttt{dpu\_conf.vh} file.
@@ -68,7 +64,7 @@ Therefore, a higher number means higher throughput.
 Table \ref{tab:arch_parallelism} shows all available architectures and the correlation to the parallelism.
 
 \begin{table}[hb]
-  \caption{Parallelism for Different Convolution Architectures } % cite: https://www.xilinx.com/support/documentation/ip_documentation/dpu/v3_1/pg338-dpu.pdf 
+  \caption{Parallelism for Different Convolution Architectures \cite{dpu_product_guide}}
   \label{tab:arch_parallelism}
   \centering
   \begin{tabular}{lllll}
@@ -106,10 +102,10 @@ Activating this function costs extra logic resources.
 In this CNN there are three input channels and therefore, channel augmentation is enabled.
 
 \paragraph{Depthwise Convolution}
-In standart convolution, the operations are performed for each input channel separately with one specific kernel and the results are combined over all channels.
+In standard convolution, the operations are performed for each input channel separately with one specific kernel and the results are combined over all channels.
 In depthwise separable convolution, the operation is performed in two steps: depthwise convolution and pointwise convolution.
 As a result, the needed parameter stay the same but the change of overfitting is smaller.
-\todo[inline]{?? makes no sence, overfitting is no problem in inference, is it a parameter while training?}
+\todo[inline]{?? makes no sense, overfitting is no problem in inference, is it a parameter while training?}
 
 \paragraph{AveragePool}
 Average pooling can be done on the \acrshort{dpu} or not.
@@ -124,7 +120,7 @@ The softmax function can be done in hardware or in software.
 Implemented on hardware, the function is about 160 times faster than a software implementation.
 The function needs approximately \SI{10000}{\acrshortpl{lut}}, four block RAMs and 14 DSPs.
 If the the resources run out the \acrlong{dnnc} implements the function independently in software.
-The softmax function is not available in Zynq-7000 devices. 
+The softmax function is not available in Zynq-7000 devices \cite{dpu_product_guide}. 
 
 \paragraph{Configuration File}
 With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3EG device could look like this:
@@ -165,8 +161,8 @@ During the building process which can take more than an hour the bitstream is ge
 After running the makefile in the \texttt{boards} directory with the parameter BOARD=Ultra96, the files \texttt{dpu.bit}, \texttt{dpu.hwh} and \texttt{dpu.xclbin} are created and located in the same directory as the configuration files where stored.
 Those files can be copied to the board and the customized \acrshort{dpu} is ready to use.
 
-When working with Petalinux the generated \texttt{BOOT.BIN} is of interrest as well.
-This file is locaded in the \texttt{boards/Ultra96/binary\_container\_1/sd\_card} directory.
+When working with Petalinux the generated \texttt{BOOT.BIN} is of interest as well.
+This file is located in the \texttt{boards/Ultra96/binary\_container\_1/sd\_card} directory.
 The \texttt{BOOT.BIN} is responsible to load the \acrshort{dpu} on boot with the \texttt{.xclbin} file.
 The \texttt{.xclbin} file file should be located at \texttt{/usr/lib} on the board.
 Using PYNQ the \acrshort{fpga} can be programmed while starting the application.
