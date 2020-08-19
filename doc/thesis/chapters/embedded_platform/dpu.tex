@@ -1,16 +1,14 @@
 \section{DPU}
 \label{sec:embedded_platform:dpu}
-\todo[inline]{maybe split DPU into two files}
+
 The Xilinx \acrfull{dpu} is developed to run convolutional neural networks on an \acrshort{fpga} of the Zynq UltraScale+ or Zynq-7000 family.
+\acrshort{dpu}v1 and \acrshort{dpu}v3 are for cloud computing on Alveo cards and \acrshort{dpu}v2 for Zynq devices. 
 Due to parallelization of the calculations in a neural network, the inference can be accelerated considerably.
 The \acrshort{dpu} is configured by an AXI slave interface and accesses instructions by a AXI master interface.
 It can be configured to make best use of the size of the \acrshort{fpga}.
 The encrypted \acrshort{rtl} design files are available on Github.
-To use the \acrshort{dpu}, a device driver is required.
-This driver is included in the Xilinx \acrshort{dnndk} toolchain.
-
-\acrfull{dnndk} is a full-stack deep learning toolchain for inference with the \acrlong{dpu}.
-It contains a \acrfull{decent}, \acrfull{n2cube}, \acrfull{dnnc} and a \acrshort{dpu} profiler \cite{dpu_product_guide}.
+To use the \acrshort{dpu}, a device driver is required \cite{dpu_product_guide}.
+This driver is included in the Xilinx Vitis AI development kit \cite{dpu_product_guide_v3_2}.
 
 \subsection{Configuration}
 \label{subsec:embedded_platform:dpu:configuration}
@@ -27,7 +25,7 @@ For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
 Because of a hardware design mistake on the Ultra96V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
 On higher frequencies the \acrfull{pmic} reboots the hole system.
 It is possible to fix this issue, but it needs both a hardware and a software change \cite{pmic_issue}.
-The frequency can be set  by the setting a variable like this: freqHz=150000000:DPUCZDX8G\_1.aclk.
+The frequency can be set  by the setting the variable  freqHz=150000000:DPUCZDX8G\_1.aclk.
 Another way is using the predefined frequencies from Xilinx.
 Table \ref{tab:frequencies_ids} shows the possibilities.
 
@@ -125,7 +123,7 @@ The softmax function is not available in Zynq-7000 devices \cite{dpu_product_gui
 \paragraph{Configuration File}
 With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3EG device could look like this:
 \todo[inline]{listing für diesen komischen Code? (sieht aber schon okee aus)}
-\begin{lstlisting}[style=bash, caption={}, label=lst:config_dpu]
+\begin{lstlisting}[style=bash, caption={Configure \acrshort{dpu}}, label=lst:config_dpu]
   `define B2304
   `define URAM_DISABLE 
 
