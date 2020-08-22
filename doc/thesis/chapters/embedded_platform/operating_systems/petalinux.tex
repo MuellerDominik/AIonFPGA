@@ -40,7 +40,7 @@ Because all header and library files are included in this directory structure, c
 
 \paragraph{Configure own Vitis Platform}
 The platform can be customized according to individual needs.
-First a new petalinux project is created.
+First a new Petalinux project is created.
 The generated folder \texttt{project-spec/meta-user} contains recipes to add or remove programs such as OpenCV or a package manager.
 Own recipes can be created by the \texttt{petalinux-create -t apps} command.
 It is possible to create a component from an existing content or from a pre-defined application template \cite{petalinux_commandline_guide}.
@@ -62,7 +62,7 @@ In a shell script, it can be done like this:
 
 \begin{lstlisting}[style=bash, caption={Prepair SD card}, label=lst:create_partitions]
   DISK=/dev/sdb
-  PART= # p
+  PART=
 
   # Create partitions
   sudo parted $DISK -s mkpart primary fat32 1MiB 1025MiB
