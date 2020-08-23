@@ -67,7 +67,8 @@ Table \ref{tab:arch_parallelism} shows all available architectures and the corre
   \centering
   \begin{tabular}{lllll}
     \toprule
-    \textbf{Convolution Architecture} & \textbf{Pixel Parallelism} & \textbf{Input Channel Parallelism} & \textbf{Output Channel Parallelism} & \textbf{Peak Ops (operations/per clock)} \\
+    \textbf{Architecture} & \textbf{Pixel} & \textbf{Input Channel} & \textbf{Output Channel} & \textbf{Peak Ops} \\
+     & \textbf{Parallelism} & \textbf{Parallelism} & \textbf{Parallelism} & \textbf{(ops per clock)} \\
     \midrule
     B512 & 4 & 8 & 8 & 512 \\
     B800 & 4 & 10 & 10 & 800 \\
@@ -80,7 +81,6 @@ Table \ref{tab:arch_parallelism} shows all available architectures and the corre
     \bottomrule
   \end{tabular}
 \end{table}
-\todo[inline]{Umbrüche bei den Titeln, Tabelle überhaupt nötig / nur Architekturen itemizen?}
 
 \paragraph{RAM Usage}
 The RAM Usage can be set high or low.
@@ -88,7 +88,7 @@ If the chip does not possess UltraRAM the on-chip block RAM is used and the Ultr
 One block has a size of \SI{36}{kB} and for the B2304 architecture 167 such blocks are used for RAM low and 211 for RAM high.
 If UltraRAM is available, several other defines need to be set.
 The listing \ref{lst:config_dpu} shows an example, how to do it with a B4096 architecture.
-The UltraRAM numbers can be found in the Zynq DPU IP product guide.
+The UltraRAM numbers can be found in the Zynq \acrshort{dpu} IP product guide.
 The ZU3EG device is in possession of 216 BRAM and no UltraRAM.
 Because the RAM for the \acrshort{pl} is not used for any other calculation, RAM high can be activated and UltraRAM should be disabled.
 Practical tests showed throughput time reductions of about 20\% with RAM high compared to RAM low.
@@ -102,12 +102,11 @@ In this CNN there are three input channels and therefore, channel augmentation i
 \paragraph{Depthwise Convolution}
 In standard convolution, the operations are performed for each input channel separately with one specific kernel and the results are combined over all channels.
 In depthwise separable convolution, the operation is performed in two steps: depthwise convolution and pointwise convolution.
-As a result, the needed parameter stay the same but the change of overfitting is smaller.
-\todo[inline]{?? makes no sense, overfitting is no problem in inference, is it a parameter while training?}
+Enabling  depthwise convolution allows for more flexibility with the \acrshort{cnn} architecture.
 
 \paragraph{AveragePool}
 Average pooling can be done on the \acrshort{dpu} or not.
-The supported sizes goes from 2x2 to 8x8, with only square sizes supported.
+The supported sizes goes from $2\cdot2$ to $8\cdot8$, with only square sizes supported.
 
 \paragraph{ReLU Type}
 By default the ReLu and ReLU6 function are supported.
@@ -122,7 +121,7 @@ The softmax function is not available in Zynq-7000 devices \cite{dpu_product_gui
 
 \paragraph{Configuration File}
 With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3EG device could look like this:
-\todo[inline]{listing für diesen komischen Code? (sieht aber schon okee aus)}
+
 \begin{lstlisting}[style=bash, caption={Configure \acrshort{dpu}}, label=lst:config_dpu]
   `define B2304
   `define URAM_DISABLE 

@@ -23,19 +23,18 @@ In a next step, some required packages are installed such as matplotlib or Pysim
 After this, PYNQ is patched to be compatible with Vitis AI.
 This is done by the \texttt{DPU-PYNQ} repository from Xilinx.
 This repository contains a makefile which updates pynq, installs \acrfull{xrt} at version 2019.2 and a small Python script to control the \acrfull{dpu} clocks.
-The patch also updates OpenCV to version 3.4.3.
+The patch also updates \acrshort{opencv} to version 3.4.3.
 Next, the repository from this project is cloned to the board.
 This way all created programs and packages are already at the expected location.
 Finally, the \acrshort{dpu} model and the files to program the \acrfull{pl} are copied from the host by \acrfull{scp}.
 
 To run the \acrshort{ai} application always at startup, a systemd service is used.
-This service can be started manually by the command
+This service can be started manually with the following command:
 \begin{lstlisting}[style=bash, caption={}, label=lst:start_service]
   systemctl start aionfpga.service
 \end{lstlisting}
-\todo[inline]{Better just write without listing?}
-A systemd service contains in minimum a description in the [Unit] section, a type and the command to execute in the [Service] section and other configurations in the [Install] section \cite{systemd}. \todo[inline]{Author is dl8uf (pseudonym)}
-\todo[inline]{graphical.target and not multi-user.target?}
+A systemd service contains in minimum a description in the [Unit] section, a type and the command to execute in the [Service] section and other configurations in the [Install] section \cite{systemd}.
+
 To be able to run a graphical application, the executed command is a shell script.
 The shell script exports the display and then starts the \acrshort{ai} application.
 

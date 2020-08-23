@@ -35,8 +35,7 @@ In a next step the quantization is applied.
 After quantization the weights, biases and activations have a given bit width, like eight bit.
 
 A calibration image dataset is required to check the quality of the quantized neural network.
-This dataset contains between 100 and 1000 un-labeled images \cite{vitis_ai_user_guide}.
-\todo[inline]{1000 correct format}
+This dataset contains between \numrange{100}{1000} unlabeled frames \cite{vitis_ai_user_guide}.
 The output of the quantization is a \acrshort{dpu} deployable model named deploy\_model.pb for a tensorflow model and a deploy.prototxt/deploy.caffemodel for caffe.
 
 Listing \ref{lst:quantize} shows an example how the quantize command could look like.
@@ -44,7 +43,7 @@ Listing \ref{lst:quantize} shows an example how the quantize command could look 
 \begin{lstlisting}[style=bash, caption={Quantize command}, label=lst:quantize]
   vai_q_tensorflow quantize \
   --input_frozen_graph frozen_graph.pb \
-  --input_nodes x} \
+  --input_nodes x \
   --input_shapes ?,256,320,3 \
   --output_nodes Identity \
   --input_fn input_fn.calib_input \
@@ -52,8 +51,9 @@ Listing \ref{lst:quantize} shows an example how the quantize command could look 
   --output_dir build \
   --method 1
 \end{lstlisting}
-\todo[inline]{where did we get the in and out nodes names?}
 
+The input node names as well as the output node names are set when generating the frozen graph.
+These are the first and last entries when the layers are listed.
 The parameter input\_frozen\_graph is the path and name of the frozen graph generated in section \ref{sec:architecture}. \todo[inline]{Correct link to section}
 The input\_nodes defines the first layer to be quantized and the last layer is set by the output\_nodes.
 The input\_fn is a python script which processes the calibration images as it is done during inference.
@@ -62,8 +62,7 @@ Calib\_iter defines the number of iterations.
 100 is the default number but 50 turned out to be quite enough.
 Method can be set either to 0 or 1.
 1 is the default and sets the min-diff method.
-When method is set to 0 the quantized model is sensitive to outliers.
-\todo[inline]{not sure, what it means but 0 made problem in practice}
+When method is set to 0 no values are saturated during quantization which makes it sensitive to outliers.
 
 \paragraph{Dump}
 It is possible to dump the quantized model for example to debug or for better understanding of the deployed \acrshort{cnn}.
@@ -109,16 +108,19 @@ By executing the command
 \begin{lstlisting}[style=bash, caption={}, label=lst:dlet]
   dlet -f dpu.hwh
 \end{lstlisting}
-a file called dpu-dd-mm-yyyy-hh-mm.dcf is created where dd-mm-yyyy-hh-mm is the timestamp when the \texttt{dpu.hwh} file was created \cite{vitis_ai_user_guide}.
+a file called \texttt{dpu-dd-mm-yyyy-hh-mm.dcf} is created where dd-mm-yyyy-hh-mm is the timestamp when the \texttt{dpu.hwh} file was created \cite{vitis_ai_user_guide}.
 
 The whole \texttt{arch.json} file can look like this:
 \begin{lstlisting}[style=bash, caption={}, label=lst:arch_json]
-  {"target": "dpuv2", "dcf": "'dpu-01-01-2000-00-01.dcf'", "cpu_arch": "arm64"}
+  {
+  	"target": "dpuv2",
+  	"dcf": "'dpu-01-01-2000-00-01.dcf'",
+  	"cpu_arch": "arm64"
+  }
 \end{lstlisting}
-\todo[inline]{listing for json?}
 
 Due to a programming error of Xilinx the net name must not end with an s.
-The Python script which does the compilation removes everything from the end of the netname until there is no s or \_0.
+The Python script which loads the overlay removes everything from the end of the netname until there is no s or \_0.
 \todo[inline]{what does it remove exactly?}
 
 The \acrshort{dpu} mode can be set either to normal, profile or debug mode.
@@ -127,4 +129,4 @@ When using the profile mode, output is printed to the console.
 If debug mode is selected, raw data for each \acrshort{dpu} computation node will be dumped.
 
 After the compilation is done a file named \textit{netname}.elf is stored in the defined output directory.
-In the example listing \ref{lst:compile} it would be fhnw\_toys.elf
+In the example listing \ref{lst:compile} it would be \texttt{fhnw\_toys\_0.elf}.

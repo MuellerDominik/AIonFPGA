@@ -10,17 +10,15 @@ Table \ref{tab:compare_os} shows a quick overview of the main functions and prop
     \toprule
     \textbf{} & \textbf{PYNQ} & \textbf{Petalinux} \\
     \midrule
-    Kernelversion & 4.19.0 & 4.19.0 \cite{petalinux_2019_1_release_notes} \\
+    Kernelversion & 4.19.0 & 4.19.0 \\
     Basic distribution & Ubuntu \cite{pynq_presentation} & none \\
     Supporting Baumer Camera & (yes) \cite{baumer_prog_guide} & no \\
     Wifi function & yes & (yes) \\
     Package manager & \acrshort{apt} & none, installable \\
-    dpu initialization & with overlays at runtime \cite{pynq_overlays} & while booting \\
+    \acrshort{dpu} initialization & with overlays at runtime \cite{pynq_overlays} & while booting \cite{petalinux_user_guide} \\
     \bottomrule
   \end{tabular}
 \end{table}
-\todo[inline]{find source to pynq kernel version, hard to find}
-\todo[inline]{find source to petalinux flash moment}
 
 PYNQ is based on Ubuntu.
 Because Baumer supports Ubuntu, the Baumer camera should work with this \acrlong{os}.
