@@ -22,7 +22,7 @@ On a ZU7 device it is possible to implement two cores while on a ZU9 even three 
 \paragraph{Clock}
 The clock frequency is set in the \texttt{prj\_config} file as well.
 For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
-Because of a hardware design mistake on the Ultra96V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
+Because of a hardware design mistake on the Ultra96-V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
 On higher frequencies the \acrfull{pmic} reboots the hole system.
 It is possible to fix this issue, but it needs both a hardware and a software change \cite{pmic_issue}.
 The frequency can be set  by the setting the variable  freqHz=150000000:DPUCZDX8G\_1.aclk.
