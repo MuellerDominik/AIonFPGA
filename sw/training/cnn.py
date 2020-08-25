@@ -90,6 +90,10 @@ def main():
     frozen_func = convert_variables_to_constants_v2(full_model)
     frozen_func.graph.as_graph_def()
 
+    # Display information about the input and output layers
+    print(f'Input: {frozen_func.inputs}')
+    print(f'Output: {frozen_func.outputs}')
+
     # Save the frozen graph from the frozen concrete function
     tf.io.write_graph(graph_or_graph_def=frozen_func.graph,
                       logdir=str(fh.dir_frozen_model),

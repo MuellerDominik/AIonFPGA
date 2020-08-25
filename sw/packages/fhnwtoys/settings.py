@@ -46,7 +46,7 @@ objects_ui = [
     'Nerf Dart', 'American Football', 'Table Tennis Ball',
     'Shuttlecock', 'Sporf', 'Arrow', 'Hand Featherball', 'Floorball',
     'Spiky Ball', 'Tesafilm', 'Sponge', 'Red Duplo Brick',
-    'Green Duplo Brick', 'Duplo Figure', 'Foam Dice',
+    'Green Duplo Brick', 'Duplo Figure', 'Foam Die', # formerly 'Foam Dice'
     'Infant Shoe', 'Stuffed Bunny', 'Goalkeeper Glove', 'Hemp Cord',
     'Paper Ball', 'Beer Cap', 'Water Bottle'
 ]
