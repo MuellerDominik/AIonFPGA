@@ -32,7 +32,7 @@ objects = [
     'Paper Ball', 'Beer Cap', 'Water Bottle'
 ]
 
-# list `objects_san` is dynamically created in `__init__.py`
+# list `objects_san` is dynamically created in `training.py`
 # objects_san = [
 #     'nerf-dart', 'american-football', 'table-tennis-ball',
 #     'shuttlecock', 'sporf', 'arrow', 'hand-featherball', 'floorball',
