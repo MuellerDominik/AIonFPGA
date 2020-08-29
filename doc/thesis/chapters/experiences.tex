@@ -27,8 +27,8 @@ Avnet creates makefiles in makefiles to allow modularity of the build process.
 Because of bad programming artifacts appeared in the makefile like a -e in front of the target.
 But by our own experiments we could show that the make command can handle such things.
 
-When trying to read the dataset with TFRecords from Tensorflow there were also several problems.
-But these could be avoided with Numpy arrays.
+When trying to read the dataset with TFRecords from TensorFlow there were also several problems.
+But these could be avoided with NumPy arrays.
 
 The experiences with Xilinx were appealing, but it is difficult to get in as a newcomer.
 There are many tools and user guides.
@@ -37,45 +37,13 @@ But after a while this worked.
 But there were also very good experiences.
 When we tried to start up the camera on the Petalinux \acrshort{os} we contacted Baumer.
 Very quickly we got help from developers, although it is clearly stated that only certain operating systems are supported and Petalinux is clearly not one of them.
-The help was detailed and led to partial success, but it was not possible to take pictures without losing frames.
+The help was detailed and led to partial success, but it was not possible to run the application without losing frames.
 
 Xilinx's \acrshort{dpu} was also put into operation with the documentation in an appealing time and functions reliably and with high performance.
 The solution to work with Docker turned out to be extremely useful and easy to use.
 
-Tensorflow 2 worked absolutely satisfying during the whole project. 
+TensorFlow 2 worked absolutely satisfying during the whole project with the exception of reading the data set with TFRecords. 
 
 In summary, we are very satisfied with the result. 
-The image recognition is performant and accurate, the throwing booth looks good and the application is running error-free according to our current state of knowledge.
-
-While we recommend Tensorflow2 as well as Xilinx, we do not recommend the use of Avnet.
-Xilinx itself provides development boards.
-These have better \acrshortpl{mpsoc} and are probably less buggy.
-
-% Problems:
-% - Avnet not really good
-%  - PMIC
-%  - Scripts paths hardcoded 
-% - Corona
-%  - sufficient / necessairy
-% - Baumer Programmers Guide
-% - Pynq still works with 2019.1 Tools
-% - Baumer incompatible with Petalinux, difficult with pynq
-% - TF
-%  - import dataset with TFRecords
-
-
-% Okee
-% - Xilinx
-%  - many different tools, user guides etc
-%  - Building platform only described with examples
-
-
-% Nice
-% - Baumer Camera Support 
-% - Ultra96V2 Board Schema available
-% - Tensorflow
-% - Xilinx
-%  - Docker very usefull, good implementation
-%  - FPGA solution performant, nice to use
-
-% Product (booth) as we wanted
+The image recognition is performing fast and accurate, the throwing booth looks good and the application is running error-free according to our current state of knowledge.
+While we recommend TensorFlow 2 as well as Xilinx, we do not recommend the use of Avnet.
