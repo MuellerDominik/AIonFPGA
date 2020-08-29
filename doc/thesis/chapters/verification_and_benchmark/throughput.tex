@@ -1,5 +1,69 @@
 \section{Throughput}
 \label{sec:verification_and_benchmark:throughput}
-\todo[inline]{nico}
 
+All steps which are passed through in the while true loop are measured. 
+These are:
+\begin{itemize}
+	\item get raw Bayer from \acrshort{ram}
+	\item transform Bayer to \acrshort{bgr} 
+	\item resize frame size from 1280 $\cdot$ 1024 to 320 $\cdot$ 256
+	\item normalize the image which is a float32 division
+	\item run inference on the \acrshort{dpu}
+	\item run softmax function
+	\item add weighting
+\end{itemize}
 
+To measure the time needed for each step, the python module datetime was used.
+The function \texttt{datetime.now()} returns the current local date and time.
+
+To measure these steps the main python file is slightly modified.
+The initialization is not changed at all.
+The infinite loop is removed, so that only one throw is captured and the application ends afterwards.
+Furthermore, the start and end time are recorded around each of the above steps.
+
+The times are stored in a three-dimensional dictionary.
+In the first dimension is the measured command.
+The second dimension indicates if it was the start or end of the command.
+Since the times vary from frame to frame, several images are taken and averaged in a final step.
+The times are appended at the end of the corresponding list.
+Listing \ref{lst:measure_time} shows an example for the color transformation.
+
+\begin{lstlisting}[style=python, caption={Measure needed time for the color transformation}, label=lst:measure_time]
+  meas_time['Transform color']['start'].append(datetime.now())
+  frames[idx] = cv2.cvtColor(raw_frame, cv2.COLOR_BayerBG2BGR)
+  meas_time['Transform color']['end'].append(datetime.now())
+\end{lstlisting}
+
+The time which is needed for each step is the difference between end and start.
+When all images have been computed, the average value is calculated for each step.
+This is printed on the console and written to a file.
+
+Table \ref{tab:measured_times} shows the measured times.
+
+\begin{table}[hb]
+	\caption{Measured time for the different steps}
+	\label{tab:measured_times}
+	\centering
+	\begin{tabular}{ll}
+		\toprule
+		\textbf{Step} & \textbf{Time} \\
+		\midrule
+		get raw Bayer & \SI{4}{ms} \\
+		transform & \SI{4}{ms} \\
+		resize & \SI{4}{ms} \\
+		normalize & \SI{4}{ms} \\
+		run inference & \SI{4}{ms} \\
+		run softmax & \SI{4}{ms} \\
+		add weighting & \SI{4}{ms} \\
+		\midrule
+		Total time & \SI{20}{ms} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+By calculating the reciprocal value of the total time required, the frame rate can be determined:
+\begin{equation}
+  \text{framerate} = \frac{1}{T_{tot}} = \frac{1}{\SI{20}{ms}} = \SI{50}{fps}
+  \label{eq:achieved_framerate}
+\end{equation}
+\todo[inline]{edit numbers}
