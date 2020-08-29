@@ -22,7 +22,8 @@
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
 \ProvidesClass{fhnwreport}[2018/05/06 v2.5 PDF-LaTeX class for FHNW reports]
-\LoadClass{report}
+\LoadClass[twoside,openright]{report}
+\usepackage{emptypage}
 \RequirePackage{geometry}
 \RequirePackage{calc}
 \RequirePackage{times}
@@ -173,21 +174,27 @@
 \renewcommand\LARGE{\@setfontsize\LARGE\@xviipt{22}}
 \renewcommand\huge{\@setfontsize\huge\@xxpt{25}}
 \renewcommand\Huge{\@setfontsize\Huge\@xxvpt{30}}
+\def\ps@plain{%
+  \let\@evenfoot\@empty
+  \vspace*{-5mm}
+  \setlength{\footskip}{30pt}
+  \def\@oddfoot{\centerline{\textbf{\thepage}}}%
+  \let\@evenhead\@empty\let\@oddhead\@empty}
 \def\ps@headings{%
   \let\@oddfoot\@empty\let\@evenfoot\@empty
-  \def\@evenhead{\thepage\hfil\slshape\leftmark}%
-  \def\@oddhead{{\slshape\rightmark}\hfil\thepage}%
+  \def\@evenhead{\textbf{\thepage}\hfil\slshape\leftmark}%
+  \def\@oddhead{{\slshape\rightmark}\hfil\textbf{\thepage}}%
   \let\@mkboth\markboth
-  \def\sectionmark##1{%
-    \markboth {\MakeUppercase{%
+  \def\chaptermark##1{%
+    \markboth {%
         \ifnum \c@secnumdepth >\z@
-        \thesection\quad
+        \thechapter\quad
         \fi
-        ##1}}{}}%
-  \def\subsectionmark##1{%
+        ##1}{}}%
+  \def\sectionmark##1{%
     \markright {%
       \ifnum \c@secnumdepth >\@ne
-      \thesubsection\quad
+      \thesection\quad
       \fi
       ##1}}}
 \pagestyle{headings}
