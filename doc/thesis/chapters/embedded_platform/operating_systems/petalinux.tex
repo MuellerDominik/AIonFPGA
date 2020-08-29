@@ -8,15 +8,20 @@ The target platform is a combination of hardware and software components.
 The most important hardware component is a proprietary file format, called XSA.
 XSA stands for Xilinx Support Archive and contains one or more hwh files, bit files, driver files and other meta-data files.
 In a hardware hand-off file (hwh file), information about Vivado tool version and the board tag are saved.
-Furthermore, hwh files contain IP-instance, name and parameters, as well as Memory Map information of the processors \cite{vitis_user_guide}.
+Furthermore, hwh files contain \acrshort{ip} instance, name and parameters, as well as Memory Map information of the processors \cite{vitis_user_guide}.
 
 It is also possible to download the pre-built platform from Element14.
 However, to customize the working environment, it is needed to build the platform by hand.
 Avnet provides all files for the Ultra96-V2 board via Github to build an own target platform.
 
 \paragraph{Development Flow}
-Graphic \ref{fig:petalinux_workflow} shows the working flow graphically.
-Each of the blocks is described in the following sections.
+Graphic \ref{fig:petalinux_workflow} shows the workflow graphically.
+Red names mean that the files on the SD card are needed, while the black ones serve as auxiliary data to create additional red files.
+The grayed out field needs further programs from Xilinx to be executed.
+This step is not essential, but can improve performance.
+It is not used in this project.
+In the following sections the step Vitis Platform is described more precisely.
+Building the \acrshort{dpu} is described in section \ref{sec:embedded_platform:dpu} and the model deployment flow is documented in section \ref{sec:embedded_platform:model_deployment}
 
 \begin{figure}[h]
 	\centering
@@ -35,16 +40,16 @@ Four repositories are needed from Avnet.
 \end{itemize}
 
 The \texttt{bdf} (board definition files) repository contains one folder for each of their development boards.
-The \texttt{hdl} repo is needed to use the programmable logic on UltraScale+ MPsoC.
+The \texttt{hdl} repo is needed to use the \acrfull{pl} on UltraScale+ MPsoC.
 In the \texttt{petalinux} archive are, among other things, the configurations of the Petalinux operating system.
-To be able to build a Vitis platform, the \texttt{vits} archive is needed as well.
+To be able to build a Vitis platform, the \texttt{vitis} archive is needed as well.
 The \texttt{vitis} folder contains several makefiles which refer to the other three repositories.
 The repositories \texttt{hdl} and \texttt{petalinux} need to be checked out on the same branch as the Xilinx tools are.
 
 The building process can be started by the makefile in the vitis folder.
 Which board is used, needs to be given as a parameter.
 Building the platform needs several hours, approximately \SI{200}{GB} disk space and a minimum of \SI{32}{GB} RAM is required.
-After the process is done, the platform is located in the platform\_repo directory.
+After the process is done, the platform is located in the vitis/platform\_repo directory.
 
 The makefile from Avnet creates a sysroot by default.
 Because all header and library files are included in this directory structure, cross compiling an application is possible.

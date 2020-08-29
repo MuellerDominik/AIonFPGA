@@ -15,6 +15,7 @@ An image is pulled automatically when a command like
 \end{lstlisting}
 is executed for the first time \cite{docker_overview}.
 The functions to quantize and compile are installed in the xilinx/vitis-ai image in binary form.
+The process showed in figure \ref{fig:petalinux_workflow} is valid apart from building the Vitis Platform.
 
 \subsection{Quantize}
 \label{subsec:embedded_platform:model_deployment:quantize}
@@ -25,14 +26,13 @@ The quantizer has the following parameters:
 	\item quantize
 	\item dump
 \end{itemize}
-\todo[inline]{add picture of quantize flow}
 
 \paragraph{Quantize}
 The Vitis AI quantizer takes a floating-point model as input (prototxt and caffemodel for the
 Caffe version, and frozen GraphDef file for the TensorFlow version).
 First the useless nodes are removed and the batchnorms are folded.
 In a next step the quantization is applied.
-After quantization the weights, biases and activations have a given bit width, like eight bit.
+After quantization the weights, biases and activations have a given bit width, like for example eight bit.
 
 A calibration image dataset is required to check the quality of the quantized neural network.
 This dataset contains between \numrange{100}{1000} unlabeled frames \cite{vitis_ai_user_guide}.

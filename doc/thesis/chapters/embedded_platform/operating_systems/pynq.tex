@@ -4,12 +4,12 @@
 PYNQ is an open-source project from Xilinx.
 The name is a combination of Python and Zynq, the Xilinx processor family.
 The main goal of PYNQ is to make it easier for developers to design applications for the Zynq devices. 
-Specially, PYNQ works with Overlays, which allow using programmable logic without knowledge of programming in vhdl/verilog.
+Specially, PYNQ works with Overlays, which allow using \acrlong{pl} without knowledge of programming in VHDL/Verilog.
 Avnet distributes a prebuilt image for the Ultra96-V2 board \cite{pynq_intro}.
 
 \paragraph{Build PYNQ}
 Avnet provides source files and instructions for building PYNQ to run on the Ultra96-V2 board.
-First, the \texttt{Ultra96-PYNQ} repository are cloned and checked out on the preferred version.
+First, the \texttt{Ultra96-PYNQ} repository is cloned and checked out on the preferred version.
 PYNQ version 2.5 needs Xilinx tools 2019.1.
 The \texttt{PYNQ} repository is needed as well.
 The setup\_host.sh script in the repository allows to install all required tools on the host.
@@ -17,12 +17,12 @@ As a next step the operating system can be built by the make command and the dir
 It is possible to add recipes in the folder \texttt{Ultra96/petalinux\_bsp\_v2/meta-user} to install user specific applications \cite{avnet_pynq_github}. 
 
 \paragraph{Setup PYNQ}
-The wifi configuration scripts (\texttt{interfaces} and \texttt{wpa\_supplicant.conf}) are copied to the SD card to communicate via \acrfull{ssh} after first boot.
-To work without password exchanges on the board, the public key for both the Root and the Xilinx user is exchanged.
+The Wi-Fi configuration scripts (\texttt{interfaces} and \texttt{wpa\_supplicant.conf}) are copied to the SD card to communicate via \acrfull{ssh} after first boot.
+To work without password exchanges on the board, the public key for both the Root and the Xilinx user are exchanged.
 In a next step, some required packages are installed such as matplotlib or PysimpleGUI.
 After this, PYNQ is patched to be compatible with Vitis AI.
 This is done by the \texttt{DPU-PYNQ} repository from Xilinx.
-This repository contains a makefile which updates pynq, installs \acrfull{xrt} at version 2019.2 and a small Python script to control the \acrfull{dpu} clocks.
+This repository contains a makefile which updates PYNQ, installs \acrfull{xrt} at version 2019.2 and a small Python script to control the \acrfull{dpu} clocks.
 The patch also updates \acrshort{opencv} to version 3.4.3.
 Next, the repository from this project is cloned to the board.
 This way all created programs and packages are already at the expected location.

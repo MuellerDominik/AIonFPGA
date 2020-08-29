@@ -88,7 +88,7 @@ If the chip does not possess UltraRAM the on-chip block RAM is used and the Ultr
 One block has a size of \SI{36}{kB} and for the B2304 architecture 167 such blocks are used for RAM low and 211 for RAM high.
 If UltraRAM is available, several other defines need to be set.
 The listing \ref{lst:config_dpu} shows an example, how to do it with a B4096 architecture.
-The UltraRAM numbers can be found in the Zynq \acrshort{dpu} IP product guide.
+The UltraRAM numbers can be found in the Zynq \acrshort{dpu} \acrshort{ip} product guide.
 The ZU3EG device is in possession of 216 BRAM and no UltraRAM.
 Because the RAM for the \acrshort{pl} is not used for any other calculation, RAM high can be activated and UltraRAM should be disabled.
 Practical tests showed throughput time reductions of about 20\% with RAM high compared to RAM low.

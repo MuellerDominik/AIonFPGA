@@ -12,7 +12,7 @@ It is important to have the correct three package versions:
 	 \item \texttt{libpq5\_10.4-0ubuntu0.18.04\_arm64.deb}
 \end{itemize}
 
-It is important to specify the correct block device for the SD card.
+To prevent destruction of the own hard disk specify the correct block device for the SD card.
 To get the device, use the \texttt{lsblk} command before and after inserting the SD card.
 The new node needs to be defined as for example \texttt{DISK=/dev/sdb} in the makefile.
 
@@ -41,7 +41,7 @@ After executing the other three makefiles, insert the SD card and power the Ultr
 The makefile in the \texttt{mpsoc/pynq-setup} directory can now be executed.
 
 To successfully run the script the IP address of the board needs to be edited to the received IP address.
-This address is viewable at the access point.
+This address is viewable at the Wi-Fi access point.
 
 In a first step the \acrshort{ssh} keys are exchanged by the make command.
 Therefore the host computer needs a key pair at the default directory (/home/\textit{user}/.ssh where \textit{user} is substituted with the current user name).
