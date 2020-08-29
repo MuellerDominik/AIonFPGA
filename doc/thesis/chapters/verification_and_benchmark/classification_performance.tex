@@ -2,19 +2,250 @@
 \label{sec:verification_and_benchmark:classification_performance}
 % \todo[inline]{this file will change (do not modify), todos, cleanup}
 
+% The performance of the trained \acrshort{cnn} model is verified separately from that of the quantized model.
+The performance of the floating-point \acrshort{cnn} model is verified separately from that of the quantized model.
+Afterwards they are compared with each other.
+
+% Verifying the classification accuracy of a \acrshort{cnn} model requires the definition of a function to measure it.
+Measuring the performance of a \acrshort{cnn} model requires the definition of a suitable function to quantify the classification accuracy.
+% Therefore, the Top-$K$ function is specified in this section.
+Therefore, the Top-$K$ function is specified in a first step.
+
+% Determining the overall
+% However, to determine the overall accuracy of the model is not sufficient.
+% Furthermore, to determine the overall accuracy of the models is not sufficient.
+% Furthermore, determining the overall accuracy of the models is not sufficient.
+Furthermore, the determination of the overall accuracy of the models is not sufficient.
+% Some classes might perform worse than others
+The fact that some classes might perform worse than others would not be noticed.
+% Therefore, the individual Top-$K$ accuaries of the different classes are evaluated as well.
+% The individual Top-$K$ accuaries of the different classes are, therefore, evaluated as well.
+The individual Top-$K$ accuaries of the different classes are therefore also evaluated.
+% Additionally, the overall accuracy of a test dataset that contains only images in which the object is fully visible is computed.
+Additionally, the overall accuracy of a test dataset containing only images in which the object is fully visible is computed.
+
+% ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Top-K}
 \label{subsec:verification_and_benchmark:classification_performance:topk}
 
+A common way to quantify the perfomance of a single prediction is its Top-$K$ value.
+In general, Top-$K$ means that the element with the $K$-th highest probability of the prediction vector corresponds to its true label.
+% Top-1 means that the element with the highest probability of the prediction vector corresponds to the true label.
+% Top-2 means that the element with the second highest probability of the prediction vector corresponds to the true label and so on.
+% For example, a prediction with a Top-2 accuracy means that the element with the second highest probability of the prediction vector corresponds to the true label, and so on.
+Consider, for example, a prediction with a Top-2 accuracy.
+This means that the element with the second highest probability of the prediction vector corresponds to its true label.
+% Consider, for example, a prediction with a Top-2 accuracy, which means that the element with the second highest probability of the prediction vector corresponds to its true label, and so on.
 % If two elements are equal, the lower-index element appears first.
+% make an example why
+% If two or more elements of the prediction vector feature the same probability, the worst (highest) of the possible Top-$K$ values is chosen.
+% If two or more elements of the prediction vector feature the same probability, the worst (highest) of the available Top-$K$ values is chosen.
+If two or more elements of the prediction vector feature the same probability, there are two or more possible Top-$K$ values.
+In such a case, the worst (highest) of the possible Top-$K$ values is chosen.
+% Otherwise, an equal distribution of probabilities would lead to a Top-1 accuracy when in fact it is a random guess.
+Otherwise, an equal distribution of probabilities would lead to a Top-1 accuracy, although in reality it is a random guess.
 
+% To measure the performance of a \acrshort{cnn} model, the Top-$K$ function is used to quantify the classification accuracy.
+To measure the performance of a \acrshort{cnn} model, the Top-$K$ accuracy is used to quantify the classification accuracy.
+The Top-$K$ accuracy is a vector with as many elements as there are classes.
+% Each element $k$ corresponds to the percentage of the predictions which had a Top-$K$ value of $k$ or better (lower).
+Each element $k$ corresponds to the percentage of the predictions which feature a Top-$K$ value of $k$ or better (lower).
 
+The implementation uses the NumPy function \texttt{np.unique} with the parameter \texttt{return\_counts} set to \texttt{True}, which returns two arrays.
+% The first array contains the ordered and uniquified input values.
+% The first array contains the in ascending order sorted unique elements of the input array (the probabilities of the prediction).
+% The first array contains the in ascending order sorted unique elements of the input prediction array.
+The first array contains the unique elements of the input prediction array sorted in ascending order.
+The second array contains the number of occurances of each of the values from the first array.
+% The next step involves finding the index of the probability in the first array which corresponds to the probability at the position of the label in the input array.
+The next step involves finding the position of the probability in the first array which corresponds to the probability at the index of the label in the input array.
+% The last step is to sum up the elements of the second array from the position of the previously found index to the end of the array.
+The last step is to sum up the elements of the second array from the previously found position to the end of the array.
+% The last step is to compute the sum of the elements of the second array from the previously found position to the end of the array.
+% This value corresponds to the Top-K value of a particular prediction which are averaged with all other predictions.
+This value corresponds to the Top-$K$ value of a particular prediction.
+% All Top-$K$ values of all predictions are then used to determine the Top-$K$ vector which consists of the percentages of predictions which
+% All Top-$K$ values of all predictions are then used to determine the Top-$K$ array, where the elements correspond to the percentage of predictions which
+All Top-$K$ values of all predictions are then used to determine the Top-$K$ accuracy of the input predictions.
+% All predictions are then averaged to create the Top-$K$ vector which shows the percentage 
+% It is important to keep in mind that a Top-1 prediction is also a Top-2 prediciton
+% which are averaged with all other predictions.
+% todo: cite https://numpy.org/doc/stable/reference/generated/numpy.unique.html
+Listing \ref{lst:topk} shows the implementation of the \texttt{top\_k} function in the \texttt{fhnwtoys} package.
 
+\begin{lstlisting}[style=python, caption={Implementation of the Top-K function}, label=lst:topk]
+def top_k(predictions, labels, num_classes):
+  num_predictions = len(predictions)
+
+  top_k = np.zeros((num_classes,), dtype=np.float64)
+
+  for pred, label in zip(predictions, labels):
+    unique_v, unique_c = np.unique(pred, return_counts=True)
+    pos = np.asarray(unique_v == pred[label]).nonzero()[0][0]
+    idx = sum(unique_c[pos:]) - 1 # top k - 1 (-1: array index)
+    top_k[idx:] += 1
+
+  return top_k / num_predictions
+\end{lstlisting}
+
+% ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Training}
 \label{subsec:verification_and_benchmark:classification_performance:training}
 
+The computation of the classification accuracy of the floating-point model is implemented in the Python script \texttt{cnnv.py}.
+In a first step, the floating-point model is used to generate predictions for all of the samples in the test dataset.
+These predictions are stored in a NumPy array, which is then used to compute the overall Top-$K$ accuracy of the test dataset.
+% only predictions of images of a specific class
+% Additionally, the Top-$K$ accuracies of the individual classes are also computed.
+Additionally, the Top-$K$ accuracies of the individual classes are also calculated.
+
+The overall Top-$K$ accuracy of the floating-point model is listed in table \ref{tab:overall_top_k_training} and the Top-$K$ accuracies of the individual classes are listed in table \ref{tab:individual_top_k_training}.
+
+Analyzing the two tables shows that the usage of a test dataset containing only images in which the object is fully visible leads to a neglectable improvement of about \SI{0.3}{\percent}.
+% Furthermore, it shows that the individual classes perfom about the same.
+Furthermore, it can be seen that the individual classes perform about equally well.
+
+\begin{table}[b]
+  \caption{Overall Top-$K$ accuracy of the floating-point model with $K = 1, 2, \dots, 5$}
+  \label{tab:overall_top_k_training}
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+     & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-4} & \textbf{Top-5} \\
+    \midrule
+    \textbf{Entire Dataset} & \num{0.995} & \num{0.999} & \num{0.999} & \num{1.000} & \num{1.000} \\
+    \textbf{Fully Visible Only} & \num{0.998} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\ % last three values are not rounded
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \caption{Individual Top-$K$ accuracies of the floating-point model with $K = 1, 2, \dots, 5$}
+  \label{tab:individual_top_k_training}
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    \textbf{Object} & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-4} & \textbf{Top-5} \\
+    \midrule
+    \textbf{Nerf Dart} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{American Football} & \num{0.995} & \num{0.999} & \num{0.999} & \num{0.999} & \num{1.000} \\
+    \textbf{Table Tennis Ball} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Shuttlecock} & \num{0.999} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Sporf} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Arrow} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Hand Featherball} & \num{0.993} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Floorball} & \num{0.996} & \num{0.998} & \num{0.999} & \num{1.000} & \num{1.000} \\
+    \textbf{Spiky Ball} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Tesafilm} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Sponge} & \num{0.986} & \num{0.995} & \num{0.998} & \num{0.999} & \num{0.999} \\
+    \textbf{Red Duplo Brick} & \num{0.989} & \num{0.999} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Green Duplo Brick} & \num{0.983} & \num{0.998} & \num{0.999} & \num{1.000} & \num{1.000} \\
+    \textbf{Duplo Figure} & \num{0.997} & \num{0.999} & \num{0.999} & \num{1.000} & \num{1.000} \\
+    \textbf{Foam Die} & \num{0.995} & \num{0.997} & \num{0.997} & \num{0.997} & \num{0.997} \\
+    \textbf{Infant Shoe} & \num{0.991} & \num{0.999} & \num{0.999} & \num{0.999} & \num{0.999} \\
+    \textbf{Stuffed Bunny} & \num{0.997} & \num{0.997} & \num{0.997} & \num{0.997} & \num{0.998} \\
+    \textbf{Goalkeeper Glove} & \num{0.987} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Hemp Cord} & \num{0.994} & \num{0.999} & \num{0.999} & \num{1.000} & \num{1.000} \\
+    \textbf{Paper Ball} & \num{0.996} & \num{0.997} & \num{0.997} & \num{0.999} & \num{0.999} \\
+    \textbf{Beer Cap} & \num{0.989} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Water Bottle} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Inference}
 \label{subsec:verification_and_benchmark:classification_performance:inference}
 
+The computation of the classification accuracy of the quantized model is also implemented in the Python script \texttt{cnnv.py}.
+% another python script is used to exfiltrate
+However, the size of the entire test dataset is too large to fit on the SD card used.
+% For this reason the Python script \texttt{inference\_predictions.py} is used to generate all of the predictions in arbitrary sized batches.
+For this reason the Python script \texttt{inference\_predictions.py} is used to generate all predictions in arbitrary sized batches and store them in a NumPy array.
+% The generated NumPy array, which contains all of the predictions, can then be exfiltrated and used to to compute the overall Top-$K$ accuracy of the test dataset.
+% The generated NumPy array containing all predictions can then be exfiltrated and used to compute the overall Top-$K$ accuracy of the test dataset.
+% The NumPy array containing all predictions can then be exfiltrated and used to compute the overall Top-$K$ accuracy of the test dataset.
+This array, which contains all predictions, can then be exfiltrated and used to compute the overall Top-$K$ accuracy of the test dataset.
+In addition, the Top-$K$ accuracies of the individual classes are also calculated for the quantized model.
 
+The overall Top-$K$ accuracy of the quantized model is listed in table \ref{tab:overall_top_k_inference} and the Top-$K$ accuracies of the individual classes are listed in table \ref{tab:individual_top_k_inference}.
+
+The analysis of these two tables shows that the usage of a test dataset containing only images in which the object is fully visible leads to a significant improvement of the overall Top-$K$ accuracy of about \SI{1.3}{\percent}.
+% Furthermore, it is noticeable that some of the classes do perform slightly worse than others.
+Furthermore, it is noticeable that some of the classes perform somewhat worse than others.
+
+\begin{table}
+  \caption{Overall Top-$K$ accuracy of the quantized model with $K = 1, 2, \dots, 5$}
+  \label{tab:overall_top_k_inference}
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+     & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-4} & \textbf{Top-5} \\
+    \midrule
+    \textbf{Entire Dataset} & \num{0.972} & \num{0.983} & \num{0.989} & \num{0.993} & \num{0.995} \\
+    \textbf{Fully Visible Only} & \num{0.986} & \num{0.992} & \num{0.996} & \num{0.998} & \num{0.999} \\ % last three values are not rounded
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \caption{Individual Top-$K$ accuracies of the quantized model with $K = 1, 2, \dots, 5$}
+  \label{tab:individual_top_k_inference}
+  \centering
+  \begin{tabular}{llllll}
+    \toprule
+    \textbf{Object} & \textbf{Top-1} & \textbf{Top-2} & \textbf{Top-3} & \textbf{Top-4} & \textbf{Top-5} \\
+    \midrule
+    \textbf{Nerf Dart} & \num{0.999} & \num{0.999} & \num{0.999} & \num{1.000} & \num{1.000} \\
+    \textbf{American Football} & \num{0.971} & \num{0.977} & \num{0.983} & \num{0.991} & \num{0.993} \\
+    \textbf{Table Tennis Ball} & \num{0.999} & \num{0.999} & \num{1.000} & \num{1.000} & \num{1.000} \\
+    \textbf{Shuttlecock} & \num{0.991} & \num{0.993} & \num{0.993} & \num{0.994} & \num{0.996} \\
+    \textbf{Sporf} & \num{0.995} & \num{0.998} & \num{0.999} & \num{0.999} & \num{1.000} \\
+    \textbf{Arrow} & \num{0.994} & \num{0.995} & \num{0.997} & \num{0.999} & \num{0.999} \\
+    \textbf{Hand Featherball} & \num{0.943} & \num{0.964} & \num{0.980} & \num{0.989} & \num{0.999} \\
+    \textbf{Floorball} & \num{0.990} & \num{0.995} & \num{0.996} & \num{0.996} & \num{0.996} \\
+    \textbf{Spiky Ball} & \num{0.999} & \num{0.999} & \num{0.999} & \num{0.999} & \num{0.999} \\
+    \textbf{Tesafilm} & \num{0.998} & \num{0.999} & \num{0.999} & \num{0.999} & \num{0.999} \\
+    \textbf{Sponge} & \num{0.955} & \num{0.973} & \num{0.985} & \num{0.989} & \num{0.992} \\
+    \textbf{Red Duplo Brick} & \num{0.956} & \num{0.984} & \num{0.993} & \num{0.999} & \num{0.999} \\
+    \textbf{Green Duplo Brick} & \num{0.966} & \num{0.978} & \num{0.987} & \num{0.992} & \num{0.995} \\
+    \textbf{Duplo Figure} & \num{0.946} & \num{0.963} & \num{0.972} & \num{0.978} & \num{0.983} \\
+    \textbf{Foam Die} & \num{0.989} & \num{0.991} & \num{0.994} & \num{0.995} & \num{0.997} \\
+    \textbf{Infant Shoe} & \num{0.897} & \num{0.927} & \num{0.948} & \num{0.969} & \num{0.976} \\
+    \textbf{Stuffed Bunny} & \num{0.991} & \num{0.991} & \num{0.992} & \num{0.993} & \num{0.993} \\
+    \textbf{Goalkeeper Glove} & \num{0.912} & \num{0.941} & \num{0.958} & \num{0.973} & \num{0.981} \\
+    \textbf{Hemp Cord} & \num{0.971} & \num{0.990} & \num{0.995} & \num{0.997} & \num{0.997} \\
+    \textbf{Paper Ball} & \num{0.974} & \num{0.983} & \num{0.989} & \num{0.993} & \num{0.997} \\
+    \textbf{Beer Cap} & \num{0.966} & \num{0.988} & \num{0.994} & \num{0.997} & \num{0.998} \\
+    \textbf{Water Bottle} & \num{0.988} & \num{0.995} & \num{0.997} & \num{0.998} & \num{0.999} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Comparison}
 \label{subsec:verification_and_benchmark:classification_performance:comparison}
+
+As expected, the classification performance of the quantized model is slightly worse than that of the floating-point model.
+% While the floating-point model features a Top-1 accuary of \SI{99.5}{\percent} and a Top-5 accuracy of \SI{100.0}{\percent}, the Top-1 accuary of the
+While the floating-point model features a Top-1 accuary of about \SI{99.5}{\percent}, the Top-1 accuary of the quantized model is only about \SI{97.2}{\percent}.
+% This corresponds to a drop of about \SI{2.3}{\percent} in accuracy due to the quantization process.
+This corresponds to a drop in accuracy of about \SI{2.3}{\percent} due to the quantization process.
+However, since a throw usually creates more than one frame, the average of the probabilities can be used.
+This reduces the impact of a misclassified frame significantly.
+
+% test dataset containing only images in which the object is fully visible
+% More interestingly is the fact that the entire test dataset performs worse than a test dataset where the images in which the object is only partially visible have been removed.
+More interestingly is the fact that the entire test dataset performs worse than a modified test dataset where the images in which the object is only partially visible were removed.
+% While the difference of only \SI{0.3}{\percent} for the floating-point model is not that noticeable, the difference of \SI{1.3}{\percent} for the quantized model is significantly
+% While the difference of only \SI{0.3}{\percent} for the floating-point model is not that noticeable, the difference of \SI{1.3}{\percent} for the quantized model is significantly higher.
+% While the difference of only \SI{0.3}{\percent} for the floating-point model is neglectable, the difference of \SI{1.3}{\percent} for the quantized model is significantly higher.
+% The difference of \SI{1.3}{\percent} for the quantized model is significantly higher.
+% The quantized model performs about \SI{1.3}{\percent} better with the modified dataset.
+% This is a significant performance boost.
+% The quantized model performs about \SI{1.3}{\percent} better with the modified dataset, which corresponds to a significant increase in the Top-1 accuracy.
+The Top-1 accuracy of the quantized model is increased by about \SI{1.3}{\percent} when the modified dataset is used.
+% This corresponds to an increase in the Top-1 accuracy of about \SI{1.3}{\percent}
+
+For this reason, it is highly benefitial to weight the frames according to their occurrence in the throw (see section \ref{subsec:inference:app:weighting}). % or position on the throw?
+Frames from the beginning of the throw, where the object is only partially visible, are weighted less than frames from the middle of the throw, where the object is most likely fully visible.

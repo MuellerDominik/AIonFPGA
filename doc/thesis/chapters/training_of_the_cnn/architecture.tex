@@ -1,4 +1,184 @@
 \section{Architecture}
-\label{sec:architecture}
+\label{sec:training_of_the_cnn:architecture}
+% \todo[inline]{too much 'the', citations, todos, cleanup}
 
+% Designing a \acrlong{cnn} architecture from scratch  (e.g. types and number of layers, number of filters, kernel size).
+% The design of a \acrlong{cnn} architecture from scratch involves choosing the types of layers and their arrangement as well as many hyperparameters.
+% Designing a \acrlong{cnn} architecture from scratch involves choosing the types of layers and their arrangement as well as many hyperparameters.
+Designing a \acrlong{cnn} architecture from scratch requires choosing the types of layers and their arrangement as well as many hyperparameters.
+% There are infinitely many ways to design a \acrlong{cnn} architecture from scratch (e.g. types of layers and their arrangement, many hyperparameters).
+% There is currently no perfect way to design a good model and a lot of trial and error is 
+For this reason, a lot of trial an error is involved in the design process of an adequate model \cite{}. % todo: cite http://www.isikdogan.com/blog/how-to-design-a-convolutional-neural-network.html
+% For this reason, there are a infinitely many ways to design an adequate model and a lot of trial an error is involved in the design process of an adequate model. % todo: cite http://www.isikdogan.com/blog/how-to-design-a-convolutional-neural-network.html
+There are, however, certain design principles that work really well \cite{}: % todo: cite https://towardsdatascience.com/a-guide-to-an-efficient-way-to-build-neural-network-architectures-part-ii-hyper-parameter-42efca01e5d7
+% the deeper in the net, the more filters and lower spatial dimensions (max pooling)
 
+\begin{enumerate}
+  % \item Starting with a low number of filters and increasing 
+  \item Starting with a low number of filters (high-level feature detection)
+  \item Increasing the number of filters towards the end (low-level feature detection)
+  \item Decreasing the spatial dimensions of the feature maps towards the end
+  \item Using kernel sizes of $3\times 3$, $5\times 5$ or $7\times 7$ for convolutional layers
+  \item Using kernel sizes of $2\times 2$ or $3\times 3$ with a stride of two for max-pooling layers
+  \item Adding additional layers until the model is overfitting
+  \item Using state-of-the-art networks as inspiration
+\end{enumerate}
+
+% A summary of all the layers is listed in table \ref{tab:arch}.
+A summary of all the layers of the final \acrshort{cnn} architecture is listed in table \ref{tab:arch}.
+% A kernel size of $5\times 5$ is chosen for the first convolutional layer
+% Due to the large input shape of the frames, a larger kernel size of $5\times 5$ is chosen for the first convolutional layer.
+% The first convolutional layer uses \num{16} filters and a larger kernel size of $5\times 5$ due to the large input shape of the frames.
+The first convolutional layer uses only \num{16} filters and a larger kernel size of $5\times 5$ due to the large dimensions of the input images.
+All other convolutional layers use a kernel size of $3\times 3$ while steadily increasing the number of used filters up to \num{128}.
+% only max pooling is used
+% max amount of poooling layers used (iage size of 5x4)
+% The architecture uses the maximum amount of max-pooling layers for the given input shape.
+The designed architecture uses six max-pooling layers with a kernel size of $2\times 2$ and a stride of two.
+% This reduces the spatial dimensions of the input feature maps down to $4\times 5$.
+This reduces the spatial dimensions of the feature maps to $4\times 5$ (height $\times$ width).
+% The fully-connected layer \texttt{fc8} is several times larger than the output layer \texttt{fc9}.
+The output of the fully-connected layer \texttt{fc8} is about the size of the output layer \texttt{fc9} squared.
+This allows the output layer to combine many of the different high-level features to create a confident prediction.
+% This allows the output layer a variety of combinations of the different high-level features 
+
+% no more layers were added (was simply not necessary, it converged incredible fast)
+Even though the model was not yet overfitting, no additional layers were added.
+% The reason for this is that the classification performance is already exceptional with the current architecture.
+% The reason for this is that with the current architecture the classification performance is already exceptional (see section \ref{sec:training_of_the_cnn:training}).
+The reason for this is that with the current architecture the classification performance is already exceptional.
+
+% number of parameter relatively low compared to state-of-the-art networks
+% compare this and back up with the citation below
+% Furthermore, the number of trainable parameters (weights) is relative low compared to state-of-the-art networks (e.g. VGG, ResNet, Inception) \cite{}. % todo: cite https://keras.io/api/applications/
+Furthermore, the number of trainable parameters (weights) is relative low compared to state-of-the-art networks like VGG, ResNet or Inception \cite{}. % todo: cite https://keras.io/api/applications/
+This increases the throughput considerably, as less mathematical operations are required.
+% talk about the importance of keeping the parameters of the first fc layer down!
+% The keys to keeping the total number of trainable parameter low are the shape of the feature maps of the last convolutional layer and the artifical output neurons of the first dense layer.
+% This is evident when analyzing the number of trainable parameters listed in table \ref{tab:arch}.
+The key to keeping the total number of trainable parameter low is evident when analyzing table \ref{tab:arch}.
+% A whopping \num{1311232} of the \num{1614486} total weights stem from the connection between those layers.
+% A whopping \num{1311232} of the \num{1614486} total weights can be attributed to the connection between these layers.
+A whopping \num{1311232} of the \num{1614486} total weights can be attributed to the connection between the feature maps of the last convolutional layer \texttt{conv7} and the artifical output neurons of the first dense layer \texttt{fc8}.
+This accounts for \SI{81.22}{\percent} of all trainable parameters.
+% This is the reason why the spatial dimensions of the feature maps should be decreased towards the end.
+For this reason the spatial dimensions of the feature maps should be decreased towards the end.
+% For this reason the spatial dimensions of the feature maps should decrease towards the end. % todo: maybe use this?
+
+\begin{table}
+  \caption{Layers of the \acrshort{cnn} architecture}
+  \label{tab:arch}
+  \centering
+  \begin{tabular}{lllllll}
+    \toprule
+    \textbf{Layer} & \textbf{Type} & \textbf{Activation} & \textbf{Filters} & \textbf{Kernel} & \textbf{Output Shape} & \textbf{Param \#} \\
+    \midrule
+    \textbf{conv1} & \texttt{Conv2D} & \acrshort{relu} & \num{16} & $5\times 5$ & $256\times 320\times 16$ & \num{1216} \\
+    \textbf{pool1} & \texttt{MaxPooling2D} &  &  & $2\times 2$ & $128\times 160\times 16$ & \num{0} \\
+    \midrule
+    \textbf{conv2} & \texttt{Conv2D} & \acrshort{relu} & \num{32} & $3\times 3$ & $128\times 160\times 32$ & \num{4640} \\
+    \textbf{pool2} & \texttt{MaxPooling2D} &  &  & $2\times 2$ & $64\times 80\times 32$ & \num{0} \\
+    \midrule
+    \textbf{conv3} & \texttt{Conv2D} & \acrshort{relu} & \num{32} & $3\times 3$ & $64\times 80\times 32$ & \num{9248} \\
+    \textbf{pool3} & \texttt{MaxPooling2D} &  &  & $2\times 2$ & $32\times 40\times 32$ & \num{0} \\
+    \midrule
+    \textbf{conv4} & \texttt{Conv2D} & \acrshort{relu} & \num{64} & $3\times 3$ & $32\times 40\times 64$ & \num{18496} \\
+    \textbf{pool4} & \texttt{MaxPooling2D} &  &  & $2\times 2$ & $16\times 20\times 64$ & \num{0} \\
+    \midrule
+    \textbf{conv5} & \texttt{Conv2D} & \acrshort{relu} & \num{64} & $3\times 3$ & $16\times 20\times 64$ & \num{36928} \\
+    \textbf{pool5} & \texttt{MaxPooling2D} &  &  & $2\times 2$ & $8\times 10\times 64$ & \num{0} \\
+    \midrule
+    \textbf{conv6} & \texttt{Conv2D} & \acrshort{relu} & \num{128} & $3\times 3$ & $8\times 10\times 128$ & \num{73856} \\
+    \textbf{pool6} & \texttt{MaxPooling2D} &  &  & $2\times 2$ & $4\times 5\times 128$ & \num{0} \\
+    \midrule
+    \textbf{conv7} & \texttt{Conv2D} & \acrshort{relu} & \num{128} & $3\times 3$ & $4\times 5\times 128$ & \num{147584} \\
+    \midrule
+    \textbf{flatten} & \texttt{Flatten} &  &  &  & \num{2560} & \num{0} \\
+    \textbf{fc8} & \texttt{Dense} & \acrshort{relu} &  &  & \num{512} & \num{1311232} \\
+    \textbf{fc9} & \texttt{Dense} &  &  &  & \num{22} & \num{11286} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Visualization}
+\label{subsec:training_of_the_cnn:architecture:visualization}
+% The final architecture of the \acrshort{cnn} model is visualized in figure \ref{fig:arch}.
+% Figure \ref{fig:arch} shows the final architecture of the \acrshort{cnn} model.
+% Figure \ref{fig:arch} visualizes the final architecture of the \acrshort{cnn} model listed in table \ref{tab:arch}.
+Figure \ref{fig:arch} visualizes the final architecture of the \acrshort{cnn} model.
+The visualization was created with Ti\textit{k}Z and the help of the open-source repository \textit{PlotNeuralNetwork} \cite{example}.
+% The final architecture of the \acrshort{cnn} model shown in figure \ref{fig:arch} was visualized with the help of the open source tool PlotNeuralNetwork \cite{}.
+% todo: cite https://github.com/HarisIqbal88/PlotNeuralNet or https://doi.org/10.5281/zenodo.2526396
+% Haris Iqbal. (2018, December 25). HarisIqbal88/PlotNeuralNet v1.0.0 (Version v1.0.0). Zenodo. http://doi.org/10.5281/zenodo.2526396
+% @software{haris_iqbal_2018_2526396,
+%   author       = {Haris Iqbal},
+%   title        = {HarisIqbal88/PlotNeuralNet v1.0.0},
+%   month        = dec,
+%   year         = 2018,
+%   publisher    = {Zenodo},
+%   version      = {v1.0.0},
+%   doi          = {10.5281/zenodo.2526396},
+%   url          = {https://doi.org/10.5281/zenodo.2526396}
+% }
+
+% todo: lots of sentences starting with 'the'
+The boxes represent the outputs of the different layers.
+% The light orange boxes with darker orange bands represent convolutional layers with the \acrshort{relu} activation function.
+% The light orange boxes with darker orange bands represent convolutional layers, which use the \acrshort{relu} activation function.
+% The light orange boxes with darker orange bands represent the feature maps of the convolutional layers, which use the \acrshort{relu} activation function.
+% The light orange boxes with darker orange bands represent the feature maps of the convolutional layers with the \acrshort{relu} activation function applied.
+% The light orange boxes represent the feature maps of the convolutional layers and the darker orange bands indicate that the \acrshort{relu} activation function is applied.
+On the one hand, the light orange boxes represent the feature maps of the convolutional layers and, on the other hand the purple boxes represent the artificial output neurons of the dense layers.
+The darker colored bands on the boxes indicate that the \acrshort{relu} activation function is applied.
+% darker orange bands indicate that the \acrshort{relu} activation function is applied.
+% Again, the darker purple band of \texttt{fc8} indicates that the \acrshort{relu} activation function is applied
+The red boxes represent max-pooling layers, which decrease the spatial dimensions.
+% The dashed lines between the output of \texttt{conv7} and \texttt{fc8} depict the flattening and the dense connection between of the convolutional layer
+% The dashed lines between the output of \texttt{conv7} and \texttt{fc8} depict the flattening as well as the dense connection between the layer outputs.
+% The dashed lines between the output of \texttt{conv7} and \texttt{fc8} depict the flattening as well as the dense connection.
+The dashed lines between the output of \texttt{conv7} and \texttt{fc8} depict the flattening in addition to the dense connection.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{arch}
+  \caption{Final architecture of the \acrlong{cnn}}
+  \label{fig:arch}
+\end{figure}
+
+\subsection{Implementation}
+\label{subsec:training_of_the_cnn:architecture:implementation}
+% The dataset augmentation is done with the Python script \texttt{dataset\_generator.py}, which uses NumPy as well as the Python implementation of the \acrfull{opencv}.
+% The \acrshort{cnn} architecture is implemented in the Python script \texttt{cnn.py}, as shown in listing \ref{lst:arch}.
+The \acrshort{cnn} architecture is defined in the Python script \texttt{cnn.py}, as shown in listing \ref{lst:arch}.
+% implementation with TF 2.2.0, Keras backend/frontend?!, PYthon
+% Implementation of the Keras API meant to be a high-level API for TensorFlow.
+% The script uses the open-source software library TensorFlow v2.2.0, which serves as the default backend for Keras
+% The script uses the open-source software library TensorFlow v2.2.0, along with the high-level Keras \acrshort{api} in the \texttt{tf.keras} module \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras
+The script uses the open-source software library TensorFlow v2.2.0, along with the high-level Keras \acrshort{api} implemented in the \texttt{tf.keras} module \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras
+% todo: or maybe cite https://www.tensorflow.org/api_docs/python/tf/keras
+% easy implementation with the sequential model
+To define the architecture a \texttt{Sequential} model is used to arrange the desired layers in a plain stack \cite{}. % todo: cite https://www.tensorflow.org/guide/keras/sequential_model
+
+\begin{lstlisting}[style=python, caption={Sequential model}, label=lst:arch]
+# Convolutional Neural Network Architecture
+# Convolution layers
+model = models.Sequential()
+model.add(layers.Conv2D(16, (5, 5), padding='same', activation='relu', input_shape=fh.inf_shape))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(32, (3, 3), padding='same', activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(32, (3, 3), padding='same', activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(128, (3, 3), padding='same', activation='relu'))
+
+# Dense layers
+model.add(layers.Flatten())
+model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dense(22))
+\end{lstlisting}

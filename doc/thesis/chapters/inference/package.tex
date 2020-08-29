@@ -1,0 +1,68 @@
+\section{Package}
+\label{sec:inference:package}
+% \todo[inline]{change paragraphs to sections?, todos, cleanup}
+
+% The inference application as well as the Python scripts used during the training require a lot of similar functionality (e.g. database connectivity, settings).
+Both the inference application and the Python scripts used during the training require a lot of similar functionality (e.g. settings, constants, database connectivity).
+For this reason the \texttt{fhnwtoys} Python package, consisting of several modules (\texttt{.py} files), was created.
+
+\subsection{Structure}
+\label{subsec:inference:package:structure}
+There are three main modules:
+\begin{enumerate}
+  \item Definitions (\texttt{definitions.py})
+  \item Settings (\texttt{settings.py})
+  \item Enums (\texttt{enums.py})
+\end{enumerate}
+
+The \texttt{fhnwtoys.definitions} module contains, as the name suggests, several definitions (functions and classes).
+These definitions are only used during the training and verification process on the host.
+
+The \texttt{fhnwtoys.settings} module contains various names and settings that are used throughout the project (e.g. the names of the objects, file names, camera settings).
+
+The \texttt{fhnwtoys.enums} module contains a bunch of enumerations which provide a convenient way to work with a set of related constants \cite{}. % todo: cite https://docs.python.org/3/library/enum.html
+% These make the code clearer as they 
+% This improves the readability of the code by removing the necessity of magic numbers
+This improves the readability of the code by removing magic numbers (unexplained numerical constants).
+
+% There are two additional modules, which are meant to be for importing:
+% There are two additional modules, which can be used to import the required main modules:
+% Additionally, there are two modules which can be used to import the required main modules:
+Additionally, there are two modules that can be used to import the required main modules:
+\begin{enumerate}
+  \item Training (\texttt{training.py})
+  \item Inference (\texttt{inference.py})
+\end{enumerate}
+
+Importing the \texttt{fhnwtoys.training} module provides access to all three main modules.
+
+Importing the \texttt{fhnwtoys.inference} module is the same as importing the \texttt{fhnwtoys} package directly, as it is an alias for the \texttt{fhnwtoys.\_\_init\_\_} module.
+However, explicitly importing the \texttt{fhnwtoys.inference} module is the preffered method.
+This provides acces to the \texttt{fhnwtoys.settings} and \texttt{fhnwtoys.enums} modules.
+
+% % -------------------------------
+% \paragraph{Importing the Package}
+\subsection{Importing the Package}
+\label{subsec:inference:package:importing_the_package}
+Listing \ref{lst:importing_package} shows how to import the \texttt{fhnwtoys} package.
+% The imported package is aliased as \texttt{fh}.
+For convenience purposes, the imported package is aliased as \texttt{fh}.
+
+\begin{lstlisting}[style=python, caption={Importing the \texttt{fhnwtoys} Python package}, label=lst:importing_package]
+import fhnwtoys.training as fh # training and verification
+import fhnwtoys.inference as fh # inference application
+\end{lstlisting}
+
+% % ----------------------
+% \paragraph{Installation}
+\subsection{Installation}
+\label{subsec:inference:package:installation}
+A setup script is provided which allows for an easy installation of the \texttt{fhnwtoys} package.
+% A setup script allows for an easy installation of the \texttt{fhnwtoys} package.
+% The \texttt{fhnwtoys} package can be installed from the \texttt{packages/} directory with the following command:
+% It can be installed from the \texttt{packages/} directory with the following command:
+It can be installed with the following command from the \texttt{packages/} directory:
+
+\begin{lstlisting}[style=bash]
+sudo pip3 install -e .
+\end{lstlisting}

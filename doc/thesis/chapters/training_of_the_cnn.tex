@@ -1,6 +1,18 @@
 \chapter{Training of the CNN}
 \label{ch:training_of_the_cnn}
+% \todo[inline]{todos, cleanup}
 
+% Building a \acrlong{cnn} requires the design and training of a \acrshort{cnn} model.
+Building a \acrlong{cnn} from scratch leaves a lot of design choices and requires multiple steps.
+% In a first step, a \acrshort{cnn} architecture is designed and 
+% The first step involves the design of the desired \acrshort{cnn} architecture and the tuning of the hyperparameters.
+The first step involves the design of the desired \acrshort{cnn} architecture. % todo: remove desired?
+In a second step, the labeled dataset is used to fit the \acrshort{cnn} model.
+If necessary, the hyperparameters of the \acrshort{cnn} architecture can be tuned in a third step.
 
+% This chapter describes these steps
+This chapter describes the dataset generation, the design of the \acrshort{cnn} architecture and the actual training of the \acrshort{cnn} model. % todo: remove actual?
 
+\input{chapters/training_of_the_cnn/dataset}
 \input{chapters/training_of_the_cnn/architecture}
+\input{chapters/training_of_the_cnn/training}
