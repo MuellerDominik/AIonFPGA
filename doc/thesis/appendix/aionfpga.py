@@ -132,7 +132,7 @@ def main():
   libcamera.set_frames_to_acquire(fh.frames_to_acquire)
 
   # Initialize Camera
-  initialize = fh.ReturnCodes.NOT_INITIALIZED
+  initialize = fh.ReturnCodes.NOT_INITIALIZED(*\label{lst:ln:camera_init1}*)
   initialization_tries = 0
 
   while initialize != fh.ReturnCodes.SUCCESS:
@@ -143,7 +143,7 @@ def main():
         return_code = initialize
       ui.update_boot_window(f'Camera Error ({return_code}), try to replug the camera.')
     initialize = libcamera.initialize()
-    initialization_tries += 1
+    initialization_tries += 1(*\label{lst:ln:camera_init2}*)
 
   # UI: Ready
   ui.update_boot_window('READY')
@@ -153,7 +153,7 @@ def main():
 
   while True:
     # Reset the predictions
-    predictions = np.zeros((fh.frames_to_consider, fh.num_objects), dtype=np.float32)
+    predictions = np.zeros((fh.frames_to_consider, fh.num_objects), dtype=np.float32)(*\label{lst:ln:predictions_matrix}*)
 
     # Start acquisition (threaded)
     # todo: error handling ('Unexpected Error, system reboot required.')
@@ -172,27 +172,27 @@ def main():
 
     # Image processing (including inference)
     for idx, frame_id in enumerate(range(throw_bgn_idx, throw_end_idx - 1)):
-      frame_ptr = libcamera.get_frame_ptr(frame_id)
+      frame_ptr = libcamera.get_frame_ptr(frame_id)(*\label{lst:ln:image_preprocessing1}*)
       raw_frame = np.ctypeslib.as_array(frame_ptr, shape=fh.raw_shape) # Raw Baumer BayerRG8 frame
       # Transform Baumer BayerRG8 to BGR8 (Baumer BayerRG = OpenCV BayerBG)
       frames[idx] = cv2.cvtColor(raw_frame, cv2.COLOR_BayerBG2BGR) # Color space conversion
       # Image scaling using nearest-neighbor interpolation
       frame_resized = cv2.resize(frames[idx], fh.inf_dsize, interpolation=fh.Interpolation.NEAREST)
-      frame_inference = frame_resized.astype(np.float32) / 255.0 # Normalization (float32 precision)
+      frame_inference = frame_resized.astype(np.float32) / 255.0(*\label{lst:ln:image_preprocessing2}*) # Normalization (float32 precision)
 
       # Inference
       n2cube.dpuSetInputTensorInHWCFP32(task, kernel_conv_input, frame_inference, input_tensor_size)
-      n2cube.dpuRunTask(task)
+      n2cube.dpuRunTask(task)(*\label{lst:ln:image_classification}*)
 
       # Softmax function (normalized exponential function)
       # Confident predictions lead to all zeros and a NaN, when run through `n2cube.dpuRunSoftmax(.)`
       # This section replaces the first occurrence of NaN in the `prediction` array with 1.0 and sets everything else to 0.0
-      prediction = n2cube.dpuRunSoftmax(output_tensor_address, output_tensor_channel, output_tensor_size//output_tensor_channel, output_tensor_scale)
+      prediction = n2cube.dpuRunSoftmax(output_tensor_address, output_tensor_channel, output_tensor_size//output_tensor_channel, output_tensor_scale)(*\label{lst:ln:softmax1}*)
       nan = np.isnan(prediction)
       if nan.any():
         nan_idx = nan.argmax() # returns the index of the first occurrence of NaN
         prediction = np.zeros((fh.num_objects,), dtype=np.float32)
-        prediction[nan_idx] = 1.0
+        prediction[nan_idx] = 1.0(*\label{lst:ln:softmax2}*)
       predictions[idx] = prediction
 
       # Only consider `fh.frames_to_consider` frames
