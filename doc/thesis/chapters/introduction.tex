@@ -3,58 +3,60 @@
 \label{ch:introduction}
 
 Humanity has been trying to understand how thinking works for thousands of years and is making considerable progress.
-One of the newest fields in science and engineering is the \acrfull{ai} which goes even further than just understanding the thinking process.
-The attempt is to build own intelligent entities \cite{ai}.
+One of the newest fields in science and engineering is \acrfull{ai}, which goes even further than just understanding the thinking process.
+It attempts to build intelligent entities \cite{ai}.
 For example, in most vehicles today, the human being chooses which reaction is the best.
-However, humans are influenced, distracted and have reactions that are simply too slow to avoid accidents.
-When these tasks are given to a computer, something in the background is needed that is able to recognize dangers and react appropriately.
-To do this, an image must be taken and evaluated.
-Because the dangers are not always the same, intelligence is needed to make the decisions.
-This is where \acrshort{ai} comes in.
+However, humans are influenced, distracted and have reaction times that are simply too slow to avoid accidents.
+When these tasks are delegated to a computer, a background task is required that is capable of identifying threats and reacting appropriately.
+For this purpose, images must be acquired and evaluated.
+Since the dangers are not always the same, intelligence is required to make the decisions.
+This is where \acrshort{ai} comes into play.
 The progress in the field of self-driving cars through \acrshort{ai} has been considerable in the recent years.
-All Tesla cars being produced now have full self-driving hardware and only need a software update to replace the driver \cite{tesla_self_driving_cars}.
-Another example is the optical quality control.
-Thanks to computers, the accuracy can be optimized and the throughput can be increased compared to human workers.
-Both examples require fast and accurate image recognition which is usually done by a so called \acrfull{cnn}. 
+All Tesla vehicles now in production are equipped with full self-driving hardware and require only a software update to replace the driver \cite{tesla_self_driving_cars}.
+Another example is optical quality control.
+Thanks to computers, the accuracy can be optimized and the throughput can be increased compared to human labor.
+Both examples require fast and accurate image recognition, which is usually performed by a so-called \acrfull{cnn}.
 
-In order to keep up with the current state of development, the \acrfull{ise} which is part of the \acrfull{fhnw} has started this project that deals with these two aspects.
+In order to keep up with the current state of development, the institute for sensors and electronics (ISE) which is part of the University of Applied Sciences and Arts Northwestern Switzerland (FHNW) has launched this project, which deals with these two aspects.
 
-There are two main targets in the project:
+This project has two main objectives:
 
 \begin{enumerate}
-	\item Showing the \acrshort{fhnw} how to run hardware accelerated \acrshort{ai}.
-	\item Building an exhibition object for the \acrshort{ise}, which can be presented at fairs. 
+	\item Showing the FHNW how to run hardware accelerated \acrshort{ai}
+	\item Developing an eye-catcher for the ISE, which can be presented at trade fairs
 \end{enumerate}
 
-Apart from the hardware, which is an Ultra96-V2 development board, the procedure and the order was not defined more precisely, which allowed some leeway.
+Apart from the hardware, which is an Ultra96-V2 development board, the procedure was not defined more precisely, which allowed a certain leeway.
 The task was defined more precisely by the students as follows:
 
 To meet the requirements of fast image recognition, objects are thrown past a high-speed camera.
 These objects are taken from a set of 22 items such as a floorball or a stuffed bunny.
-The \acrshort{cnn} shall be described and trained with an end-to-end open source platform for machine learning called Tensorflow \cite{tensorflow_main}.
-The throwing booth should function as a plug and play device.
-This makes it easier to use at a fair.
-In appendix \ref{app:problem_statement} the task definition can be seen.
+The \acrshort{cnn} shall be described and trained with an end-to-end open-source platform for machine learning called Tensorflow \cite{tensorflow_main}.
+The throwing booth should function as a plug-and-play device.
+This makes it easier to use at a trade fair.
+Appendix \ref{app:problem_statement} shows the task definition.
 
-In a previous project work the throwing booth was constructed and built up.
-A camera and the lighting were evaluated, bought and mounted.
-Furthermore a data set was collected, which contains at least 480 pictures of each object. 
-For each image in the database, labels have been set to indicate what kind of object it is.
-Also it is noted if the picture is not good (for example because a hand was on the picture) or if the object is cut off at the edge  of the image.
+During the previous project, the throwing booth was designed and built.
+An industrial camera and suitable lighting were evaluated, purchased and installed.
+Furthermore, a dataset was collected, which consists of more than \num{15000} usable frames with at least \num{485} frames of each object.
+Each frame in the dataset is labeled and therefore indicates what kind of object it is.
+% For each image in the database, labels have been set to indicate what kind of object it is.
+% Also it is noted if the picture is not good (for example because a hand was on the picture) or if the object is cut off at the edge of the image.
 
-In this project an \acrfull{os} for the processor of the Ultra96-V2 was set up.
+In this project an \acrfull{os} for the processor of the Ultra96-V2 is set up.
 The \acrshort{os} can control the \acrfull{fpga}, which is included in the \acrfull{mpsoc}.
-A \acrfull{dpu} was programmed on this \acrshort{fpga}, which performs the high speed image recognition.
-The trained neural network was quantized before.
-This makes it possible to execute the image recognition by using C-code commands.
-The results were verified on accuracy and throughput.
+On this \acrshort{fpga} a \acrfull{dpu} is implemented, which performs the high-speed image recognition.
+% The trained neural network was quantized before.
+% This makes it possible to execute the image recognition by using C-code commands. % why C-code?
+The results are verified for accuracy and throughput.
 
-This report contains five main parts.
-The first one is the theoretical background about \acrfull{ai}.
-The second part shows how the \acrlong{cnn} is trained.
+This thesis contains seven main parts.
+The first part is the theoretical background about \acrfull{ai}.
+The second part describes the training of the \acrlong{cnn}.
 Next comes a chapter that describes the throwing booth.
 The chapter embedded platform introduces two operating systems and describes how to use them.
-The results of the \acrshort{cnn} are documented in the chapter verification and benchmark.
-After these chapters there is a conclusion and the personal experiences with Xilinx, Avnet and Tensorflow.
+The inference application is described in the chapter inference.
+The results of the \acrshort{cnn} are documented in the chapter verification.
+After these chapters there is a conclusion and our personal experiences with Xilinx, Avnet and TensorFlow.
 
-All components developed for this project fall under the Apache 2.0 license and are freely available on GitHub.
+All components developed for this project fall under the Apache 2.0 license and are freely available on GitHub (\url{https://git.io/aionfpga}).
