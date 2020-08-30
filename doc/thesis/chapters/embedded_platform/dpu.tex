@@ -25,7 +25,7 @@ For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
 Because of a hardware design mistake on the Ultra96-V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
 On higher frequencies the \acrfull{pmic} reboots the whole system.
 It is possible to fix this issue, but it needs both a hardware and a software change \cite{pmic_issue}.
-The frequency can be set  by the setting the variable  freqHz=150000000:DPUCZDX8G\_1.aclk.
+The frequency can be set  by setting the variable  freqHz=150000000:DPUCZDX8G\_1.aclk.
 Another way is using the predefined frequencies from Xilinx.
 Table \ref{tab:frequencies_ids} shows the possibilities.
 
@@ -107,7 +107,7 @@ Depthwise convolution is enabled because it allows for more flexibility with the
 
 \paragraph{AveragePool}
 Average pooling can be done on the \acrshort{dpu} or not.
-The supported sizes go from $2\cdot2$ to $8\cdot8$, with only square sizes supported.
+The supported sizes go from $2\times2$ to $8\times8$, with only square sizes supported.
 Average pooling is activated to accelerate the whole process.
 
 \paragraph{ReLU Type}
@@ -117,10 +117,10 @@ Because of the low resource consumption LeakyReLU is also included.
 So if the \acrshort{cnn} is changed the \acrshort{dpu} does not have to be rebuilt. 
 
 \paragraph{Softmax}
-The softmax function can be done in hardware or in software.
+The softmax function can be implemented in hardware or in software.
 Implemented on hardware, the function is about 160 times faster than a software implementation.
 The function needs approximately \SI{10000}{\acrshortpl{lut}}, four \acrshortpl{bram} and 14 \acrshortpl{dsp}.
-If the the resources run out the \acrlong{dnnc} implements the function independently in software.
+If the resources run out the \acrlong{dnnc} implements the function independently in software.
 The softmax function is not available in Zynq-7000 devices \cite{dpu_product_guide}. 
 
 Implementing the softmax in hardware is not done using a define, but during the build process.
@@ -163,7 +163,7 @@ In a next step the created configuration files need to be copied to the \texttt{
 Now, the Xilinx tools Vitis and \acrshort{xrt} must be sourced as shown in listing \ref{lst:source_tools}.
 The makefile checks if all required tools are installed and sourced and then starts Vivado.
 During the building process which can take more than an hour the bitstream is generated. 
-After running the makefile in the \texttt{boards} directory with the parameter BOARD=Ultra96, the files \texttt{dpu.bit}, \texttt{dpu.hwh} and \texttt{dpu.xclbin} are created and located in the same directory as the configuration files where stored.
+After running the makefile in the \texttt{boards} directory with the parameter BOARD=Ultra96, the files \texttt{dpu.bit}, \texttt{dpu.hwh} and \texttt{dpu.xclbin} are created and located in the same directory as the configuration files were stored.
 Those files can be copied to the board and the customized \acrshort{dpu} is ready to use.
 
 When working with Petalinux the generated \texttt{BOOT.BIN} is of interest as well.

@@ -1,6 +1,6 @@
 \section{Model Deployment}
 \label{sec:embedded_platform:model_deployment}
-Xilinx provides functions to prepare the in chapter \ref{ch:training_of_the_cnn} deployed model for the \acrshort{dpu}.
+Xilinx provides functions to prepare the deployed model described in chapter \ref{ch:training_of_the_cnn} for the \acrshort{dpu}.
 The preparation is done in two main steps:
 \begin{enumerate}
 	\item Quantization
@@ -52,9 +52,10 @@ Listing \ref{lst:quantize} shows an example how the quantize command could look 
   --method 1
 \end{lstlisting}
 
-The input node names as well as the output node names are set when generating the frozen graph.
+The input node name as well as the output node name are set when generating the frozen graph.
 These are the first and last entries when the layers are listed.
-The parameter input\_frozen\_graph is the path and name of the frozen graph generated in section \ref{sec:architecture}. \todo[inline]{Correct link to section}
+The parameter input\_frozen\_graph is the path and name of the frozen graph generated as described in subsection \ref{subsec:training_of_the_cnn:training:saving_of_the_model}.
+
 The input\_nodes defines the first layer to be quantized and the last layer is set by the output\_nodes.
 The input\_fn is a python script which processes the calibration images as it is done during inference.
 Amongst others the path to the calibration dataset is set in the python script.
@@ -67,7 +68,7 @@ When method is set to 0 no values are saturated during quantization which makes 
 \paragraph{Dump}
 It is possible to dump the quantized model for example to debug or for better understanding of the deployed \acrshort{cnn}.
 The difference between the listing \ref{lst:quantize} and the dump command is the batch size which is now called max\_dump\_batches and can be set to one.
-The second difference is the input\_frozen\_graph should no be the quantized output.
+The second difference is that the input\_frozen\_graph should not be the quantized output.
 There is one more parameter called dump\_float.
 If dump\_float is set to 1 the float weights and activations are dumped as well.
 The default is 0.
@@ -85,7 +86,7 @@ Therefore, pruning is not applied in this project.
 \subsection{Compile}
 \label{subsec:embedded_platform:model_deployment:compile}
 According to the Vitis AI quantize tool the compile command is named vai\_c\_tensorflow.
-Goal of the compiler is to map the network model into a highly optimized \acrshort{dpu} instruction sequence.
+The goal of the compiler is to map the network model into a highly optimized \acrshort{dpu} instruction sequence.
 
 Start compiling can be done like shown in listing \ref{lst:compile}.
 
