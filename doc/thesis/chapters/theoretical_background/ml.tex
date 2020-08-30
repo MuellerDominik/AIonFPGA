@@ -1,4 +1,85 @@
 \section{Machine Learning}
 \label{sec:theoretical_background:ml}
 
-\Acrlong{ml} is a branch of \acrlong{ai} that aims 
+% \Acrlong{ml} is a branch of \acrlong{ai} that aims to learn from data.
+\Acrlong{ml} is a branch of \acrlong{ai} that essentially aims to give computers the ability to learn from data.
+Therefore, it deals with the study of algorithms that computers use to perform certain tasks without using explicit instructions \cite[p.~97]{deeplearningbook}.
+
+% ------------------------
+\paragraph{Generalization}
+% overfitting
+% generalization (noise can help)
+The goal of the learning process is to generalize and not to memorize the samples of the training dataset.
+% A model that fails to generalize is either subject to underfitting or overfitting.
+A model that fails to generalize can be subject to underfitting or overfitting.
+% The two central challenge in \acrlong{ml} are underfitting and overfitting.
+On the one hand, underfitting occurs when the model is not able to reach an acceptable classification accuracy.
+Overfitting, on the other hand, refers to the situation where the gap between the training accuracy and the validation accuracy is too large \cite[p.~108--114]{deeplearningbook}.
+
+% ---------------------------------------------
+\paragraph{Supervised and Unsupervised Learning}
+\Acrlong{ml} algorithms can generally be divided into supervised and unsupervised learning algorithms.
+% The distinction is made on the basis of the kind of experience they are allowed to have
+% The distinction is made on the basis of the kind of dataset
+% The distinction is based on the type of datasets the algorithm is allowed to experience \cite[p.~102--105]{deeplearningbook}.
+The distinction is based on the type of datasets used during training \cite[p.~102--105]{deeplearningbook}.
+% The majority of \acrlong{ml} algorithms can be divided into supervised and unsupervised learning algorithms \cite[p.~102--105]{deeplearningbook}.
+
+Supervised learning algorithms use labeled datasets to learn.
+The algorithm takes a guess on a piece of data from the dataset and this guess is then checked against the label (i.e. the correct answer).
+% This enables the algorithm to adjust itself and therefore to make it guess better.
+This enables the algorithm to adjust itself and therefore to improve future predictions.
+
+Unsupervised learning algorithms, however, work with unlabeled data and therefore only operate on the input data.
+The algorithm must learn to make sense of the input data, as it has no means of correcting itself.
+Unsupervised learning is usually used in problems that involve finding groups in data or summarizing the distribution of data.
+% The majority of all data is not labeled and therefore the potential of unsupervised learning is enormous.
+% The improvement of unsupervised learning is essential for the future of artificial intelligence.
+
+% -----------------------
+\paragraph{Deep Learning}
+% Deep learning is a specific kind of \acrlong{ml}.
+% Deep learning is a subset of \acrlong{ml}, which was developed to improve the ability to generalize
+% Deep learning is a subset of \acrlong{ml}, which was developed to improve the ability to generalize
+Deep learning is a subset of \acrlong{ml} that was developed to achieve better results than tradiotional algorithms.
+Deep learning algorithms are combinations of a dataset, a cost function, an optimizer and a model.
+The best results are achieved by using deep learning architectures in combination with large datasets.
+% The word \textit{deep} in deep learning refers to the large number of layers used in a model \cite[p.~151--152]{deeplearningbook}.
+% The word \textit{deep} in \textit{deep learning} refers to the large number of layers in a model \cite[p.~151--152]{deeplearningbook}.
+% The word \textit{deep} in \textit{deep learning} refers to the large number of layers present in a model \cite[p.~151--152]{deeplearningbook}.
+The word \textit{deep} in \textit{deep learning} refers to the large number of layers in a network \cite[p.~151--152]{deeplearningbook}.
+
+% % -------------------------
+% \paragraph{Hyperparameters}
+% Many \acrlong{ml} algorithms require the specification of so-called hyperparameters.
+% These are determined outside of the learning algorithm itself. % remove of
+
+
+
+
+
+% \subsection{Backpropagation}
+% \label{subsec:theoretical_background:cnn:backpropagation}
+
+% % A central aspect of 
+
+% Backpropagation is a commonly used algorithm to fit a model.
+% It is based on stochastic gradient descent
+% It computes the gradient of the loss function 
+
+% % todo: cite http://neuralnetworksanddeeplearning.com/chap2.html
+
+
+
+
+
+% citation
+% @book{Goodfellow-et-al-2016,
+%     title={Deep Learning},
+%     author={Ian Goodfellow and Yoshua Bengio and Aaron Courville},
+%     publisher={MIT Press},
+%     note={\url{http://www.deeplearningbook.org}},
+%     year={2016}
+% }
+
+

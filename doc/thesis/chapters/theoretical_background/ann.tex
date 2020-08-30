@@ -1,7 +1,75 @@
 \section{Artificial Neural Network}
 \label{sec:theoretical_background:ann}
 
-An \acrlong{ann} is a model used in \acrshort{ml}
+% An \acrlong{ann} is a model used in \acrshort{ml}, % p.~727--
+An \acrlong{ann} is a model used in \acrshort{ml} which consists of artificial neurons and weighted connections between those neurons.
+% It usually consists of an input layer, several hidden layers and an output layer.
+They usually features an input layer, several hidden layers and an output layer.
+The individual layers consist of an arbitrary number of artificial neurons, which are connected to one another \cite[p.~33-36]{nn}.
+
+% The simplest \acrshort{ann} is the feedforward neural network, where the information flows in only one direction.
+The simplest \acrshort{ann} is the feedforward neural network, where the information propagates in only one direction.
+% artificial neurons
+% sums up inputs + bias
+% applies activation function
+% A common propagation function is the weighted sum of the neurons from the previous layer.
+A common propagation function is the weighted sum of the neurons from the previous layer.
+% The output of each neuron is multiplied with the weight ascociated to the connection between the two neurons.
+Therefore, the output of each neuron $i$ is multiplied with the weight $w_{i, j}$ ascociated to the connection between the two neurons.
+% These values are then summed up and a bias term is added.
+% These values are then summed up and added to a bias term.
+These values are summed up and added to a bias term.
+In a last step, an activation function is applied, which results in equation \ref{eq:artificial_neuron}.
+
+\begin{equation}
+  % y_j = a\left(\sum\limits_{i=1}^{m} (x_i \cdot w_{i, j}) + b\right)
+  % y_j = a\left(\sum\limits_{i=1}^{m} x_i w_{i, j} + b\right)
+  y_j = a\left(\sum\limits_{i} x_i \cdot w_{i, j} + b\right)
+  \label{eq:artificial_neuron}
+\end{equation}
+
+where
+
+\begin{tabular}{lll}
+  $y_j$ & = & output of neuron $j$ \\
+  $a(.)$ & = & activation function \\
+  % $m$ & = & number of neurons in the previous layer \\
+  $x_i$ & = & output of neuron $i$ from the previous layer \\
+  $w_{i, j}$ & = & weight $i, j$ connecting the output of neuron $i$ with the input of neuron $j$ \\
+  $b$ & = & bias \\
+\end{tabular}
+\\
+
+% todo: cite
+% @Book{ Kriesel2007NeuralNetworks, 
+%        author = { David Kriesel }, 
+%        title =  { A Brief Introduction to Neural Networks },
+%        year =   { 2007 }, 
+%        url =   { available at http://www.dkriesel.com } 
+%      }
 
 
-% p.~727--
+\subsection{Activation Function}
+\label{subsec:theoretical_background:ann:activation_function}
+
+An activation function is responsible for transforming the input of an artificial neuron to its output.
+% Activation functions are used to introduce a nonlinearity.
+% They are usually used to introduce a nonlinearity to to solve problems which are not trivial.
+There exists a variety of different linear and non-linear activation functions.
+However, non-linear activation functions are preffered due to their ability to learn more complex structures in the data.
+The sigmoid and hyperbolic tangent activation functions were traditionally very popular but they both suffer from a saturation problem.
+% Most commonly, the \acrfull{relu} activation function is used, which is shown in equation \ref{eq:relu}.
+% At the moment, the \acrfull{relu} activation function is  the most commonly used activation function is the \acrfull{relu} activation function
+% The \acrfull{relu} activation function is currently the most commonly used.
+Currently, the \acrfull{relu} is the most commonly used activation function in the field of deep learning.
+It is a piecewise-defined function, which outputs the input if it positive and zero otherwise.
+This is shown in equation \ref{eq:relu}.
+Furthermore, the \acrshort{relu} activation function requires only a single comparison and is therefore not very computationally expensive \cite{}. % todo: cite https://machinelearningmastery.com/rectified-linear-activation-function-for-deep-learning-neural-networks/
+
+\begin{equation}
+  a(x) = x^+ = \max(0, x)
+  \label{eq:relu}
+\end{equation}
+
+% relu (incl. plot)
+% maybe sigmoid or tanh

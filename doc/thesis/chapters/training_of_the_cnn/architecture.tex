@@ -19,7 +19,8 @@ There are, however, certain design principles that work really well \cite{}: % t
   \item Increasing the number of filters towards the end (low-level feature detection)
   \item Decreasing the spatial dimensions of the feature maps towards the end
   \item Using kernel sizes of $3\times 3$, $5\times 5$ or $7\times 7$ for convolutional layers
-  \item Using kernel sizes of $2\times 2$ or $3\times 3$ with a stride of two for max-pooling layers
+  % \item Using kernel sizes of $2\times 2$ or $3\times 3$ with a stride of two for max-pooling layers
+  \item Using pool sizes of $2\times 2$ or $3\times 3$ with a stride of two for max-pooling layers
   \item Adding additional layers until the model is overfitting
   \item Using state-of-the-art networks as inspiration
 \end{enumerate}
@@ -34,7 +35,8 @@ All other convolutional layers use a kernel size of $3\times 3$ while steadily i
 % only max pooling is used
 % max amount of poooling layers used (iage size of 5x4)
 % The architecture uses the maximum amount of max-pooling layers for the given input shape.
-The designed architecture uses six max-pooling layers with a kernel size of $2\times 2$ and a stride of two.
+% The designed architecture uses six max-pooling layers with a kernel size of $2\times 2$ and a stride of two.
+The designed architecture uses six max-pooling layers with a pool size of $2\times 2$ and a stride of two.
 % This reduces the spatial dimensions of the input feature maps down to $4\times 5$.
 This reduces the spatial dimensions of the feature maps to $4\times 5$ (height $\times$ width).
 % The fully-connected layer \texttt{fc8} is several times larger than the output layer \texttt{fc9}.
