@@ -8,26 +8,25 @@ Integrated is a quad-core ARM Cortex A53 processor to run a complete operating s
 The A53 core can be clocked with \SI{1.5}{GHz}, the R5 with \SI{600}{MHz}.
 
 The \acrshort{fpga} on the \acrshort{mpsoc} allows a hardware acceleration of up to a factor of 20 compared to the fastest CPUs \cite{acceleration_xilinx}.
-Avnet therefore recommends the board as ideal for the field of high-speed artificial intelligence \cite{ai_resources_xilinx}.
-The most important specifications of the \acrshort{mpsoc} are listed in the following table \ref{tab:specs_MPSoC}.
+Avnet therefore recommends the board as ideal for high-speed artificial intelligence \cite{ai_resources_xilinx}.
+The most important specifications of the \acrshort{mpsoc} are listed in table \ref{tab:specs_MPSoC}.
 
-\begin{table}[h]
-	\caption{Xilinx Zynq UltraScale+ \acrshort{mpsoc} ZU3EG key features \cite{xilinx_zynq}}
-	\label{tab:specs_MPSoC}
-	\centering
-	\begin{tabular}{ll}
-		\toprule
-		& \textbf{ZU3EG} \\
-		\midrule
-		\textbf{Logic Cells} & \SI{154}{k} \\
-		\textbf{Flip Flops} & \SI{141}{k} \\
-		\textbf{\acrshort{bram}} & \SI{7.6}{Mb} \\
-		\textbf{\acrshort{dsp} Slices} & 360 \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-The Ultra96-V2 also features two USB 3.0 ports and \SI{2}{GB} \acrfull{lpddr4} \acrshort{ram}, which are essential for fast image processing.
+The Ultra96-V2 also features two USB 3.0 ports and \SI{2}{GB} of \acrfull{lpddr4} \acrshort{ram}, which are essential for fast image processing.
 A \acrfull{mdp} serves as a connection to a monitor \cite{avnet_ultra96v2}.
 This guarantees a standalone operation.
 
+\begin{table}[h]
+  \caption{Xilinx Zynq UltraScale+ \acrshort{mpsoc} ZU3EG key features \cite{xilinx_zynq}}
+  \label{tab:specs_MPSoC}
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+     & \textbf{ZU3EG} \\
+    \midrule
+    \textbf{Logic Cells} & \SI{154}{k} \\
+    \textbf{Flip Flops} & \SI{141}{k} \\
+    \textbf{\acrshort{bram}} & \SI{7.6}{Mb} \\
+    \textbf{\acrshort{dsp} Slices} & 360 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
