@@ -4,31 +4,32 @@
 
 During the execution of the project we encountered various problems.
 Some were caused by us.
-With others we could do little.
+On others we had little impact.
 The global corona pandemic did not really have a major impact on the work.
 Even during the lock down it was possible to work.
-However, when it was possible to meet again at the school in June, the big shock came.
+However, when it was possible to meet again at school in June, we faced difficulties.
 It turned out that the camera was incompatible with Petalinux.
-The camera was always with one of us while the other was working on the \acrlong{os}.
+The camera was not with the one who was working on the \acrlong{os}.
 Since compiling and running the application was always possible, we assumed that everything would work.
 However, successful compilation was only a necessary condition, but not a sufficient one.
 As a result, an alternative \acrlong{os} had to be used in the last two months and much of the work that had been done until then was lost. 
 
-The experience with Avnet was not very positive as well.
-On the one hand, the bug with the \acrshort{pmic} is annoying because it reduces performance.
-But also the documentation on how to use their hardware is very sparse.
+The experience with Avnet was not very positive either.
+On one hand, the bug with the \acrshort{pmic} is annoying because it reduces performance.
+% But also the documentation on how to use their hardware is very sparse.
+There is very sparse documentation on how to use the hardware.
 There are a few examples on hackster.io, but no technical documentation exists.
 Furthermore the written scripts are not very good.
 One example was already mentioned in section \ref{sec:embedded_platform:xilinx_tools}.
 Because we did not install Petalinux in the default directory, the makefile could not be finished.
-Unfortunately there was no error message and the log file with about \num{10000} lines had to be searched
+Unfortunately there was no error message and the log file with about \num{10000} lines had to be searched.
 Here is another example:
 Avnet creates makefiles in makefiles to allow modularity of the build process.
 Because of bad programming artifacts appeared in the makefile like a -e in front of the target.
-But by our own experiments we could show that the make command can handle such things.
+But with our own experiments we could show that the make command can handle this situation.
 
 When trying to read the dataset with TFRecords from TensorFlow there were also several problems.
-But these could be avoided with NumPy arrays.
+But these could be resolved with NumPy arrays.
 
 The experiences with Xilinx were appealing, but it is difficult to get in as a newcomer.
 There are many tools and user guides.
@@ -39,7 +40,7 @@ When we tried to start up the camera on the Petalinux \acrshort{os} we contacted
 Very quickly we got help from developers, although it is clearly stated that only certain operating systems are supported and Petalinux is clearly not one of them.
 The help was detailed and led to partial success, but it was not possible to run the application without losing frames.
 
-Xilinx's \acrshort{dpu} was also put into operation with the documentation in an appealing time and functions reliably and with high performance.
+Xilinx's \acrshort{dpu} was also put into operation with the documentation in an appealing time and reliable function and with high performance.
 The solution to work with Docker turned out to be extremely useful and easy to use.
 
 TensorFlow 2 worked absolutely satisfying during the whole project with the exception of reading the data set with TFRecords. 
