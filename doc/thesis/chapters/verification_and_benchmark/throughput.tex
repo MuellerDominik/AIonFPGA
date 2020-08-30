@@ -48,22 +48,21 @@ Table \ref{tab:measured_times} shows the measured times.
 		\toprule
 		\textbf{Step} & \textbf{Time} \\
 		\midrule
-		get raw Bayer & \SI{4}{ms} \\
-		transform & \SI{4}{ms} \\
-		resize & \SI{4}{ms} \\
-		normalize & \SI{4}{ms} \\
-		run inference & \SI{4}{ms} \\
-		run softmax & \SI{4}{ms} \\
-		add weighting & \SI{4}{ms} \\
+		get raw Bayer & \SI{0.233}{ms} \\
+		transform color & \SI{9.612}{ms} \\
+		resize & \SI{1.534}{ms} \\
+		normalize & \SI{4.503}{ms} \\
+		run inference & \SI{7.422}{ms} \\
+		run softmax & \SI{0.458}{ms} \\
+		add weighting & \SI{0.567}{ms} \\
 		\midrule
-		Total time & \SI{20}{ms} \\
+		Total time & \SI{24.329}{ms} \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
 By calculating the reciprocal value of the total time required, the frame rate can be determined:
 \begin{equation}
-  \text{framerate} = \frac{1}{T_{tot}} = \frac{1}{\SI{20}{ms}} = \SI{50}{fps}
+  \text{framerate} = \frac{1}{T_{tot}} = \frac{1}{\SI{24.329}{ms}} = \SI{41.104}{fps}
   \label{eq:achieved_framerate}
 \end{equation}
-\todo[inline]{edit numbers}
