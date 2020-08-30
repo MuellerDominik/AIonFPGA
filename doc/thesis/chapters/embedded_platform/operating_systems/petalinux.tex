@@ -96,4 +96,25 @@ The SD card is now ready to save the \acrshort{os}.
 The \texttt{BOOT.BIN} and \texttt{Image.ub} can be copied to the boot partition and the \texttt{rootfs.tar.gz} extracted to the rootfs partition.
 
 \paragraph{Setup}
-\todo[inline]{all}
+To use the \acrshort{dpu}, the \acrshort{n2cube} library is required.
+This can either be added as a recipe when creating the operating system, or the header, include and library files can be copied manually afterwards.
+The files are available in the docker image from Xilinx in the \texttt{/opt/vitis\_ai/xilinx\_vai\_board\_package} directory.
+How to use Docker and Xilinx is described in section \ref{sec:embedded_platform:model_deployment}.
+The following files need to be copied from the xilinx\_vai\_board\_package folder:
+\begin{itemize}
+	\item \texttt{pkgs/bin/*} into the \texttt{/usr/local/bin/} folder of the board
+	\item \texttt{pkgs/lib/*} into the \texttt{/usr/local/lib/} folder of the board
+	\item \texttt{pkgs/include/*} into the \texttt{/usr/local/include/} folder of the board
+\end{itemize}
+
+Since \texttt{user/local/lib} is not a default path for dynamic libraries, a file with a filename ending with .conf must be created in the \texttt{/etc/ld.so.conf.d/} folder.
+This file contains the path to the previously added libraries.
+For example, the file can be named \texttt{dnndk.conf} and the content can be like this:
+\begin{lstlisting}[style=bash, caption={}, label=lst:dnndk_conf_content]
+  /usr/local/lib
+\end{lstlisting}
+By running \texttt{ldconfig} the dynamic loader is configured to search in the \texttt{/usr/local/lib/} directory for the \acrshort{n2cube} libraries.
+\texttt{ldconfig} is always executed at boot.
+
+To be able to use the Baumer camera, the same procedure must be done.
+The include, library and header files can be obtained from Baumer.

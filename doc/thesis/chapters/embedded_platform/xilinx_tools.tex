@@ -1,34 +1,39 @@
 \section{Xilinx Tools}
-\paragraph{Vivado}
 \label{sec:embedded_platform:xilinx_tools}
+
+\paragraph{Petalinux}
+Petalinux is an embedded Linux \acrfull{sdk}.
+It is a development tool that contains everything necessary to build, develop, test, and deploy embedded Linux systems.
+In the background Petalinux is running Yocto functions.
+The goal of Petalinux is to make it easier for developers to build an own embedded Linux \cite{petalinux_user_guide}.
+
+\paragraph{Vivado}
 Xilinx offers many tools to work with their hardware.
 The traditional way is to design hardware with a \acrfull{hdl} like Verilog or VHDL.
 These \acrfull{rtl} descriptions are passed to a synthesis tool and written to the \acrshort{fpga}.
 This functionality is embraced by the Vivado Design Suite HLx Editions.
 The output of Vivado is the bitstream that can be loaded to the target \cite{vivado_user_guide}.
 
-\paragraph{Vitis}
+\paragraph{Vitis Unified Software Platform}
 Vitis Unified Software Platform in short sometimes called Vitis provides software developers with the ability to build accelerated applications.
 To communicate with the hardware \acrfullpl{api} are used.
 The Vitis core development kit includes the v++ compiler for the hardware kernel, the g++ compiler for compiling the application to run on an x86 host, and an ARM compiler for cross-compiling the application to run on the embedded processor of a Xilinx device \cite{vitis_user_guide}.
 
 \paragraph{Vitis AI}
 The Vitis AI development environment consists of the Vitis AI development kit.
-This consists an AI compiler, an AI quantizer, an AI optimizer as well as the libraries to run inference and the \acrfull{xrt}.
+This contains an AI compiler, an AI quantizer, an AI optimizer as well as the libraries to run inference and the \acrfull{xrt}.
 There are also example designs included.
 AI inference on Edge devices and Alveo accelerator cards are available with Vitis AI \cite{vitis_ai_user_guide}.
 Vitis AI replaces the old DNNDK toolchain since version 2019.2 
-
-\paragraph{Petalinux}
-PetaLinux is an embedded Linux \acrfull{sdk}.
-It is a development tool that contains everything necessary to build, develop, test, and deploy embedded Linux systems.
-In the background Petalinux is running Yocto functions.
-The goal of Petalinux is to make it easier for developers to build an own embedded Linux \cite{petalinux_user_guide}.
 
 \paragraph{\Acrfull{xrt}}
 In the \acrfull{xrt} a combination of userspace and kernel driver components are included.
 The advantage of the \acrshort{xrt} for the user is that there is very little porting effort when migrating an application from PCIe based platforms to MPSoC based edge platforms or from one edge platform to another.
 When working with Vitis AI it handles the \acrshort{xrt} in the background \cite{xrt_overview}.
+
+\paragraph{\Acrfull{n2cube}}
+\acrshort{n2cube} is based on the \acrshort{xrt}.
+It contains of the \acrshortpl{api} to develop an \acrshort{ai} application in python or c++ \cite{vitis_ai_user_guide}.
 
 \paragraph{Versions}
 Xilinx releases two to three versions per year.
@@ -46,6 +51,6 @@ For example sourcing Petalinux could look like this:
 \end{lstlisting}
 Avnet expects that the user installs the tools in the default install directory.
 For Vitis it is \texttt{/tools/Xilinx}, for Petalinux \texttt{/tools}.
-To avoid problems it is recommended to not change the default directory.
+To avoid problems it is recommended not to change the default directory.
 % Install in default location, because of hardcoded paths.
 

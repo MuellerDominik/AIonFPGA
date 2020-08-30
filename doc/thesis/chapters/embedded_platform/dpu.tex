@@ -23,7 +23,7 @@ On a ZU7 device it is possible to implement two cores while on a ZU9 even three 
 The clock frequency is set in the \texttt{prj\_config} file as well.
 For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
 Because of a hardware design mistake on the Ultra96-V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
-On higher frequencies the \acrfull{pmic} reboots the hole system.
+On higher frequencies the \acrfull{pmic} reboots the whole system.
 It is possible to fix this issue, but it needs both a hardware and a software change \cite{pmic_issue}.
 The frequency can be set  by the setting the variable  freqHz=150000000:DPUCZDX8G\_1.aclk.
 Another way is using the predefined frequencies from Xilinx.
@@ -59,6 +59,7 @@ They are related to the parallelism of the convolution unit.
 On a ZU3EG the best results can be achieved with a B2304 architecture.
 2304 are the maximum operatings per clock.
 Therefore, a higher number means higher throughput.
+B2304 architecture is used in this project.
 Table \ref{tab:arch_parallelism} shows all available architectures and the correlation to the parallelism.
 
 \begin{table}[hb]
@@ -89,9 +90,9 @@ One block has a size of \SI{36}{kB} and for the B2304 architecture 167 such bloc
 If UltraRAM is available, several other defines need to be set.
 The listing \ref{lst:config_dpu} shows an example, how to do it with a B4096 architecture.
 The UltraRAM numbers can be found in the Zynq \acrshort{dpu} \acrshort{ip} product guide.
-The ZU3EG device is in possession of 216 BRAM and no UltraRAM.
+The ZU3EG device is in possession of 216 \acrshort{bram} and no UltraRAM.
 Because the RAM for the \acrshort{pl} is not used for any other calculation, RAM high can be activated and UltraRAM should be disabled.
-Practical tests showed throughput time reductions of about 20\% with RAM high compared to RAM low.
+Practical tests showed throughput time reductions of about 20\% with \acrshort{ram} high compared to RAM low.
 \todo[inline]{chamer so öppis do ine schriibe?}
 
 \paragraph{Channel Augmentation}
@@ -102,15 +103,18 @@ In this CNN there are three input channels and therefore, channel augmentation i
 \paragraph{Depthwise Convolution}
 In standard convolution, the operations are performed for each input channel separately with one specific kernel and the results are combined over all channels.
 In depthwise separable convolution, the operation is performed in two steps: depthwise convolution and pointwise convolution.
-Enabling  depthwise convolution allows for more flexibility with the \acrshort{cnn} architecture.
+Depthwise convolution is enabled because it allows for more flexibility with the \acrshort{cnn} architecture.
 
 \paragraph{AveragePool}
 Average pooling can be done on the \acrshort{dpu} or not.
-The supported sizes goes from $2\cdot2$ to $8\cdot8$, with only square sizes supported.
+The supported sizes go from $2\cdot2$ to $8\cdot8$, with only square sizes supported.
+Average pooling is activated to accelerate the whole process.
 
 \paragraph{ReLU Type}
 By default the ReLu and ReLU6 function are supported.
 It is possible to include the LeakyReLU function as well with low resource usage.
+Because of the low resource consumption LeakyReLU is also included.
+So if the \acrshort{cnn} is changed the \acrshort{dpu} does not have to be rebuilt. 
 
 \paragraph{Softmax}
 The softmax function can be done in hardware or in software.
@@ -118,6 +122,10 @@ Implemented on hardware, the function is about 160 times faster than a software 
 The function needs approximately \SI{10000}{\acrshortpl{lut}}, four block RAMs and 14 DSPs.
 If the the resources run out the \acrlong{dnnc} implements the function independently in software.
 The softmax function is not available in Zynq-7000 devices \cite{dpu_product_guide}. 
+
+Implementing the softmax in hardware is not done using a define, but during the build process.
+The make command is \texttt{make KERNEL=DPU\_SM} instead of \texttt{make KERNEL=DPU}.
+The softmax layer is not implemented in hardware in this project.
 
 \paragraph{Configuration File}
 With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3EG device could look like this:
