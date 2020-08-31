@@ -1,68 +1,80 @@
 \section{Throughput}
 \label{sec:verification_and_benchmark:throughput}
 
-All steps which are passed through in the while true loop are measured. 
-These are:
+% All steps which are passed through in the while true loop are measured.
+All steps from the image classification chain and the weighting are measured.
+This results in the following measurements:
 \begin{itemize}
-	\item get raw Bayer from \acrshort{ram}
-	\item transform Bayer to \acrshort{bgr} 
-	\item resize frame size %from \SI{1280}{px} $\times$ \SI{1024}{px} to \SI{320}{px} $\times$ \SI{256}{px}
-	\item normalize the image which is a float32 division
-	\item run inference on the \acrshort{dpu}
-	\item run softmax function
-	\item add weighting
+  % \item Get raw Bayer from \acrshort{ram}
+  \item Getting the raw Baumer \texttt{BayerRG8} frame
+  % \item transform Bayer to \acrshort{bgr}
+  \item Converting the color space
+  % \item resize frame size %from \SI{1280}{px} $\times$ \SI{1024}{px} to \SI{320}{px} $\times$ \SI{256}{px}
+  \item Resizing the frame
+  % \item normalize the image which is a float32 division
+  \item Normalizing the pixel values
+  \item Running inference
+  % \item run inference on the \acrshort{dpu}
+  % \item run softmax function
+  \item Applying the softmax function
+  \item Weighting
 \end{itemize}
 
-To measure the time needed for each step, the python module datetime was used.
-The function \texttt{datetime.now()} returns the current local date and time.
+To measure the time needed for each step, the Python module datetime was used.
+The function \texttt{datetime.now} returns the current local date and time.
 
-To measure these steps the main python file is slightly modified.
+To measure the individual steps, the Python file \texttt{aionfpga.py} is slightly modified.
 The initialization is not changed at all.
 The infinite loop is removed, so that only one throw is captured and the application ends afterwards.
-Furthermore, the start and end time are recorded around each of the above steps.
+Additionally, the start and end time around each of the above steps are recorded.
 
 The times are stored in a three-dimensional dictionary.
-In the first dimension is the measured command.
-The second dimension indicates if it was the start or end of the command.
-Since the times vary from frame to frame, several images are taken and averaged in a final step.
-The times are appended at the end of the corresponding list.
+The first dimension contains the measured command.
+The second dimension indicates whether it is the beginning or the end of the command.
+Since the times vary from frame to frame, several images are acquired and averaged in a final step.
+The times are appended to the end of the corresponding list.
 Listing \ref{lst:measure_time} shows an example for the color transformation.
 
-\begin{lstlisting}[style=python, caption={Measure needed time for the color transformation}, label=lst:measure_time]
+\begin{lstlisting}[style=python, caption={Measuring the required time for the color space conversion}, label=lst:measure_time]
   meas_time['Transform color']['start'].append(datetime.now())
   frames[idx] = cv2.cvtColor(raw_frame, cv2.COLOR_BayerBG2BGR)
   meas_time['Transform color']['end'].append(datetime.now())
 \end{lstlisting}
 
-The time which is needed for each step is the difference between end and start.
-When all images have been computed, the average value is calculated for each step.
-This is printed on the console and written to a file.
+% The time which is needed for each step is the difference between end and start.
+The time needed for each step is the difference between end and start.
+% When all images have been computed, the average value is calculated for each step.
+% When all of the individual times are computed, the average value is calculated for each step.
+When all individual times are computed, the average value is calculated for each step.
+% This is printed on the console and written to a file.
+This is printed out on the console and written to a file.
+Table \ref{tab:measured_times} lists the measured times.
 
-Table \ref{tab:measured_times} shows the measured times.
+% By calculating the reciprocal value of the total time required, the frame rate can be determined:
+By calculating the reciprocal of the total time required, the frame rate can be determined:
 
-\begin{table}[hb]
-	\caption{Measured time for the different steps}
-	\label{tab:measured_times}
-	\centering
-	\begin{tabular}{ll}
-		\toprule
-		\textbf{Step} & \textbf{Time} \\
-		\midrule
-		get raw Bayer & \SI{0.233}{ms} \\
-		transform color & \SI{9.612}{ms} \\
-		resize & \SI{1.534}{ms} \\
-		normalize & \SI{4.503}{ms} \\
-		run inference & \SI{7.422}{ms} \\
-		run softmax & \SI{0.458}{ms} \\
-		add weighting & \SI{0.567}{ms} \\
-		\midrule
-		Total time & \SI{24.329}{ms} \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-By calculating the reciprocal value of the total time required, the frame rate can be determined:
 \begin{equation}
-  \text{framerate} = \frac{1}{T_{tot}} = \frac{1}{\SI{24.329}{ms}} = \SI{41.104}{fps}
+  \text{frame rate} = \frac{1}{T_{\text{tot}}} = \frac{1}{\SI{24.329}{ms}} = \SI{41.104}{fps}
   \label{eq:achieved_framerate}
 \end{equation}
+
+\begin{table}
+  \caption{Measured time for the different steps}
+  \label{tab:measured_times}
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Step} & \textbf{Time} \\
+    \midrule
+    Getting the raw frame & \SI{0.233}{ms} \\
+    Converting the color space & \SI{9.612}{ms} \\
+    Resizing the frame & \SI{1.534}{ms} \\
+    Normalizing the pixel values & \SI{4.503}{ms} \\
+    Running inference & \SI{7.422}{ms} \\
+    Applying the softmax function & \SI{0.458}{ms} \\
+    Weighting & \SI{0.567}{ms} \\
+    \midrule
+    Total & \SI{24.329}{ms} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
