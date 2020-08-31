@@ -1,19 +1,19 @@
 \subsection{Comparison}
 \label{subsec:embedded_platform:operating_systems:comparison}
-Table \ref{tab:compare_os} shows a quick overview of the main functions and properties of the two \acrlong{os}
+Table \ref{tab:compare_os} provides an overview of the main functions and properties of the two \acrlongpl{os}.
 
-\begin{table}[hb]
-  \caption{Compare PYNQ and Petalinux}
+\begin{table}
+  \caption{Comparison of PYNQ and PetaLinux}
   \label{tab:compare_os}
   \centering
   \begin{tabular}{lll}
     \toprule
-    \textbf{} & \textbf{PYNQ} & \textbf{Petalinux} \\
+    \textbf{} & \textbf{PYNQ} & \textbf{PetaLinux} \\
     \midrule
-    Kernelversion & 4.19.0 & 4.19.0 \\
-    Basic distribution & Ubuntu \cite{pynq_presentation} & none \\
-    Supporting Baumer Camera & (yes) \cite{baumer_prog_guide} & no \\
-    Wi-Fi function & yes & (yes) \\
+    Kernel version & 4.19.0 & 4.19.0 \\
+    Basic distribution & Ubuntu \cite{pynq_presentation} & - \\
+    Baumer camera support & (yes) \cite{baumer_prog_guide} & no \\
+    Wi-Fi functionality & yes & (yes) \\
     Package manager & \acrshort{apt} & none, installable \\
     \acrshort{dpu} initialization & with overlays at runtime \cite{pynq_overlays} & while booting \cite{petalinux_user_guide} \\
     \bottomrule
@@ -21,15 +21,16 @@ Table \ref{tab:compare_os} shows a quick overview of the main functions and prop
 \end{table}
 
 PYNQ is based on Ubuntu.
-Because Baumer supports Ubuntu, the Baumer camera should work with this \acrlong{os}.
-However, installing the official .deb package does not work.
-The workaround is to use the installing package for a Rock64 board which Baumer distributed for a while.
-A Rock64 development board consists of a Quad-Core ARM Cortex A53 processor just as the Ultrascale+ family.
-In addition mysqlclient and pq5 have to be installed to use the Baumer camera.
+Since Baumer supports Ubuntu, the Baumer camera should work with this \acrlong{os}.
+However, the installation of the official \texttt{.deb} package does not work.
+% The workaround is to use the installation package for the Rock64 board that Baumer distributed for a while.
+The workaround is to use the installation package for the Rock64 board that Baumer distributed for a while in the past.
+The Rock64 development board features a quad-core ARM Cortex A53 processor like the UltraScale+ family.
+% In addition mysqlclient and pq5 have to be installed to use the Baumer camera.
+Additionally, \texttt{mysqlclient} and \texttt{pq5} must be installed to use the Baumer camera.
 
-Although, both \acrshort{os} officially support Wi-Fi Petalinux has connecting problems due to a faulty root filesystem.
+Although both \acrlongpl{os} officially support Wi-Fi, PetaLinux has connecting problems due to a faulty root filesystem.
 
 On PYNQ the \acrfull{apt} is installed.
-This is the default package manager on most Debian distributions.
-On Petalinux a recipe can be added as described in section \ref{subsec:embedded_platform:operating_systems:petalinux} to install and use a package manager.
-
+This is the default package manager on most Debian-based distributions.
+On PetaLinux, a recipe can be added to install and use a package manager, as described in section \ref{subsec:embedded_platform:operating_systems:petalinux}.

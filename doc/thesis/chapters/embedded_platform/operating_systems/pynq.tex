@@ -4,38 +4,42 @@
 PYNQ is an open-source project from Xilinx.
 The name is a combination of Python and Zynq, the Xilinx processor family.
 The main goal of PYNQ is to make it easier for developers to design applications for the Zynq devices. 
-Specially, PYNQ works with Overlays, which allow using \acrlong{pl} without knowledge of programming in VHDL/Verilog.
-Avnet distributes a prebuilt image for the Ultra96-V2 board \cite{pynq_intro}.
+In particular, PYNQ works with overlays that allow the use of \acrlong{pl} without programming knowledge in VHDL or Verilog.
+Avnet distributes a pre-built image for the Ultra96-V2 board \cite{pynq_intro}.
 
 \paragraph{Build PYNQ}
 Avnet provides source files and instructions for building PYNQ to run on the Ultra96-V2 board.
 First, the \texttt{Ultra96-PYNQ} repository is cloned and checked out on the preferred version.
-PYNQ version 2.5 needs Xilinx tools 2019.1.
-The \texttt{PYNQ} repository is needed as well.
-The setup\_host.sh script in the repository allows to install all required tools on the host.
-As a next step the operating system can be built by the make command and the directory as a parameter.
+PYNQ version 2.5 requires Xilinx tools 2019.1.
+The \texttt{PYNQ} repository is also required.
+The \texttt{setup\_host.sh} script in the repository allows the installation of all necessary tools on the host.
+% The next step the operating system can be built by the make command and the directory as a parameter.
+The next step is to build the operating system with the \texttt{make} command and the directory as a parameter.
 It is possible to add recipes in the folder \texttt{Ultra96/petalinux\_bsp\_v2/meta-user} to install user specific applications \cite{avnet_pynq_github}. 
 
 \paragraph{Setup PYNQ}
 The Wi-Fi configuration scripts (\texttt{interfaces} and \texttt{wpa\_supplicant.conf}) are copied to the SD card to communicate via \acrfull{ssh} after first boot.
-To work without password exchanges on the board, the public key for both the Root and the Xilinx user are exchanged.
-In a next step, some required packages are installed such as matplotlib or PysimpleGUI.
-After this, PYNQ is patched to be compatible with Vitis AI.
-This is done by the \texttt{DPU-PYNQ} repository from Xilinx.
-This repository contains a makefile which updates PYNQ, installs \acrfull{xrt} at version 2019.2 and a small Python script to control the \acrfull{dpu} clocks.
+% To work without password exchanges on the board, the public key for both the Root and the Xilinx user are exchanged.
+To work on the board without constant password exchanges, the public key is exchanged for both the root and the Xilinx user.
+In a next step, some required packages are installed such as \texttt{matplotlib} or \texttt{PysimpleGUI}.
+% After this, PYNQ is patched to be compatible with Vitis AI.
+PYNQ is then patched to be compatible with Vitis AI.
+This is done using the \texttt{DPU-PYNQ} repository from Xilinx.
+This repository contains a Makefile that updates PYNQ, installs the \acrfull{xrt} version 2019.2 and a small Python script to control the \acrfull{dpu} clocks.
 The patch also updates \acrshort{opencv} to version 3.4.3.
 Next, the repository from this project is cloned to the board.
 This way all created programs and packages are already at the expected location.
-Finally, the \acrshort{dpu} model and the files to program the \acrfull{pl} are copied from the host by \acrfull{scp}.
+Finally, the \acrshort{dpu} model and the required files for programming the \acrfull{pl} are copied to the target over \acrfull{scp}.
 
-To run the \acrshort{ai} application always at startup, a systemd service is used.
+To always run the \acrshort{ai} application at startup, a systemd service is used.
 This service can be started manually with the following command:
 \begin{lstlisting}[style=bash, caption={}, label=lst:start_service]
   systemctl start aionfpga.service
 \end{lstlisting}
-A systemd service contains in minimum a description in the [Unit] section, a type and the command to execute in the [Service] section and other configurations in the [Install] section \cite{systemd}.
+A systemd service requires at least a description in the \texttt{[Unit]} section, a type and the command to execute in the \texttt{[Service]} section and other configurations in the \texttt{[Install]} section \cite{systemd}.
 
-To be able to run a graphical application, the executed command is a shell script.
+% To be able to run a graphical application, the executed command is a shell script.
+To run a graphical application, the executed command starts a shell script.
 The shell script exports the display and then starts the \acrshort{ai} application.
 
 For the service to be executed at startup, it must be activated with the following command:

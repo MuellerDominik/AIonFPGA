@@ -1,10 +1,10 @@
 \section{Using the Scripts}
 \label{sec:embedded_platform:using_scripts}
 
-The scripts provided in the \texttt{AIonFPGA} repository on GitHub allow building the whole chapter \ref{ch:embedded_platform} with four make commands once the environment is set up.
+The scripts provided in the \texttt{AIonFPGA} repository on GitHub allow building the entire chapter \ref{ch:embedded_platform} with four \texttt{make} commands, once the environment is set up.
 
 \paragraph{Get PYNQ}
-The first script in the \texttt{mpsoc/build-pynq} needs internet access, root privileges, the local Wi-Fi configurations and three Debian packages in the \texttt{packages} folder.
+The first script in the \texttt{mpsoc/build-pynq/} directory requires internet access, root privileges, the local Wi-Fi configurations and three Debian packages in the \texttt{packages/} folder.
 It is important to have the correct three package versions:
 \begin{itemize}
 	 \item \texttt{baumer-gapi-sdk-linux-v2.9.2.22969-Ubuntu-18.04-rock64.deb}
@@ -12,39 +12,41 @@ It is important to have the correct three package versions:
 	 \item \texttt{libpq5\_10.4-0ubuntu0.18.04\_arm64.deb}
 \end{itemize}
 
-To prevent destruction of the own hard disk specify the correct block device for the SD card.
+To prevent the destruction of the own hard disk, specify the correct block device of the SD card.
 To get the device, use the \texttt{lsblk} command before and after inserting the SD card.
-The new node needs to be defined as for example \texttt{DISK=/dev/sdb} in the makefile.
+The new node must be defined for example as \texttt{DISK=/dev/sdb} in the Makefile.
 
-The Wi-Fi net name and password must be set in the \texttt{config/wpa\_supplicant.conf} file.
+The Wi-Fi network name and password must be set in the \texttt{config/wpa\_supplicant.conf} file.
 
-The whole command takes about two hours if all downloads need to be done.
+The whole command takes about two hours if all downloads have to be done.
 
-\paragraph{Build \acrshort{dpu}}
-Building the \acrshort{dpu} with the make command needs internet access to download the \texttt{DPU-PYNQ} repository.
-Furthermore, the Xilinx tools \acrshort{xrt} and Vitis need to be installed on version 2019.2.
-When Vitis is not installed in \texttt{/opt/xilinx/2019.2} and \acrshort{xrt} in the \texttt{/opt/xilinx} directory they need to be redefined in the makefile.
+\paragraph{Build DPU}
+Building the \acrshort{dpu} with the \texttt{make} command requires internet access to download the \texttt{DPU-PYNQ} repository.
+Furthermore, the Xilinx tools, \acrshort{xrt} and Vitis must be installed (version 2019.2).
+If Vitis is not installed in the \texttt{/opt/xilinx/2019.2/} directory and \acrshort{xrt} in the \texttt{/opt/xilinx/} directory, they must be redefined in the Makefile.
 The building speed depends on the architecture of the \acrshort{dpu} and the host computer.
 It takes about \SI{25}{min} for the smallest architecture (B512) and \SI{50}{min} for a B2304 architecture with one \acrshort{dpu}.
-To remove the \acrshort{dpu} the \texttt{make clean-dpu} is defined in the makefile.
-Running the \texttt{make clean} removes the \acrshort{dpu} as well as the downloaded \texttt{DPU-PYNQ} repository.
+To remove the \acrshort{dpu}, the \texttt{make clean-dpu} target is defined in the Makefile.
+Running \texttt{make clean} will remove both the \acrshort{dpu} and the downloaded \texttt{DPU-PYNQ} repository.
 
 \paragraph{Deploy Model}
-Deploying the model can be done by the makefile in the \texttt{mpsoc/cnn-model} directory.
-The script starts a docker container and compiles the application.
-To run the make command docker must be installed on version 19.03.1 or above \cite{vitis_ai_user_guide}.
-When quantizing and compiling for the first time the image with a size of \SI{3.5}{GB} is downloaded from Docker Hub.
-The build-dpu makefile must already be executed when deploying the model.
+Deploying the model can be done by using the Makefile in the \texttt{mpsoc/cnn-model/} directory.
+The script starts a Docker container and compiles the application.
+To run the make command, Docker must be installed on version 19.03.1 or higher \cite{vitis_ai_user_guide}.
+When quantizing and compiling for the first time, the image with a size of \SI{3.5}{GB} is downloaded from Docker Hub.
+The \texttt{build-dpu} Makefile must be executed before the model is deployed.
 
 \paragraph{Set up PYNQ}
-After executing the other three makefiles, insert the SD card and power the Ultra96-V2 board.
-The makefile in the \texttt{mpsoc/pynq-setup} directory can now be executed.
+After executing the other three Makefiles, insert the SD card and power the Ultra96-V2 board.
+The Makefile in the \texttt{mpsoc/pynq-setup/} directory can now be executed.
 
-To successfully run the script the IP address of the board needs to be edited to the received IP address.
-This address is viewable at the Wi-Fi access point.
+To execute the script successfully, the IP address of the board must be changed to the respective IP address.
+% This address is viewable at the Wi-Fi access point.
+This address can be read from the Wi-Fi access point.
 
-In a first step the \acrshort{ssh} keys are exchanged by the make command.
-Therefore the host computer needs a key pair at the default directory (/home/\textit{user}/.ssh where \textit{user} is substituted with the current user name).
+In a first step the \acrshort{ssh} keys are exchanged by the \texttt{make} command.
+Therefore, the host computer needs a key pair in the default directory (\texttt{/home/<user>/.ssh} where \texttt{<user>} is replaced with the respective username).
 
-Running the script takes about four hours and the passwords for the user and the root user for the board are needed at the beginning.
-Both passwords are just xilinx by default.
+Running the script takes about four hours and the passwords for the user and the root user of the board are needed at the beginning.
+% Both passwords are just xilinx by default.
+Both passwords are \textit{xilinx} by default.

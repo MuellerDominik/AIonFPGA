@@ -2,34 +2,37 @@
 \label{sec:embedded_platform:dpu}
 
 The Xilinx \acrfull{dpu} is developed to run convolutional neural networks on an \acrshort{fpga} of the Zynq UltraScale+ or Zynq-7000 family.
-\acrshort{dpu}v1 and \acrshort{dpu}v3 are for cloud computing on Alveo cards and \acrshort{dpu}v2 for Zynq devices. 
-Due to parallelization of the calculations in a neural network, the inference can be accelerated considerably.
-The \acrshort{dpu} is configured by an AXI slave interface and accesses instructions by a AXI master interface.
-It can be configured to make best use of the size of the \acrshort{fpga}.
-The encrypted \acrshort{rtl} design files are available on Github.
+\acrshort{dpu}v1 and \acrshort{dpu}v3 are for cloud computing on Alveo cards and \acrshort{dpu}v2 is for Zynq devices. 
+% Due to parallelization of the calculations in a neural network, the inference can be accelerated considerably.
+Due to the parallelization of the calculations in a neural network, the inference can be accelerated considerably.
+The \acrshort{dpu} is configured by an AXI slave interface and accesses instructions by an AXI master interface.
+% It can be configured to make best use of the size of the \acrshort{fpga}.
+It can be configured so that the size of the \acrshort{fpga} is used optimally.
+The encrypted \acrshort{rtl} design files are available on GitHub.
 To use the \acrshort{dpu}, a device driver is required \cite{dpu_product_guide}.
 This driver is included in the Xilinx Vitis AI development kit \cite{dpu_product_guide_v3_2}.
 
 \subsection{Configuration}
 \label{subsec:embedded_platform:dpu:configuration}
-\paragraph{Number of \acrshortpl{dpu}}
-The number of \acrshortpl{dpu} is set in the \texttt{prj\_config} configuration file with nk=dpu\_xrt\_top:x.
-The variable x stands for the number of \acrshortpl{dpu}.
-Depending on the Ultrascale+ device, one to three \acrshort{dpu} cores can be implemented.
-For example on a ZU02 to ZU5 device, only one core is supported.
-On a ZU7 device it is possible to implement two cores while on a ZU9 even three cores are feasible.
+\paragraph{Number of DPUs}
+The number of \acrshortpl{dpu} is set in the \texttt{prj\_config} configuration file with \texttt{nk=dpu\_xrt\_top:x}.
+The variable \texttt{x} stands for the number of \acrshortpl{dpu}.
+Depending on the UltraScale+ device, one to three \acrshort{dpu} cores can be implemented.
+For example, only one core is supported on ZU2 to ZU5 devices.
+On a ZU7 device it is possible to implement two cores, while on a ZU9 device even three cores can be implemented.
 
 \paragraph{Clock}
-The clock frequency is set in the \texttt{prj\_config} file as well.
+The clock frequency is also defined in the \texttt{prj\_config} file.
 For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
-Because of a hardware design mistake on the Ultra96-V2 board, the maximum frequency lies at \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with Petalinux.
-On higher frequencies the \acrfull{pmic} reboots the whole system.
-It is possible to fix this issue, but it needs both a hardware and a software change \cite{pmic_issue}.
-The frequency can be set  by setting the variable  freqHz=150000000:DPUCZDX8G\_1.aclk.
-Another way is using the predefined frequencies from Xilinx.
-Table \ref{tab:frequencies_ids} shows the possibilities.
+Due to a hardware design flaw on the Ultra96-V2 board, the maximum frequency is \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with PetaLinux.
+At higher frequencies the \acrfull{pmic} reboots the entire system.
+uld be possible to fix this problem, but it requires both hardware and firmware changes \cite{pmic_issue}.
+The frequency can be adjusted by setting the variable \texttt{freqHz=150000000:DPUCZDX8G\_1.aclk}.
+% Another way is using the predefined frequencies from Xilinx.
+Another possibility is to use the predefined frequencies from Xilinx.
+Table \ref{tab:frequencies_ids} lists the possible values.
 
-\begin{table}[hb]
+\begin{table}
   \caption{Ids and their Frequencies}
   \label{tab:frequencies_ids}
   \centering
@@ -48,28 +51,31 @@ Table \ref{tab:frequencies_ids} shows the possibilities.
   \end{tabular}
 \end{table}
 
-To use the ID, replace freqHz with id and 15000000 with 0.
-Besides this clock the ap\_clk\_2 must be set as well.
-This one should have double frequency of the aclk and is the one which should not exceed \SI{300}{MHz}.
+% To use the ID, replace freqHz with id and 15000000 with 0.
+To use the ID, \texttt{freqHz} must be replaced by \texttt{id} and \num{15000000} by 0.
+% Besides this clock the \texttt{ap\_clk\_2} must be set as well.
+In addition to this clock, \texttt{ap\_clk\_2} must also be set.
+This clock should be twice the frequency of \texttt{aclk} and is the one that should not exceed \SI{300}{MHz}.
 
-\paragraph{\acrshort{dpu} Architecture}
+\paragraph{DPU Architecture}
 The following configurations are set in the \texttt{dpu\_conf.vh} file.
 The \acrshort{dpu} IP can be configured with different convolution architectures.
 They are related to the parallelism of the convolution unit.
-On a ZU3EG the best results can be achieved with a B2304 architecture.
-2304 are the maximum operatings per clock.
-Therefore, a higher number means higher throughput.
-B2304 architecture is used in this project.
-Table \ref{tab:arch_parallelism} shows all available architectures and the correlation to the parallelism.
+On a ZU3EG device the best results can be achieved with a B2304 architecture.
+\num{2304} refers to the maximum operations per clock.
+Therefore, a higher number corresponds to a higher throughput.
+% B2304 architecture is used in this project.
+In this project the B2304 architecture is used.
+Table \ref{tab:arch_parallelism} lists all available architectures and the correlation to the parallelism.
 
-\begin{table}[hb]
+\begin{table}
   \caption{Parallelism for Different Convolution Architectures \cite{dpu_product_guide}}
   \label{tab:arch_parallelism}
   \centering
   \begin{tabular}{lllll}
     \toprule
-    \textbf{Architecture} & \textbf{Pixel} & \textbf{Input Channel} & \textbf{Output Channel} & \textbf{Peak Ops} \\
-     & \textbf{Parallelism} & \textbf{Parallelism} & \textbf{Parallelism} & \textbf{(ops per clock)} \\
+     & \textbf{Pixel} & \textbf{Input Channel} & \textbf{Output Channel} & \textbf{Peak Ops} \\
+    \textbf{Architecture} & \textbf{Parallelism} & \textbf{Parallelism} & \textbf{Parallelism} & \textbf{(ops per clock)} \\
     \midrule
     B512 & 4 & 8 & 8 & 512 \\
     B800 & 4 & 10 & 10 & 800 \\
@@ -84,53 +90,58 @@ Table \ref{tab:arch_parallelism} shows all available architectures and the corre
 \end{table}
 
 \paragraph{RAM Usage}
-The RAM Usage can be set high or low.
-If the chip does not possess UltraRAM the on-chip \acrshort{bram} is used and the UltraRAM must be disabled.
+The RAM usage can be set to high or low.
+If the chip has no UltraRAM, the on-chip \acrshort{bram} is used and the UltraRAM must be disabled.
 One block has a size of \SI{36}{kB} and for the B2304 architecture 167 such blocks are used for \acrshort{ram} low and 211 for \acrshort{ram} high.
-If UltraRAM is available, several other defines need to be set.
-The listing \ref{lst:config_dpu} shows an example, how to do it with a B4096 architecture.
+If UltraRAM is available, several other defines need to be specified.
+Listing \ref{lst:config_dpu} shows an example of how to do this with a B4096 architecture.
 The UltraRAM numbers can be found in the Zynq \acrshort{dpu} \acrshort{ip} product guide.
-The ZU3EG device is in possession of 216 \acrfull{bram} and no UltraRAM.
-Because the RAM for the \acrshort{pl} is not used for any other calculation, RAM high can be activated and UltraRAM should be disabled.
-Practical tests showed throughput time reductions of about 20\% with \acrshort{ram} high compared to RAM low.
-\todo[inline]{chamer so öppis do ine schriibe?}
+The ZU3EG device has 216 \acrfull{bram} blocks and no UltraRAM.
+% Because the RAM for the \acrshort{pl} is not used for any other calculation, RAM high can be activated and UltraRAM should be disabled.
+Since RAM for the \acrshort{pl} is not used for any other calculation, RAM high can be enabled and UltraRAM must be disabled.
+Practical tests showed throughput time reductions of about \SI{20}{\percent} with \acrshort{ram} high compared to \acrshort{ram} low.
 
 \paragraph{Channel Augmentation}
 This feature improves the efficiency of the \acrshort{dpu} when the number of input channels is lower than the available channel parallelism.
-Activating this function costs extra logic resources.
-In this CNN there are three input channels and therefore, channel augmentation is enabled.
+Activating this function costs additional logic resources.
+% In this CNN there are three input channels and therefore, channel augmentation is enabled.
+This \acrshort{cnn} has three input channels, and therefore, channel augmentation is enabled.
 
 \paragraph{Depthwise Convolution}
-In standard convolution, the operations are performed for each input channel separately with one specific kernel and the results are combined over all channels.
-In depthwise separable convolution, the operation is performed in two steps: depthwise convolution and pointwise convolution.
-Depthwise convolution is enabled because it allows for more flexibility with the \acrshort{cnn} architecture.
+In standard convolution, operations are performed separately for each input channel with a specific kernel and the results are combined across all channels.
+In depthwise separable convolution, the operations are performed in two steps: depthwise convolution and pointwise convolution.
+Depthwise convolution is enabled because it allows for more flexibility in the \acrshort{cnn} architecture.
 
 \paragraph{AveragePool}
-Average pooling can be done on the \acrshort{dpu} or not.
-The supported sizes go from $2\times2$ to $8\times8$, with only square sizes supported.
+% Average pooling can be done on the \acrshort{dpu} or not.
+Average pooling can be enabled or disabled on the \acrshort{dpu}.
+The supported size ranges from $2\times2$ to $8\times8$, with only square sizes supported.
 Average pooling is activated to accelerate the whole process.
 
 \paragraph{ReLU Type}
-By default the ReLu and ReLU6 function are supported.
-It is possible to include the LeakyReLU function as well with low resource usage.
-Because of the low resource consumption LeakyReLU is also included.
-So if the \acrshort{cnn} is changed the \acrshort{dpu} does not have to be rebuilt. 
+By default the \acrshort{relu} and \acrshort{relu}6 activation functions are supported.
+It is possible to include the Leaky\acrshort{relu} function as well with low resource consumption.
+% Because of the low resource consumption Leaky\acrshort{relu} is also included.
+Due to the low consumption of resources, Leaky\acrshort{relu} is also included.
+So if the \acrshort{cnn} is changed, the \acrshort{dpu} does not have to be rebuilt.
 
 \paragraph{Softmax}
-The softmax function can be implemented in hardware or in software.
-Implemented on hardware, the function is about 160 times faster than a software implementation.
-The function needs approximately \SI{10000}{\acrshortpl{lut}}, four \acrshortpl{bram} and 14 \acrshortpl{dsp}.
-If the resources run out the \acrlong{dnnc} implements the function independently in software.
-The softmax function is not available in Zynq-7000 devices \cite{dpu_product_guide}. 
+The softmax function can be implemented in both hardware and software.
+% Implemented on hardware, the function is about 160 times faster than a software implementation.
+The function implemented on hardware is about 160 times faster than a software implementation.
+The function needs approximately \SI{10000}{\acrshortpl{lut}}, four \acrshort{bram} blocks and 14 \acrshort{dsp} slices.
+If the resources run out, the \acrlong{dnnc} implements the function independently in software.
+The softmax function is not available on Zynq-7000 devices \cite{dpu_product_guide}. 
 
-Implementing the softmax in hardware is not done using a define, but during the build process.
-The make command is \texttt{make KERNEL=DPU\_SM} instead of \texttt{make KERNEL=DPU}.
+% Implementing the softmax in hardware is not done using a define, but during the build process.
+The implementation of the softmax function in hardware is not done via a define, but during the build process.
+The \texttt{make} command is \texttt{make KERNEL=DPU\_SM} instead of \texttt{make KERNEL=DPU}.
 The softmax layer is not implemented in hardware in this project.
 
 \paragraph{Configuration File}
-With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3EG device could look like this:
+With all configuration settings, the \texttt{dpu\_config.vh} file for a ZU3EG device could look like this:
 
-\begin{lstlisting}[style=bash, caption={Configure \acrshort{dpu}}, label=lst:config_dpu]
+\begin{lstlisting}[style=bash, caption={DPU configuration}, label=lst:config_dpu]
   `define B2304
   `define URAM_DISABLE 
 
@@ -155,19 +166,19 @@ With all the configuration settings, the \texttt{dpu\_config.vh} file for a ZU3E
 \subsection{Building}
 \label{subsec:embedded_platform:dpu:building}
 
-The \texttt{DPU-PYNQ} repository from Xilinx which is used to patch PYNQ can be used to build the \acrshort{dpu} as well.
+The \texttt{DPU-PYNQ} repository from Xilinx, which is used to patch PYNQ, can be used to build the \acrshort{dpu}.
 It needs to be cloned to the host computer.
 By cloning the repository the \texttt{Vitis-AI} repository is cloned as a submodule.
-It contains the \texttt{DPU-TRD} folder to build a \acrshort{dpu}.
-In a next step the created configuration files need to be copied to the \texttt{boards/Ultra96} directory.
-Now, the Xilinx tools Vitis and \acrshort{xrt} must be sourced as shown in listing \ref{lst:source_tools}.
-The makefile checks if all required tools are installed and sourced and then starts Vivado.
-During the building process which can take more than an hour the bitstream is generated. 
-After running the makefile in the \texttt{boards} directory with the parameter BOARD=Ultra96, the files \texttt{dpu.bit}, \texttt{dpu.hwh} and \texttt{dpu.xclbin} are created and located in the same directory as the configuration files were stored.
-Those files can be copied to the board and the customized \acrshort{dpu} is ready to use.
+It contains the \texttt{DPU-TRD/} directory to build a \acrshort{dpu}.
+In a next step the created configuration files must be copied to the \texttt{boards/Ultra96/} directory.
+Now the Xilinx tools Vitis and \acrshort{xrt} must be sourced as shown in listing \ref{lst:source_tools}.
+The Makefile checks if all required tools are installed and sourced and then starts Vivado.
+During the building process, which can take more than an hour, the bitstream is generated. 
+After executing the Makefile in the \texttt{boards/} directory with the parameter \texttt{BOARD=Ultra96}, the files \texttt{dpu.bit}, \texttt{dpu.hwh} and \texttt{dpu.xclbin} are created and located in the same directory where the configuration files were stored.
+These files can be copied to the board and the customized \acrshort{dpu} is ready for use.
 
-When working with Petalinux the generated \texttt{BOOT.BIN} is of interest as well.
-This file is located in the \texttt{boards/Ultra96/binary\_container\_1/sd\_card} directory.
-The \texttt{BOOT.BIN} is responsible to load the \acrshort{dpu} on boot with the \texttt{.xclbin} file.
-The \texttt{.xclbin} file file should be located at \texttt{/usr/lib} on the board.
-Using PYNQ the \acrshort{fpga} can be programmed while starting the application.
+When working with PetaLinux the generated \texttt{BOOT.BIN} file is also of interest.
+This file is located in the \texttt{boards/Ultra96/binary\_container\_1/sd\_card/} directory.
+The \texttt{BOOT.BIN} file is responsible for loading the \acrshort{dpu} during boot with the \texttt{.xclbin} file.
+The \texttt{.xclbin} file file should be located under \texttt{/usr/lib/} on the board.
+Using PYNQ, the \acrshort{fpga} can be programmed when the application is started.

@@ -2,28 +2,30 @@
 \label{sec:embedded_platform:host_prerequisites}
 
 The prerequisites depend on which \acrshort{os} is used (see section \ref{sec:embedded_platform:operating_systems}).
-Table \ref{tab:prerequisits_hardware} shows which resources are needed for different building processes.
-The three different tasks will be explained later in this chapter. 
+Table \ref{tab:prerequisits_hardware} lists the required resources for the different building processes.
+The three different tasks will be explained later in this chapter.
 
-\begin{table}[hb]
+\begin{table}[b]
   \caption{Prerequisites for different tasks}
   \label{tab:prerequisits_hardware}
   \centering
   \begin{tabular}{llll} % l
     \toprule
-    \textbf{} & \textbf{Build PYNQ} \cite{avnet_pynq_github} & \textbf{Build Platform} \cite{vitis_user_guide} & \textbf{Build Petalinux} \cite{petalinux_user_guide} \\ %& \textbf{Xilinx Tools} \cite{vitis_user_guide}
+    \textbf{} & \textbf{Build PYNQ} \cite{avnet_pynq_github} & \textbf{Build Platform} \cite{vitis_user_guide} & \textbf{Build PetaLinux} \cite{petalinux_user_guide} \\ %& \textbf{Xilinx Tools} \cite{vitis_user_guide}
     \midrule
     RAM & \SI{8}{GB} & \SI{32}{GB} & \SI{8}{GB} \\ % & \SI{32}{GB} 
     Hard Disk Space & \SI{80}{GB} & \SI{100}{GB} & \SI{100}{GB} \\ % & \SI{80}{GB} 
-    \acrlong{os} & Ubuntu 16.04 & div & div \\ % & div
+    Operating System & Ubuntu 16.04 & various & various \\ % & div
     \bottomrule
   \end{tabular}
 \end{table}
 
-Supported \acrlongpl{os} to build the platform or Petalinux are \cite{vitis_user_guide, petalinux_user_guide}:
+Supported \acrlongpl{os} to build the platform or PetaLinux are \cite{vitis_user_guide, petalinux_user_guide}:
+
 \begin{itemize}
   \item Red Hat Enterprise Workstation/Server 7.4, 7.5, 7.6 (64-bit)
   \item CentOS Workstation/Server 7.4, 7.5, 7.6 (64-bit)
-  \item Ubuntu Linux Workstation/Server 16.04.5, 16.04.6, 18.04.1,18.04.02 (64-bit)
+  \item Ubuntu Linux Workstation/Server 16.04.5, 16.04.6, 18.04.1, 18.04.02 (64-bit)
 \end{itemize}
-The newer releases of Ubuntu like 18.04.4 or 20.04.1 are not supported officially.
+
+The newer releases of Ubuntu like 18.04.4 or 20.04.1 are not officially supported.

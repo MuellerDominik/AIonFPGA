@@ -1,26 +1,29 @@
 \section{Model Deployment}
 \label{sec:embedded_platform:model_deployment}
-Xilinx provides functions to prepare the deployed model described in chapter \ref{ch:training_of_the_cnn} for the \acrshort{dpu}.
+
+% Xilinx provides functions to prepare the deployed model described in chapter \ref{ch:training_of_the_cnn} for the \acrshort{dpu}.
+Xilinx provides functions to prepare the floating-point model described in chapter \ref{ch:training_of_the_cnn} for the \acrshort{dpu}.
 The preparation is done in two main steps:
 \begin{enumerate}
 	\item Quantization
 	\item Compilation
 \end{enumerate}
-Xilinx makes it easy to use those functions by using docker.
-Docker makes it possible to run an application in an isolated environment called container.
-The Xilinx images to create a container are distributed via DockerHub.
-An image is pulled automatically when a command like
+Xilinx makes it easy to use those functions by using Docker.
+% Docker makes it possible to run an application in an isolated environment called container.
+Docker allows you to run an application in an isolated environment called a container.
+The Xilinx images for creating a container are distributed via Docker Hub.
+An image is automatically pulled when a command like
 \begin{lstlisting}[style=bash, caption={}, label=lst:pull_img]
   docker run "xilinx/vitis-ai:1.1.56"
 \end{lstlisting}
 is executed for the first time \cite{docker_overview}.
-The functions to quantize and compile are installed in the xilinx/vitis-ai image in binary form.
-The process showed in figure \ref{fig:petalinux_workflow} is valid apart from building the Vitis Platform.
+The functions for quantization and compilation are installed in binary form in the \texttt{xilinx/vitis-ai} image.
+The process shown in figure \ref{fig:petalinux_workflow} is valid apart from the building of the Vitis Platform.
 
 \subsection{Quantize}
 \label{subsec:embedded_platform:model_deployment:quantize}
-The function to quantize a Tensorflow model is named vai\_q\_tensorflow, where vai stands for Vits AI and q means quantize.
-Quantize a Caffe model is possible with the vai\_q\_caffe function.
+The function to quantize a TensorFlow model is called \texttt{vai\_q\_tensorflow}, where \textit{vai} stands for Vits AI and \textit{q} for quantization.
+Quantize a Caffe model is possible with the \texttt{vai\_q\_caffe} function.
 The quantizer has the following parameters:
 \begin{itemize}
 	\item quantize
@@ -28,17 +31,16 @@ The quantizer has the following parameters:
 \end{itemize}
 
 \paragraph{Quantize}
-The Vitis AI quantizer takes a floating-point model as input (prototxt and caffemodel for the
-Caffe version, and frozen GraphDef file for the TensorFlow version).
+The Vitis AI quantizer takes a floating-point model as input (prototxt and caffemodel for the Caffe version, and frozen GraphDef file for the TensorFlow version).
 First the useless nodes are removed and the batchnorms are folded.
-In a next step the quantization is applied.
-After quantization the weights, biases and activations have a given bit width, like for example eight bit.
+In a next step, quantization is applied.
+After quantization, the weights, biases and activations have a given bit width, such as 8-bit.
 
 A calibration image dataset is required to check the quality of the quantized neural network.
 This dataset contains between \numrange{100}{1000} unlabeled frames \cite{vitis_ai_user_guide}.
-The output of the quantization is a \acrshort{dpu} deployable model named deploy\_model.pb for a tensorflow model and a deploy.prototxt/deploy.caffemodel for caffe.
+The result of the quantization is a \acrshort{dpu} deployable model named \texttt{deploy\_model.pb} for a TensorFlow model and a \texttt{deploy.prototxt} / \texttt{deploy.caffemodel} for Caffe.
 
-Listing \ref{lst:quantize} shows an example how the quantize command could look like.
+Listing \ref{lst:quantize} shows an example of what the quantization command might look like.
 
 \begin{lstlisting}[style=bash, caption={Quantize command}, label=lst:quantize]
   vai_q_tensorflow quantize \
@@ -52,45 +54,49 @@ Listing \ref{lst:quantize} shows an example how the quantize command could look 
   --method 1
 \end{lstlisting}
 
-The input node name as well as the output node name are set when generating the frozen graph.
+% The input node name as well as the output node name are set when generating the frozen graph.
+Both the name of the input node and the name of the output node are defined during the generation of the frozen graph.
 These are the first and last entries when the layers are listed.
-The parameter input\_frozen\_graph is the path and name of the frozen graph generated as described in subsection \ref{subsec:training_of_the_cnn:training:saving_of_the_model}.
+The parameter \texttt{input\_frozen\_graph} is the path to the frozen graph, which is generated as described in section \ref{subsec:training_of_the_cnn:training:saving_of_the_model}.
 
-The input\_nodes defines the first layer to be quantized and the last layer is set by the output\_nodes.
-The input\_fn is a python script which processes the calibration images as it is done during inference.
-Amongst others the path to the calibration dataset is set in the python script.
-Calib\_iter defines the number of iterations.
-100 is the default number but 50 turned out to be quite enough.
-Method can be set either to 0 or 1.
-1 is the default and sets the min-diff method.
-When method is set to 0 no values are saturated during quantization which makes it sensitive to outliers.
+The \texttt{input\_nodes} parameter defines the first layer to be quantized and the last layer is set by the \texttt{output\_nodes} parameter.
+The \texttt{input\_fn} is a Python script that processes the calibration images in the same way as during inference.
+% Amongst others the path to the calibration dataset is set in the python script.
+Among other things, the path to the calibration dataset is defined in the Python script.
+The parameter \texttt{calib\_iter} defines the number of iterations.
+100 is the default number but 50 turned out to be quite sufficient.
+The parameter \texttt{method} can be set either to 0 or 1.
+1 is the default setting and specifies the min-diff method.
+If the \texttt{method} parameter is set to 0, no values are saturated during quantization, which makes it sensitive to outliers.
 
 \paragraph{Dump}
-It is possible to dump the quantized model for example to debug or for better understanding of the deployed \acrshort{cnn}.
-The difference between the listing \ref{lst:quantize} and the dump command is the batch size which is now called max\_dump\_batches and can be set to one.
-The second difference is that the input\_frozen\_graph should not be the quantized output.
-There is one more parameter called dump\_float.
-If dump\_float is set to 1 the float weights and activations are dumped as well.
-The default is 0.
-Furthermore calling the dump function is done by vai\_q\_tensorflow dump.
+It is possible to dump the quantized model e.g. for troubleshooting or for a better understanding of the deployed \acrshort{cnn}.
+The difference between listing \ref{lst:quantize} and the dump command is the batch size, which is now called \texttt{max\_dump\_batches} and can be set to one.
+The second difference is that the \texttt{input\_frozen\_graph} should not be the quantized output.
+There is one more parameter called \texttt{dump\_float}.
+If \texttt{dump\_float} is set to 1, the float weights and activations are also dumped.
+The default value of this parameter is 0.
+Furthermore, the dump function is called by \texttt{vai\_q\_tensorflow dump}.
 
 \paragraph{Prune}
-Most neural network have significant redundancy to achieve a certain accuracy.
-The redundancy comes from over-parameterized models.
-Pruning is a process of removing some of those weights while keeping the accuracy loss as low as possible \cite{pruning_overview}.
+% Most neural network have significant redundancy to achieve a certain accuracy.
+Most neural networks have considerable redundancy to achieve a certain accuracy.
+The redundancy comes from overparameterized models.
+Pruning is the process of removing some of the weights while keeping the loss of accuracy as low as possible \cite{pruning_overview}.
 Pruning a model needs a lot of hardware resources and time.
-Although pruning is part of the quantize procedure, it is packed in the Vitis AI optimizer.
-To get the optimizer it is needed to contact the Xilinx support team.
-Therefore, pruning is not applied in this project.
+Although pruning is part of the quantization process, it is packed in the Vitis AI optimizer.
+To obtain the optimizer, it is necessary to contact the Xilinx support team.
+Therefore, no pruning is carried out in this project.
 
 \subsection{Compile}
 \label{subsec:embedded_platform:model_deployment:compile}
-According to the Vitis AI quantize tool the compile command is named vai\_c\_tensorflow.
+According to the Vitis AI quantize tool, the compile command is named \texttt{vai\_c\_tensorflow}.
 The goal of the compiler is to map the network model into a highly optimized \acrshort{dpu} instruction sequence.
 
-Start compiling can be done like shown in listing \ref{lst:compile}.
+% Start compiling can be done like shown in listing \ref{lst:compile}.
+The compilation can be done as shown in listing \ref{lst:compile}.
 
-\begin{lstlisting}[style=bash, caption={Compile command}, label=lst:compile]
+\begin{lstlisting}[style=bash, caption={Compilation command}, label=lst:compile]
   vai_c_tensorflow \
   --arch arch.json \
   --frozen_pb deploy_model.pb \
@@ -99,9 +105,9 @@ Start compiling can be done like shown in listing \ref{lst:compile}.
   --options "{'mode': 'normal'}"
 \end{lstlisting}
 
-The \texttt{arch.json} contains information about the hardware in a key value pair format.
-To define the \acrshort{dpu} as edge \acrshort{dpu} the key \texttt{target} is set to \texttt{dpuv2}.
-Furthermore, the \texttt{cpu\_arch} is set to \texttt{arm64} for Ultrascale+ \acrshort{mpsoc}.
+The \texttt{arch.json} file contains information about the hardware in a key-value pair format.
+To define the \acrshort{dpu} as edge, the key \texttt{target} is set to \texttt{dpuv2}.
+Furthermore, the \texttt{cpu\_arch} key is set to \texttt{arm64} for UltraScale+ \acrshortpl{mpsoc}.
 The compiler also needs the built \acrshort{dpu} information as a \acrfull{dcf}.
 The \texttt{dpu.hwh} file contains all information to generate a \acrshort{dcf}.
 Xilinx provides a function called \texttt{dlet} in the docker image.
@@ -109,9 +115,9 @@ By executing the command
 \begin{lstlisting}[style=bash, caption={}, label=lst:dlet]
   dlet -f dpu.hwh
 \end{lstlisting}
-a file called \texttt{dpu-dd-mm-yyyy-hh-mm.dcf} is created where dd-mm-yyyy-hh-mm is the timestamp when the \texttt{dpu.hwh} file was created \cite{vitis_ai_user_guide}.
+a file named \texttt{dpu-<dd-mm-yyyy-hh-mm>.dcf} is created, where \texttt{<dd-mm-yyyy-hh-mm>} is the timestamp when the \texttt{dpu.hwh} file was created \cite{vitis_ai_user_guide}.
 
-The whole \texttt{arch.json} file can look like this:
+The entire \texttt{arch.json} file may look like this:
 \begin{lstlisting}[style=bash, caption={}, label=lst:arch_json]
   {
   	"target": "dpuv2",
@@ -120,14 +126,19 @@ The whole \texttt{arch.json} file can look like this:
   }
 \end{lstlisting}
 
-Due to a programming error of Xilinx the net name must not end with an s.
-The Python script which loads the overlay removes everything from the end of the netname until there is no s or \_0.
-\todo[inline]{what does it remove exactly?}
+Due to a programming error of Xilinx, the \texttt{net\_name} parameter must not end with an \texttt{s}.
+The Python script responsible for loading the overlay uses the \texttt{rstrip} function to remove the trailing charachter sequence \texttt{.s}.
+However, the \texttt{rstrip} function cannot be used to remove charachter sequences, only single characters.
+It therefore removes any trailing \texttt{.} (dot) or \texttt{s} until another charachter is present.
+% It therefore removes as many trailing charachters until the last charachter is not contained in the specified sequence.
+% everything from the end of the specified name until there is no s or \_0.
+% \todo[inline]{what does it remove exactly?}
 
 The \acrshort{dpu} mode can be set either to normal, profile or debug mode.
-In normal mode the application can get the best performance.
-When using the profile mode, output is printed to the console.
-If debug mode is selected, raw data for each \acrshort{dpu} computation node will be dumped.
+In normal mode the application can achieve the best performance.
+When using the profile mode, the output is printed to the console.
+% If debug mode is selected, raw data for each \acrshort{dpu} computation node will be dumped.
+If debug mode is selected, raw data is dumped for each \acrshort{dpu} computation node.
 
-After the compilation is done a file named \textit{netname}.elf is stored in the defined output directory.
+After the compilation is done a file with the name \texttt{<netname>.elf} is SAVED in the defined output directory.
 In the example listing \ref{lst:compile} it would be \texttt{fhnw\_toys\_0.elf}.

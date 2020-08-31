@@ -1,17 +1,17 @@
-\section{\acrshort{mpsoc} Block Diagram}
+\section{MPSoC Block Diagram}
 \label{sec:embedded_platform:block_diagram}
 
 Figure \ref{fig:hardware_overview} shows the most important hardware components for this project on the Ultra96-V2 board.
-The communication and data shifting is handled by the interconnects, on the \acrlong{pl} side it is the AXI Interconnect \cite{mpsoc_memory}.
+Communication and data transfer is handled by the interconnects, on the \acrlong{pl} side it is the AXI Interconnect \cite{mpsoc_memory}.
 Recorded frames are stored in the \acrshort{ram} and retrieved when needed.
 The Mali-400 MP2 is an OpenGL multi core \acrfull{gpu} distributed by ARM \cite{arm_mali}.
-A \acrshort{gpu} is needed to run the graphical interface.
-The \acrshort{pl} contains the \acrshort{dpu} to run the inference.
+A \acrshort{gpu} is required to use the graphical interface.
+The \acrshort{pl} contains the \acrshort{dpu} to run inference.
 The application and the operating system run on the ARM processor.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.5\textwidth]{graphics/hardware_overview.pdf}
-	\caption{Available hardware on the Ultra96-V2}
-	\label{fig:hardware_overview}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.5\textwidth]{graphics/hardware_overview.pdf}
+  \caption{Available hardware on the Ultra96-V2}
+  \label{fig:hardware_overview}
 \end{figure}
