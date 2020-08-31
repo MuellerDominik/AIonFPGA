@@ -26,7 +26,7 @@ These predictions are then weighted and the result is displayed on the screen.
 % In a last step, the global variables are reset to their original values.
 Finally, the global variables are reset to their original values.
 % This completes the cycle and the image acquisition is started again.
-This completes the sequence and the image acquisition is started again.
+% This completes the sequence and the image acquisition is started again.
 This completes the never-ending sequence and the image acquisition is started again.
 
 \begin{figure}
@@ -283,7 +283,7 @@ The output values of the quantized \acrshort{cnn} model are denoted by the outpu
   \label{eq:output_vector}
 \end{equation}
 
-The values of the output vector $\boldsymbol{z}$ are 8-bit integers which represent a fixed-point format.
+The values of the output vector $\boldsymbol{z}$ are 8-bit signed integers which represent a fixed-point format.
 % on these the softmax function is used to get probabilities (read more theory about this!)
 % To normalize the the output vector to a probability distribution, the softmax function is used.
 % The softmax function is used to normalize the values of the output vector to a discrete probability distribution over the target classes.

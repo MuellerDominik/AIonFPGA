@@ -33,7 +33,8 @@ In general, Top-$K$ means that the element with the $K$-th highest probability o
 % Top-1 means that the element with the highest probability of the prediction vector corresponds to the true label.
 % Top-2 means that the element with the second highest probability of the prediction vector corresponds to the true label and so on.
 % For example, a prediction with a Top-2 accuracy means that the element with the second highest probability of the prediction vector corresponds to the true label, and so on.
-Consider, for example, a prediction with a Top-2 accuracy.
+% Consider, for example, a prediction with a Top-2 accuracy.
+Consider, for example, a prediction with a Top-$K$ value of two.
 This means that the element with the second highest probability of the prediction vector corresponds to its true label.
 % Consider, for example, a prediction with a Top-2 accuracy, which means that the element with the second highest probability of the prediction vector corresponds to its true label, and so on.
 % If two elements are equal, the lower-index element appears first.
@@ -159,7 +160,8 @@ Furthermore, it can be seen that the individual classes perform about equally we
 
 The computation of the classification accuracy of the quantized model is also implemented in the Python script \texttt{cnnv.py}.
 % another python script is used to exfiltrate
-However, the size of the entire test dataset is too large to fit on the SD card used.
+% However, the size of the entire test dataset is too large to fit on the SD card used.
+However, the size of the entire test dataset is too large to fit on the SD card.
 % For this reason the Python script \texttt{inference\_predictions.py} is used to generate all of the predictions in arbitrary sized batches.
 For this reason the Python script \texttt{inference\_predictions.py} is used to generate all predictions in arbitrary sized batches and store them in a NumPy array.
 % The generated NumPy array, which contains all of the predictions, can then be exfiltrated and used to to compute the overall Top-$K$ accuracy of the test dataset.
