@@ -158,12 +158,12 @@ def main():
     # Start acquisition (threaded)
     # todo: error handling ('Unexpected Error, system reboot required.')
     # start_acquisition = libcamera.start_acquisition() # non threaded approach
-    t = Thread(target=libcamera.start_acquisition) # threaded approach (process due to ctypes)
+    t = Thread(target=libcamera.start_acquisition)(*\label{lst:ln:threading}*) # threaded approach (process due to ctypes)
     t.start()
 
     # Wait until the throw has ended (the Ultra96-V2 is not powerful enough to process the data during the acquisition)
     while not libcamera.get_throw_end():
-      pass
+      pass(*\label{lst:ln:polling}*)
 
     throw_bgn_idx = libcamera.get_throw_bgn_idx()
     throw_end_idx = libcamera.get_throw_end_idx()

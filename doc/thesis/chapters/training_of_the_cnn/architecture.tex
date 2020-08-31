@@ -8,9 +8,9 @@
 Designing a \acrlong{cnn} architecture from scratch requires choosing the types of layers and their arrangement as well as many hyperparameters.
 % There are infinitely many ways to design a \acrlong{cnn} architecture from scratch (e.g. types of layers and their arrangement, many hyperparameters).
 % There is currently no perfect way to design a good model and a lot of trial and error is 
-For this reason, a lot of trial an error is involved in the design process of an adequate model \cite{}. % todo: cite http://www.isikdogan.com/blog/how-to-design-a-convolutional-neural-network.html
+For this reason, a lot of trial an error is involved in the design process of an adequate model \cite{training_arch_design}.
 % For this reason, there are a infinitely many ways to design an adequate model and a lot of trial an error is involved in the design process of an adequate model. % todo: cite http://www.isikdogan.com/blog/how-to-design-a-convolutional-neural-network.html
-There are, however, certain design principles that work really well \cite{}: % todo: cite https://towardsdatascience.com/a-guide-to-an-efficient-way-to-build-neural-network-architectures-part-ii-hyper-parameter-42efca01e5d7
+There are, however, certain design principles that work really well \cite{training_arch_hyper}:
 % the deeper in the net, the more filters and lower spatial dimensions (max pooling)
 
 \begin{enumerate}
@@ -53,7 +53,7 @@ The reason for this is that with the current architecture the classification per
 % number of parameter relatively low compared to state-of-the-art networks
 % compare this and back up with the citation below
 % Furthermore, the number of trainable parameters (weights) is relative low compared to state-of-the-art networks (e.g. VGG, ResNet, Inception) \cite{}. % todo: cite https://keras.io/api/applications/
-Furthermore, the number of trainable parameters (weights) is relative low compared to state-of-the-art networks like VGG, ResNet or Inception \cite{}. % todo: cite https://keras.io/api/applications/
+Furthermore, the number of trainable parameters (weights) is relative low compared to state-of-the-art networks like VGG, ResNet or Inception \cite{training_arch_keras}.
 This increases the throughput considerably, as less mathematical operations are required.
 % talk about the importance of keeping the parameters of the first fc layer down!
 % The keys to keeping the total number of trainable parameter low are the shape of the feature maps of the last convolutional layer and the artifical output neurons of the first dense layer.
@@ -108,20 +108,10 @@ For this reason the spatial dimensions of the feature maps should be decreased t
 % Figure \ref{fig:arch} shows the final architecture of the \acrshort{cnn} model.
 % Figure \ref{fig:arch} visualizes the final architecture of the \acrshort{cnn} model listed in table \ref{tab:arch}.
 Figure \ref{fig:arch} visualizes the final architecture of the \acrshort{cnn} model.
-The visualization was created with Ti\textit{k}Z and the help of the open-source repository \textit{PlotNeuralNetwork} \cite{example}.
+The visualization was created with Ti\textit{k}Z and the help of the open-source repository \textit{PlotNeuralNetwork} \cite{training_arch_plot}.
 % The final architecture of the \acrshort{cnn} model shown in figure \ref{fig:arch} was visualized with the help of the open source tool PlotNeuralNetwork \cite{}.
 % todo: cite https://github.com/HarisIqbal88/PlotNeuralNet or https://doi.org/10.5281/zenodo.2526396
 % Haris Iqbal. (2018, December 25). HarisIqbal88/PlotNeuralNet v1.0.0 (Version v1.0.0). Zenodo. http://doi.org/10.5281/zenodo.2526396
-% @software{haris_iqbal_2018_2526396,
-%   author       = {Haris Iqbal},
-%   title        = {HarisIqbal88/PlotNeuralNet v1.0.0},
-%   month        = dec,
-%   year         = 2018,
-%   publisher    = {Zenodo},
-%   version      = {v1.0.0},
-%   doi          = {10.5281/zenodo.2526396},
-%   url          = {https://doi.org/10.5281/zenodo.2526396}
-% }
 
 % todo: lots of sentences starting with 'the'
 The boxes represent the outputs of the different layers.
@@ -156,10 +146,10 @@ The \acrshort{cnn} architecture is defined in the Python script \texttt{cnn.py},
 % Implementation of the Keras API meant to be a high-level API for TensorFlow.
 % The script uses the open-source software library TensorFlow v2.2.0, which serves as the default backend for Keras
 % The script uses the open-source software library TensorFlow v2.2.0, along with the high-level Keras \acrshort{api} in the \texttt{tf.keras} module \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras
-The script uses the open-source software library TensorFlow v2.2.0, along with the high-level Keras \acrshort{api} implemented in the \texttt{tf.keras} module \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras
+The script uses the open-source software library TensorFlow v2.2.0, along with the high-level Keras \acrshort{api} implemented in the \texttt{tf.keras} module \cite{training_arch_tf_keras}.
 % todo: or maybe cite https://www.tensorflow.org/api_docs/python/tf/keras
 % easy implementation with the sequential model
-To define the architecture a \texttt{Sequential} model is used to arrange the desired layers in a plain stack \cite{}. % todo: cite https://www.tensorflow.org/guide/keras/sequential_model
+To define the architecture a \texttt{Sequential} model is used to arrange the desired layers in a plain stack \cite{training_arch_tf_keras_seq}.
 
 \begin{lstlisting}[style=python, caption={Sequential model}, label=lst:arch]
 # Convolutional Neural Network Architecture

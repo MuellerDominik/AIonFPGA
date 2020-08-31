@@ -58,7 +58,7 @@ The initialization procedure of the \acrshort{dpu} consists of loading and setti
 This is done with the two Python packages \texttt{pynq\_dpu} and \texttt{dnndk}.
 % The \texttt{pynq\_dpu} package provides a class to load the desired \acrshort{dpu} and the \texttt{dnndk} package is a thin wrapper around the \acrshort{n2cube} library.
 The \texttt{pynq\_dpu} package provides a class to load the desired \acrshort{dpu}.
-The \texttt{dnndk} package contains the \texttt{n2cube} module, which is a thin wrapper around the \acrshort{n2cube} library and allows to interface with the implemented \acrshort{dpu} \cite{}. % todo: cite https://github.com/Xilinx/DPU-PYNQ
+The \texttt{dnndk} package contains the \texttt{n2cube} module, which is a thin wrapper around the \acrshort{n2cube} library and allows to interface with the implemented \acrshort{dpu} \cite{inf_github_dpu_pynq}.
 
 % init DPU
 % done with overlays
@@ -81,7 +81,7 @@ This kernel contains the architecture and the weights of the quantized \acrshort
 \paragraph{Initializing the Camera}
 To initialize the camera, the camera library has to be loaded first.
 % explain import ctypes shortly
-This is done with the Python package \texttt{ctypes}, which provides C compatible data types and allows to call functions of shared libraries \cite{}. % todo: cite https://docs.python.org/3/library/ctypes.html
+This is done with the Python package \texttt{ctypes}, which provides C compatible data types and allows to call functions of shared libraries \cite{inf_ctypes}.
 Once loaded, the various mutator functions of the camera library are used to control settings such as the frame rate and the exposure time (see section \ref{sec:inference:camera_library}).
 
 % init camera
@@ -108,13 +108,13 @@ This enables the use of parallel processing.
 
 % thread -> Concurrency
 % process -> Parallelism
-The Python interpreter features a \acrfull{gil}, which allows only one thread to execute code \cite{}. % todo: cite https://opensource.com/article/17/4/grok-gil
+The Python interpreter features a \acrfull{gil}, which allows only one thread to execute code \cite{inf_gil}.
 % The Python standard library contains two packages to realize thread-based and process-based parallelism.
 However, the Python standard library contains two packages to realize thread-based and process-based parallelism.
-On the one hand, thread-based parallelism can be realized with the \texttt{threading} package \cite{}. % todo: cite https://docs.python.org/3/library/threading.html
-On the other hand, process-based parallelism can be realized with the \texttt{multiprocessing} package, which spawns a new process for each task \cite{}. % todo: cite https://docs.python.org/3/library/multiprocessing.html
+On the one hand, thread-based parallelism can be realized with the \texttt{threading} package \cite{inf_threading}.
+On the other hand, process-based parallelism can be realized with the \texttt{multiprocessing} package, which spawns a new process for each task \cite{inf_multiprocessing}.
 Different threads run concurrently, which means that different tasks are executed at the same time, but not simultaneously.
-Different processes can run simultaneously on different cores of the processor \cite{}. % todo: cite https://medium.com/swift-india/concurrency-parallelism-threads-processes-async-and-sync-related-39fd951bc61d
+Different processes can run simultaneously on different cores of the processor \cite{inf_parallelism}.
 
 % The problem with the \texttt{multiprocessing} package is, that different processes are not allowed to access different memory regions
 The problem with the \texttt{multiprocessing} package is, that different processes do not share memory.
@@ -126,7 +126,7 @@ This makes it impossible to poll the global variables, and therefore, the image 
 % explain that this is used:
 % from threading import Thread
 Fortunately, in this case the \texttt{threading} package is ideal.
-The \texttt{ctypes} package releases the \acrshort{gil} before calling a C function \cite{}. % todo: cite https://docs.python.org/3.3/library/ctypes.html
+The \texttt{ctypes} package releases the \acrshort{gil} before calling a C function \cite{inf_ctypes_gil}.
 This allows the \texttt{libcamera.start\_acquisition} function to run simultaneously in a thread on another processor core.
 
 However, practical tests have shown that the embedded system is not powerful enough to acquire and process frames at the same time.
@@ -235,12 +235,12 @@ This is done with the help of a pointer to the raw frame.
 In a second step, the color space is converted from raw Baumer \texttt{BayerRG8} to \acrshort{bgr}.
 % The conversion uses the \acrshort{opencv} function \texttt{cvtColor} with the color space conversion code \texttt{cv2.COLOR\_BayerBG2BGR} \cite{}. % todo: cite https://docs.opencv.org/3.4.3/d7/d1b/group__imgproc__misc.html#ga397ae87e1288a81d2363b61574eb8cab
 The conversion uses the \acrshort{opencv} function \texttt{cvtColor}, which operates on NumPy arrays.
-The required color space conversion code is set to \texttt{cv2.COLOR\_BayerBG2BGR} \cite{}. % todo: cite https://docs.opencv.org/3.4.3/d7/d1b/group__imgproc__misc.html#ga397ae87e1288a81d2363b61574eb8cab
+The required color space conversion code is set to \texttt{cv2.COLOR\_BayerBG2BGR} \cite{inf_opencv_color}.
 This odd conversion code results from the fact that Baumer and \acrshort{opencv} use different naming schemes.
 The Baumer \texttt{BayerRG} format corresponds to the \acrshort{opencv} \texttt{BayerBG} format.
 
 The third step is to resize the frames with the \acrshort{opencv} function \texttt{cv2.resize}.
-This function is supplied with three arguments: the NumPy array that represents the image, the desired output image size and the interpolation method \cite{}. % todo: cite https://docs.opencv.org/3.4.3/da/d54/group__imgproc__transform.html#ga47a974309e9102f5f08231edc7e7529d
+This function is supplied with three arguments: the NumPy array that represents the image, the desired output image size and the interpolation method \cite{training_opencv_resize}.
 % The used interpolation method used is the same one as during the training.
 % The interpolation method used is the same as during training (see section \ref{subsec:training_of_the_cnn:dataset:augmentation}).
 % The nearest-neighbor interpolation method is used, the same as during training (see section \ref{subsec:training_of_the_cnn:dataset:augmentation}).
@@ -272,7 +272,7 @@ The values of the output vector $\boldsymbol{z}$ are 8-bit signed integers which
 % on these the softmax function is used to get probabilities (read more theory about this!)
 % To normalize the the output vector to a probability distribution, the softmax function is used.
 % The softmax function is used to normalize the values of the output vector to a discrete probability distribution over the target classes.
-To normalize the values of the output vector to a discrete probability distribution over the target classes, the softmax function is used \cite{}. % todo: cite this https://towardsdatascience.com/the-softmax-function-neural-net-outputs-as-probabilities-and-ensemble-classifiers-9bd94d75932
+To normalize the values of the output vector to a discrete probability distribution over the target classes, the softmax function is used \cite{inf_softmax}.
 % formula for softmax!
 Calculating the individual probabilities is done with equation \ref{eq:softmax}.
 % todo: better do not cite https://towardsdatascience.com/softmax-activation-function-explained-a7e1bc3ad60
@@ -494,7 +494,7 @@ This results in the weighted prediction vector
 % done with numpy, explain the implementation and reference to it
 % The actual implementation uses matrix multiplication to simplify equation \ref{eq:weighted_probability}.
 The actual implementation uses matrix multiplication to perform this calculation efficiently.
-Therefore, the NumPy function \texttt{np.matmul} is used to calculate the matrix product of the two arrays \cite{}. % todo: cite https://numpy.org/doc/stable/reference/generated/numpy.matmul.html
+Therefore, the NumPy function \texttt{np.matmul} is used to calculate the matrix product of the two arrays \cite{inf_numpy_matmul}.
 This is shown in appendix \ref{app:inference_application} on line \ref{lst:ln:matrix_multiplication}.
 
 % todo: which version should be used?
@@ -579,7 +579,7 @@ The implementation of the image selection and preparation process is shown in ap
 The probabilities (in percent) are rounded to one decimal place before they are displayed on the screen.
 However, naively rounding percentages will quickly reveal the problem that the total value does not always add up to \SI{100}{\percent}.
 The largest remainder method is used to fix this problem.
-This simple method consists of the following easy three steps \cite{}: % todo: cite https://revs.runtime-revolution.com/getting-100-with-rounded-percentages-273ffa70252b
+This simple method consists of the following easy three steps \cite{inf_percentage}:
 \begin{enumerate}
   \item Flooring all values
   % \item Computing the difference between the sum of the floored values and the total value

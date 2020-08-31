@@ -3,7 +3,7 @@
 % \todo[inline]{layout, citations, todos, cleanup, \linebreak}
 
 % training is done in epochs (all frames from the training split are used for one epoch)
-The actual training of the \acrlong{cnn} model is implemented in the Python script \texttt{cnn.py} and uses the high-level Keras \acrshort{api} from the \texttt{tf.keras} module \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras
+The actual training of the \acrlong{cnn} model is implemented in the Python script \texttt{cnn.py} and uses the high-level Keras \acrshort{api} from the \texttt{tf.keras} module \cite{training_arch_tf_keras}.
 Four main steps are required to train the model:
 
 \begin{enumerate}
@@ -31,14 +31,14 @@ The pixel values of the frames are then converted to a 32-bit floating-point for
 % talk about why the normalization is necessary
 % Furthermore, the pixel values have to be normalized to the range between \numrange{0}{1}.
 % Furthermore, to avoid unexpected behaviour during training, the pixel values have to be normalized to the range between \numrange{0}{1}.
-To avoid unexpected behaviour during training, the pixel values have to be normalized to the range between \numrange{0}{1} \cite{}. % todo: cite https://machinelearningmastery.com/how-to-manually-scale-image-pixel-data-for-deep-learning/
+To avoid unexpected behaviour during training, the pixel values have to be normalized to the range between \numrange{0}{1} \cite{training_train_scaling}.
 % maybe cite this (or the other one): https://machinelearningmastery.com/how-to-normalize-center-and-standardize-images-with-the-imagedatagenerator-in-keras/
 
 % which is done with the help of the \texttt{Dataset\_Generator} class (see listing \ref{lst:dataset_generator_class}).
 This is done with the help of the \texttt{Dataset\_Generator} class.
 The \texttt{Dataset\_Generator} class inherits from the \texttt{tf.keras.utils.Sequence} superclass.
 The constructor loads the entire labels NumPy array and intializes the attributes of the class.
-Every \texttt{tf.keras.utils.Sequence} must implementt the \texttt{\_\_len\_\_} and \texttt{\_\_getitem\_\_} methods \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/utils/Sequence
+Every \texttt{tf.keras.utils.Sequence} must implementt the \texttt{\_\_len\_\_} and \texttt{\_\_getitem\_\_} methods \cite{training_arch_tf_keras_sequence}.
 The \texttt{\_\_len\_\_} method returns the total number of batches when the build-in Python \texttt{len} function is called.
 The \texttt{\_\_getitem\_\_} method loads a batch of frames as a NumPy array, converts the datatype to \texttt{np.float32} and normalizes the pixel values to the range between \numrange{0}{1}.
 The normalization is done by dividing all pixel values by the largest possible pixel value of \num{255}.
@@ -105,19 +105,20 @@ history = model.fit((*\label{lst:ln:fit}*)
 \end{lstlisting}
 
 % In a third step, the \acrshort{cnn} model is compiled, which configures the model for training \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/Sequential#compile
-In a third step, the \acrshort{cnn} model is compiled, which configures it for training \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/Sequential#compile
+In a third step, the \acrshort{cnn} model is compiled, which configures it for training \cite{training_arch_tf_keras_sequential}.
 % For this reason, an optimizer and loss function are specified.
 For this reason, an optimizer, a loss function and desired metrics to evaluate are specified.
 % The Adam optimizer is used, as it is computationally efficient and able to handle a large amount of parameters \cite{}. % todo: cite https://arxiv.org/pdf/1412.6980.pdf
-The \textit{Adam} optimizer is used, as it is computationally efficient and can handle a large number of parameters \cite{}. % todo: cite https://arxiv.org/pdf/1412.6980.pdf
+The \textit{Adam} optimizer is used, as it is computationally efficient and can handle a large number of parameters \cite{training_arch_adam}.
 % or maybe cite this, but I do not think so: https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/optimizers/Adam
 The cross-entropy loss function is used to evaluate how well the data is modeled.
-Therefore, it calculates the cross-entropy between the probability distribution of the predictions and the true labels \cite{}. % todo: cite https://medium.com/activating-robotic-minds/demystifying-cross-entropy-e80e3ad54a8 or https://machinelearningmastery.com/cross-entropy-for-machine-learning/
+Therefore, it calculates the cross-entropy between the probability distribution of the predictions and the true labels \cite{training_train_entropy}. 
+% or https://machinelearningmastery.com/cross-entropy-for-machine-learning/
 Keras provides the required implementation with the \texttt{SparseCategoricalCrossentropy} class.
 % The \textit{Sparse} indicates that the lables have to be provided as integers, rather than a one-hot representation.
 The \textit{Sparse} indicates that the labels must be provided as integers rather than in a one-hot representation.
 % Additionally, the \textit{Categorical} indicates that this is a multiclass calssification problem, rather than a binary one.
-Additionally, the \textit{Categorical} indicates that it is a multiclass calssification problem and not a binary one \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/losses/SparseCategoricalCrossentropy
+Additionally, the \textit{Categorical} indicates that it is a multiclass calssification problem and not a binary one \cite{training_train_tf_keras_crossentropy}.
 % The implementation is shown in listing \ref{lst:model_fitting} on line \ref{lst:ln:compile}.
 The method call is shown in listing \ref{lst:model_fitting} on line \ref{lst:ln:compile}.
 
@@ -126,7 +127,7 @@ The method call is shown in listing \ref{lst:model_fitting} on line \ref{lst:ln:
 The last step is the fitting of the model, which is done in so-called epochs.
 During an epoch, the entire dataset is used to train the model.
 % The weights are updated after each batch \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/Sequential#fit
-The training is performed batch-wise, which means that the weights are only updated after considering an entire batch \cite{}. % todo: cite https://www.tensorflow.org/versions/r2.2/api_docs/python/tf/keras/Sequential#fit
+The training is performed batch-wise, which means that the weights are only updated after considering an entire batch \cite{training_arch_tf_keras_sequential}.
 % The implementation uses a total of ten epochs ans saves the weights after each epoch (see listing \ref{lst:model_fitting} on line \ref{lst:ln:compile}).
 The implementation saves the weights after each of the ten epochs (see listing \ref{lst:model_fitting} on line \ref{lst:ln:fit}).
 
@@ -139,7 +140,7 @@ The implementation saves the weights after each of the ten epochs (see listing \
 % The training of the \acrshort{cnn} model is performed on a decent laptop computer featuring an Intel\textsuperscript{\textregistered} Core\textsuperscript{\texttrademark} i7-8850H processor with a max. turbo frequency of \SI{4.30}{GHz}, a mobile NVIDIA Quadro P3200 graphics card with \SI{6}{GiB} of dedicated \acrshort{gpu} memory and \SI{48}{GiB} of \acrshort{ram}.
 The training of the \acrshort{cnn} model is performed on a decent laptop computer featuring an Intel Core i7-8850H processor with a max. turbo frequency of \SI{4.30}{GHz}, a mobile NVIDIA Quadro P3200 graphics card with \SI{6}{GiB} of dedicated \acrshort{gpu} memory and \SI{48}{GiB} of \acrshort{ram}.
 The NVIDIA Quadro P3200 \acrshort{gpu} is CUDA-enabled and features a compute capability of \num{6.1} (which currently ranges from \numrange{2.0}{8.0}).
-As a result, the CUDA toolkit allows the training process to take advantage of \acrshort{gpu} acceleration \cite{}. % todo: cite https://developer.nvidia.com/cuda-gpus
+As a result, the CUDA toolkit allows the training process to take advantage of \acrshort{gpu} acceleration \cite{training_train_nvidia}.
 % Compute capabilities range from \numrange{2.0}{8.0}.
 
 The training of a single epoch takes about \SI{76}{min} on the \acrshort{cpu} and about \SI{6}{\min} on the \acrshort{gpu}.
@@ -175,7 +176,7 @@ This shows that there is no overfitting and that the \acrshort{cnn} model genera
 % The final model fit is saved in the TensorFlow SavedModel file format (\texttt{saved\_model.pb}).
 The final model fit is saved in the TensorFlow SavedModel file format (\texttt{assets/}, \texttt{variables/}, \texttt{saved\_model.pb}), which includes the weights and the computation (e.g. architecture, optimizer state).
 % This file format includes the weights and the computation (e.g. architecture, optimizer state), which is useful for sharing and deploying.
-This is very useful for sharing and deploying of the \acrshort{cnn} model. % todo: cite https://www.tensorflow.org/guide/keras/save_and_serialize
+This is very useful for sharing and deploying of the \acrshort{cnn} model \cite{training_train_tf_keras_saving_loading}.
 % this is a worse citation than the keras one % todo: cite https://www.tensorflow.org/guide/saved_model
 
 % In addition to the 
@@ -186,7 +187,7 @@ Xilinx requires such a frozen graph for the quantization of the \acrshort{cnn} m
 Unfortunately, TensorFlow dropped support for freezing models since v2.x.
 It is, however, still possible to freeze a model created with TensorFlow 2 with the usage of low-level TensorFlow \acrshort{api} calls.
 % For this purpose
-Listing \ref{lst:frozen_graph} shows how the the \texttt{frozen\_graph.pb} file is created \cite{}. % todo: cite https://leimao.github.io/blog/Save-Load-Inference-From-TF2-Frozen-Graph/
+Listing \ref{lst:frozen_graph} shows how the the \texttt{frozen\_graph.pb} file is created \cite{training_train_frozen}.
 
 For inference tasks, it is important to know the names of the input and output layers of the frozen graph.
 How this information can be obtained is shown in listing \ref{lst:frozen_graph} on line \ref{lst:ln:input_info} and \ref{lst:ln:output_info}.
@@ -194,8 +195,7 @@ The name of the input layer is \texttt{x} and the name of the output layer is \t
 
 \clearpage
 
-% todo: cite https://leimao.github.io/blog/Save-Load-Inference-From-TF2-Frozen-Graph/
-\begin{lstlisting}[style=python, caption={Saving the model in the frozen graph file format \cite{}}, label=lst:frozen_graph]
+\begin{lstlisting}[style=python, caption={Saving the model in the frozen graph file format \cite{training_train_frozen}}, label=lst:frozen_graph]
 # Saving the frozen graph
 # Convert the Keras model to a concrete function
 full_model = tf.function(lambda x: model(x))

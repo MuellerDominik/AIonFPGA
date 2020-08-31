@@ -127,14 +127,14 @@ Therefore, the inference screen usually looks more like the one shown in figure 
 The \acrlong{ui} is implemented as a class in the Python module \texttt{ui.py} and uses the Python packages PySimpleGUI as well as Matplotlib.
 
 PySimpleGUI allows for the creation of simple \acrlongpl{ui} that work across multiple platforms.
-Currently, there exist four ports of PySimpleGUI and the Tkinter variant is used by default \cite{}. % todo: cite https://realpython.com/pysimplegui-python/
-Tkinter is the standard Python interface to the Tk cross-platform widget toolkit that provides a library of graphical widgets to build \acrlongpl{ui} \cite{}. % todo: cite https://docs.python.org/3/library/tkinter.html
+Currently, there exist four ports of PySimpleGUI and the Tkinter variant is used by default \cite{inf_pysimplegui}.
+Tkinter is the standard Python interface to the Tk cross-platform widget toolkit that provides a library of graphical widgets to build \acrlongpl{ui} \cite{inf_tkinter}.
 
 % with the help of the plotting library Matplotlib.
 Matplotlib is a flexible plotting library which provides a MATLAB-like interface with the \texttt{pyplot} module.
 % Even though it is easy to use, one is still able to tweak low-level 
 % Even though it is easy to use, one still has full control over all the different properties of the plot \cite{}. % todo: cite https://matplotlib.org/3.1.1/index.html
-Even though it is extremely easy to use, full control over the various properties is not sacrificed as low-level commands are also available \cite{}. % todo: cite https://matplotlib.org/3.1.1/index.html
+Even though it is extremely easy to use, full control over the various properties is not sacrificed as low-level commands are also available \cite{inf_matplotlib}.
 
 % ------------------------------
 \paragraph{User Interface Class}
@@ -152,7 +152,7 @@ This standard \acrlong{ui} behaviour would render the entire package unusable.
 Fortunately, the \texttt{read} method allows to specify a timeout, which essentially turns it into polling mode.
 % Therefore, the \texttt{read} method is called with a short timeout of \SI{100}{ms} (necessary to update the screen) to create non-blocking methods.
 % Therefore, the \texttt{read} method is called with a short timeout of \SI{100}{ms}, which is necessary to update the screen.
-It is therefore called with a short timeout of \SI{100}{ms}, which is necessary to update the screen \cite{}. % todo: cite https://pysimplegui.readthedocs.io/en/latest/call%20reference/
+It is therefore called with a short timeout of \SI{100}{ms}, which is necessary to update the screen \cite{inf_pysimplegui_ref}.
 
 The \texttt{boot\_window} and \texttt{inference\_window} methods are used to spawn windows with the appropriate layouts described in section \ref{subsec:inference:user_interface:bootsplash_screen} and \ref{subsec:inference:user_interface:inference_screen}.
 
@@ -219,7 +219,7 @@ Unfortunately, the processor of the embedded system is not powerful enough to re
 % The cursor cannot be disabled globally, but it is possible to hide it when hovering over certain elements.
 The cursor cannot be disabled globally, but it is possible to hide it when is is hovering over certain elements (e.g. text, images).
 % For this purpose, the underlying Tkinter widgets can be accessed with the \texttt{Widget} class variable.
-For this purpose, the underlying Tkinter widgets are accessed with the \texttt{Widget} class variable and the cursor is set to invisible \cite{}. % todo: cite https://pysimplegui.readthedocs.io/en/latest/#widget-access
+For this purpose, the underlying Tkinter widgets are accessed with the \texttt{Widget} class variable and the cursor is set to invisible \cite{inf_pysimplegui_widget}.
 % ---- cursor stays at the same place
 % The position of the cursor is centered on the screen after 
 % After booting, the position of the cursor is centered on the screen and the respective Tkinter widgets are modified.

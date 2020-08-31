@@ -1,9 +1,63 @@
 \section{Camera Library}
 \label{sec:inference:camera_library}
-\todo[inline]{not done yet}
+% \todo[inline]{needs some improvements}
 
 % The camera library shares a great
 The camera library is very similar to the camera application created during the previous project.
-Therefore, only the differences are shown in this section.
+Therefore, only the differences and the various functions are described in this section.
 
+% Differences:
+% - major difference = source code of the camera interface is compiled to a shared library and not to an application
+% - own buffer implemenetd
+% - glitch will not decrement the buffer size (introduction of a throw_bgn local variable)
+% - also glitch will not be a false positive for an application polling the global variable
+The main difference between the old camera application and the new camera library is the way they are compiled.
+Previously, the source code of the camera interface was compiled to an application, whereas now it is compiled to a shared library (\texttt{libcamera.so}).
 
+Furthermore, the various state and configuration variables are now globally declared.
+This allows an application which uses the shared library to poll these global variables and act upon a change.
+
+The necessary memory for the images is manually allocated and then passed to the constructor of the Baumer \texttt{BGAPI2::Buffer::Buffer}.
+This leads to a decrease in memory usage of about \SI{66}{\percent}. 
+
+The glitch detection was revised.
+Removed glitches (single frame changes) are no longer reducing the size of the buffer.
+It has also been ensured that when a glitch occurs, that the global variable \texttt{throw\_bgn} is not set to \texttt{true}.
+Otherwise, an application polling the \texttt{throw\_bgn} variable would experience a false positive.
+
+\subsection{Functions}
+\label{subsec:inference:camera_library:functions}
+
+Besides the main functions, the camera library also features several accessor functions to access global variables and mutator functions to control camera parameters.
+% The camera library consists of accessor and mutator function.
+
+The main functions:
+
+\begin{enumerate}
+  \item \texttt{initialize} -- used to initialize the camera
+  \item \texttt{reset\_global\_variables} -- used to reset the global variables
+  \item \texttt{start\_acquisition} -- used to start the image acquisition
+  \item \texttt{terminate} -- used to terminate the camera
+\end{enumerate}
+
+Accessor functions, used to access global variables:
+
+\begin{enumerate}
+  \item \texttt{get\_frame\_ptr} -- used to get a specific frame pointer
+  \item \texttt{get\_throw\_bgn} -- used to get the value of the global variable \texttt{throw\_bgn}
+  \item \texttt{get\_throw\_end} -- used to get the value of the global variable \texttt{throw\_end}
+  \item \texttt{get\_throw\_bgn\_idx} -- used to get the value of the global variable \texttt{throw\_bgn\_idx}
+  \item \texttt{get\_throw\_end\_idx} -- used to get the value of the global variable \texttt{throw\_end\_idx}
+\end{enumerate}
+
+Mutator functions, used to control camera parameters:
+
+\begin{enumerate}
+  \item \texttt{set\_frame\_rate} -- used to modify the frame rate
+  \item \texttt{set\_buff\_size} -- used to modify the buffer size
+  \item \texttt{set\_exposure\_time} -- used to modify the exposure time
+  \item \texttt{set\_camera\_gain} -- used to modify the camera gain
+  \item \texttt{set\_avg\_diffs} -- used to modify the number of differences used to determine the threshold
+  \item \texttt{set\_threshold\_mult} -- used to modify the threshold multiplier
+  \item \texttt{set\_frames\_to\_acquire} -- used to modify the max. amount of frames to acquire
+\end{enumerate}

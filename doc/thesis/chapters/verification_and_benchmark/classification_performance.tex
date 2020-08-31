@@ -57,7 +57,7 @@ The implementation uses the NumPy function \texttt{np.unique} with the parameter
 % The first array contains the in ascending order sorted unique elements of the input array (the probabilities of the prediction).
 % The first array contains the in ascending order sorted unique elements of the input prediction array.
 The first array contains the unique elements of the input prediction array sorted in ascending order.
-The second array contains the number of occurances of each of the values from the first array.
+The second array contains the number of occurances of each of the values from the first array \cite[inf_numpy_unique].
 % The next step involves finding the index of the probability in the first array which corresponds to the probability at the position of the label in the input array.
 The next step involves finding the position of the probability in the first array which corresponds to the probability at the index of the label in the input array.
 % The last step is to sum up the elements of the second array from the position of the previously found index to the end of the array.
@@ -71,7 +71,6 @@ All Top-$K$ values of all predictions are then used to determine the Top-$K$ acc
 % All predictions are then averaged to create the Top-$K$ vector which shows the percentage 
 % It is important to keep in mind that a Top-1 prediction is also a Top-2 prediciton
 % which are averaged with all other predictions.
-% todo: cite https://numpy.org/doc/stable/reference/generated/numpy.unique.html
 Listing \ref{lst:topk} shows the implementation of the \texttt{top\_k} function in the \texttt{fhnwtoys} package.
 
 \begin{lstlisting}[style=python, caption={Implementation of the Top-K function}, label=lst:topk]

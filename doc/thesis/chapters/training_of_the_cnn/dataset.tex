@@ -56,7 +56,7 @@ Figure \ref{fig:dataset} shows two example frames from the dataset (the \textit{
 
 A notable thing is that on the first day of the data collection, the white balance was performed continuously (every three frames). % todo: frame or data collection?
 This caused the background color of large colored objects to be distorted, as shown in figure \ref{fig:white_balance}.
-However, this is not problematic, as noise can improve the generalization and thus reduce overfitting \cite{}. % todo: cite https://machinelearningmastery.com/train-neural-networks-with-noise-to-reduce-overfitting/
+However, this is not problematic, as noise can improve the generalization and thus reduce overfitting \cite{training_noise}.
 
 \begin{figure}[t]
   \centering
@@ -111,7 +111,7 @@ The fitting process of the classification model will naturally favor class \text
 % no matter the input will result in class \texttt{A}
 % The classification could then be independent of the input and always opt for class \texttt{A} (completely ignoring class \texttt{B}). % not good due to the previous sentence
 The classification could even be independent of the input and always opt for class \texttt{A} (completely ignoring class \texttt{B}).
-This obviously terrible classification process would still result in an overall accuracy of \SI{90}{\percent} \cite{}. % todo: cite https://machinelearningmastery.com/tactics-to-combat-imbalanced-classes-in-your-machine-learning-dataset/
+This obviously terrible classification process would still result in an overall accuracy of \SI{90}{\percent} \cite{training_imbalanced}.
 
 % http://www.chioka.in/class-imbalance-problem/ (bad source)
 % https://machinelearningmastery.com/what-is-imbalanced-classification/ (A Gentle Introduction to Imbalanced Classification, prob. not what I want)
@@ -183,7 +183,7 @@ Experiments have shown that this results in a complete misclassification of the 
 
 % maybe use: to counteract (I used to "improve the [...] performance", which is basically the same)
 % For those reasons, the individual frames are augmented accordingly.
-For those reasons, a range of image data augmentation techniques are used on the individual frames to improve the real-world classification performance \cite{}. % todo: cite https://link.springer.com/content/pdf/10.1186/s40537-019-0197-0.pdf
+For those reasons, a range of image data augmentation techniques are used on the individual frames to improve the real-world classification performance \cite{training_data_augmentation}.
 % todo: Augmentation is done in Python with the use of OpenCV
 % The dataset augmentation is done with the Python script \texttt{dataset\_generator.py} and the use of the Python implementation of the \acrfull{opencv}.
 % The dataset augmentation is done with the Python script \texttt{dataset\_generator.py}, which uses the Python implementation of the \acrfull{opencv} as well as the NumPy library (provides support for large, multi-dimensional arrays and matrices).
@@ -194,8 +194,8 @@ The dataset augmentation is done with the Python script \texttt{dataset\_generat
 % This script uses the Python implementation of the \acrfull{opencv}, which provides various functions to (e.g. loading and saving images, resizing images, ).
 % as well as the NumPy library (provides support for large, multi-dimensional arrays and matrices).
 % NumPy provides support for large, multi-dimensional arrays in addition to functions to work on these arrays.
-NumPy provides support for large, multi-dimensional arrays and an assortment of functions to work on these arrays \cite{}. % todo: maybe cite https://numpy.org/doc/stable/user/whatisnumpy.html
-\acrshort{opencv} provides various image transformation functions (e.g. resizing, color space conversions) and conveniently uses NumPy arrays to represent the images \cite{}. % todo: cite https://docs.opencv.org/3.4.3/d1/dfb/intro.html
+NumPy provides support for large, multi-dimensional arrays and an assortment of functions to work on these arrays \cite{training_numpy}.
+\acrshort{opencv} provides various image transformation functions (e.g. resizing, color space conversions) and conveniently uses NumPy arrays to represent the images \cite{training_opencv_intro}.
 
 % -----------------------
 \paragraph{Image Scaling}
@@ -237,13 +237,13 @@ This results in more noise and scaling artifacts than other interpolation method
 The scaling artifacts shown in figure \ref{fig:augmentation_downsampling} are the result of aliasing.
 % but simple/fast speed
 % The nearest-neighbor interpolation is chosen due to its simplicity and fast execution \cite{}.
-The advantages of nearest-neighbor interpolation are its simplicity and fast execution time \cite{}. % todo: cite https://www.atlantis-press.com/proceedings/iccsee-13/4822
+The advantages of nearest-neighbor interpolation are its simplicity and fast execution time \cite{training_interpolation}.
 % and noise can help against overfitting
-Furthermore, the additional noise can improve the generalization and therefore reduce overfitting \cite{}. % todo: cite https://machinelearningmastery.com/train-neural-networks-with-noise-to-reduce-overfitting/
+Furthermore, the additional noise can improve the generalization and therefore reduce overfitting \cite{training_noise}.
 
 % python implementation with the \acrshort{opencv} function \texttt{cv2.resize}
 The Python implementation of the image scaling makes use of the \acrshort{opencv} function \texttt{cv2.resize}.
-This function is supplied with three arguments: the NumPy array that represents the image, the desired output image size and the interpolation method \cite{}. % todo: cite https://docs.opencv.org/3.4.3/da/d54/group__imgproc__transform.html#ga47a974309e9102f5f08231edc7e7529d
+This function is supplied with three arguments: the NumPy array that represents the image, the desired output image size and the interpolation method \cite{training_opencv_resize}.
 
 % Figure \ref{fig:augmentation_downsampling} shows the above mentioned scaling artifacts.
 % The above mentioned scaling artifacts are shown in figure \ref{fig:augmentation_downsampling}.
@@ -272,7 +272,7 @@ To reduce the dependence on ambient light intensity, the average brightness of t
 % The rounded average brightness $\overline{B}$ of an image can be calculated using equation \ref{eq:average_brightness}.
 The rounded average brightness $B$ of an image can be calculated using equation \ref{eq:rounded_average_brightness}.
 % The Python script uses the NumPy function \texttt{np.sum} to compute the sum of all array elements. % todo: put code in appendix?
-This equation is implemented in Python with the help of the NumPy function \texttt{np.sum}, which computes the sum of all array elements. % todo: cite https://numpy.org/doc/stable/reference/generated/numpy.sum.html ???
+This equation is implemented in Python with the help of the NumPy function \texttt{np.sum}, which computes the sum of all array elements \cite{training_numpy_sum}.
 % todo: put code in appendix? If yes, so reference to it: as shown in appendix \ref{app:throw_detection} on line \ref{lst:ln:mean_diff}!
 
 \begin{equation}
@@ -343,7 +343,7 @@ The pixel values are 8-bit unsigned integers, which must be in the range between
 % To ensure this range is not exceeded, the values are clipped in a second step.
 % These values are clipped in a second step, to ensure that the range is not exceeded.
 In order to ensure that this range is not exceeded, the values are clipped in a second step.
-For this purpose, the NumPy function \texttt{np.clip} is used \cite{}. % todo: cite https://numpy.org/doc/stable/reference/generated/numpy.clip.html
+For this purpose, the NumPy function \texttt{np.clip} is used \cite{training_numpy_clip}.
 % todo: if code is added in the appendix, reference to it (and also to the specific line)
 
 \begin{equation}
@@ -440,7 +440,7 @@ Each frame is flipped vertically and horizontally to improve the orientation-ind
 Furthermore, the influence of the shadow that the object casts is decreased.
 An example of these reflections is shown in figure \ref{fig:augmentation_flipping}.
 
-The Python implementation uses the \acrshort{opencv} function \texttt{cv2.flip} to flip the frames around the x-axis (vertically) and around the y-axis (horizontally) \cite{}. % todo: cite https://docs.opencv.org/3.4.3/d2/de8/group__core__array.html#gaca7be533e3dac7feb70fc60635adf441
+The Python implementation uses the \acrshort{opencv} function \texttt{cv2.flip} to flip the frames around the x-axis (vertically) and around the y-axis (horizontally) \cite{training_opencv_flip}.
 % todo: if the code is added in the appendix, reference to it
 
 % figure of flipping (shuttlecock): original, vertical, horizontal
@@ -493,7 +493,7 @@ These required splits and their respective use is summarized in table \ref{tab:d
 % test dataset (~15%): unbiased evaluation of the final model fit on the training dataset
 % calibration dataset (45 x 22 = 990 images): small unlabeled dataset for calibration (during the quantization) taken from the validation dataset [5..45 frames per class (110..990)]
 \begin{table}
-  \caption{Overview of the required dataset splits \cite{}} % todo: cite https://machinelearningmastery.com/difference-test-validation-datasets/
+  \caption{Overview of the required dataset splits \cite{training_datasets}}
   \label{tab:dataset_splits}
   \centering
   \begin{tabular}{llp{10cm}}
@@ -577,7 +577,7 @@ Table \ref{tab:tab_frames_structure} lists all columns of the database table \te
 % In a first step, the slight imbalance in the dataset is mitigated.
 The slight imbalance in the dataset is mitigated in a next step.
 There are several different methods to ensure that the dataset is balanced (e.g. collecting more data, resampling).
-For the sake of simplicity, undersampling is used to remove samples from the overrepresented classes \cite{}. % todo: cite https://machinelearningmastery.com/tactics-to-combat-imbalanced-classes-in-your-machine-learning-dataset/
+For the sake of simplicity, undersampling is used to remove samples from the overrepresented classes \cite{training_imbalanced}.
 
 % randomization of the balancing
 % Only the amount of frames in the minority class is used from all classes.
@@ -627,10 +627,10 @@ The length of these label arrays is determined by the number of frames in the re
 % The labels are then 
 
 % For each split, both the batch arrays and the label array are saved ...
-For each split, both the batch arrays and the label array are saved to the disk in the binary NumPy (\texttt{.npy}) file format \cite{}. % todo: cite https://numpy.org/doc/stable/reference/generated/numpy.lib.format.html#module-numpy.lib.format
+For each split, both the batch arrays and the label array are saved to the disk in the binary NumPy (\texttt{.npy}) file format \cite{training_numpy_format}.
 % This is done using NumPy ... in the binary \texttt{.npy} format.
 % This array is then saved to the disk in the binary NumPy (\texttt{.npy}) file format.
-This allows for fast loading of the dataset from the disk \cite{}. % todo: cite https://towardsdatascience.com/why-you-should-start-using-npy-file-more-often-df2a13cc0161
+This allows for fast loading of the dataset from the disk \cite{training_numpy_npy}.
 
 % This is implemented in the function \texttt{save\_batches}.
 % This last step is implemented in the function \texttt{save\_batches} (see listing \ref{lst:save_batches}).
