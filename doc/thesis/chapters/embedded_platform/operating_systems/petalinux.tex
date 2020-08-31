@@ -77,10 +77,10 @@ Both files are located in the \texttt{petalinux/projects/ultra96v2\_oob\_2019\_2
 
 \paragraph{Flash SD Card}
 The first step is to create the partitions for the boot files and for the root filesystem.
-For the boot partition the format should be FAT32, while the root filesystem partition should to be Ext4.
+For the boot partition the format should be FAT32, while the root filesystem partition should be Ext4.
 A space of \SI{1}{GB} for the boot partition is sufficient.
 Furthermore, the boot label should be set for the boot partition.
-In a next step, the created partitions must to be formated.
+In a next step, the created partitions must be formatted.
 In a shell script it can be done as follows:
 
 \begin{lstlisting}[style=bash, caption={Prepare SD card}, label=lst:create_partitions]

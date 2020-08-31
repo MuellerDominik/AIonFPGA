@@ -137,7 +137,7 @@ The camera library starts to drop frames as soon as another processor-intensive 
 % still benefitial because of
 % - pDevice->GetRemoteNode("AcquisitionStop")->Execute();
 % - pDataStream->StopAcquisition();
-Nevertheless, using a thread-based approach is still benefitial.
+Nevertheless, using a thread-based approach is still beneficial.
 This is due to the specific implementation of the \texttt{libcamera.start\_acquisition} function, which introduces some overhead.
 After a throw has ended, the function stops the device and the datastream before returning.
 This task is not computationally intensive, but still requires a significant amount of time.
@@ -183,7 +183,7 @@ However, it makes no sense to evaluate all frames of a throw, as this would stro
 % Furthermore, the classification accuracy of the \acrshort{cnn} model is quite high and therefore a low amount of frames is sufficient to make an accurate prediction.
 Furthermore, the classification accuracy of the \acrshort{cnn} model is quite high, so that a small number of frames is sufficient to make an accurate prediction.
 
-Analysing the dataset reveals the ideal number of frames to consider to cover all frames of at least \SI{80}{\percent} of all throws.
+Analysing the dataset reveals the ideal number of frames to consider, to cover all frames of at least \SI{80}{\percent} of all throws.
 % Analysing the dataset reveals the ideal number of frames that should be considered to cover all frames of at least \SI{80}{\percent} of all throws.
 % plot that shows with 22 frames everything is good
 % Histogram (Bimodal) => no, a histogram is used for continuous data!

@@ -61,7 +61,7 @@ This increases the throughput considerably, as less mathematical operations are 
 The key to keeping the total number of trainable parameter low is evident when analyzing table \ref{tab:arch}.
 % A whopping \num{1311232} of the \num{1614486} total weights stem from the connection between those layers.
 % A whopping \num{1311232} of the \num{1614486} total weights can be attributed to the connection between these layers.
-A whopping \num{1311232} of the \num{1614486} total weights can be attributed to the connection between the feature maps of the last convolutional layer \texttt{conv7} and the artifical output neurons of the first dense layer \texttt{fc8}.
+A whopping \num{1311232} of the \num{1614486} total weights can be attributed to the connection between the feature maps of the last convolutional layer \texttt{conv7} and the artificial output neurons of the first dense layer \texttt{fc8}.
 This accounts for \SI{81.22}{\percent} of all trainable parameters.
 % This is the reason why the spatial dimensions of the feature maps should be decreased towards the end.
 For this reason the spatial dimensions of the feature maps should be decreased towards the end.

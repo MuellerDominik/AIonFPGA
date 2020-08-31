@@ -38,7 +38,7 @@ To avoid unexpected behaviour during training, the pixel values have to be norma
 This is done with the help of the \texttt{Dataset\_Generator} class.
 The \texttt{Dataset\_Generator} class inherits from the \texttt{tf.keras.utils.Sequence} superclass.
 The constructor loads the entire labels NumPy array and intializes the attributes of the class.
-Every \texttt{tf.keras.utils.Sequence} must implementt the \texttt{\_\_len\_\_} and \texttt{\_\_getitem\_\_} methods \cite{training_arch_tf_keras_sequence}.
+Every \texttt{tf.keras.utils.Sequence} must implement the \texttt{\_\_len\_\_} and \texttt{\_\_getitem\_\_} methods \cite{training_arch_tf_keras_sequence}.
 The \texttt{\_\_len\_\_} method returns the total number of batches when the build-in Python \texttt{len} function is called.
 The \texttt{\_\_getitem\_\_} method loads a batch of frames as a NumPy array, converts the datatype to \texttt{np.float32} and normalizes the pixel values to the range between \numrange{0}{1}.
 The normalization is done by dividing all pixel values by the largest possible pixel value of \num{255}.
@@ -118,7 +118,7 @@ Keras provides the required implementation with the \texttt{SparseCategoricalCro
 % The \textit{Sparse} indicates that the lables have to be provided as integers, rather than a one-hot representation.
 The \textit{Sparse} indicates that the labels must be provided as integers rather than in a one-hot representation.
 % Additionally, the \textit{Categorical} indicates that this is a multiclass calssification problem, rather than a binary one.
-Additionally, the \textit{Categorical} indicates that it is a multiclass calssification problem and not a binary one \cite{training_train_tf_keras_crossentropy}.
+Additionally, the \textit{Categorical} indicates that it is a multiclass classification problem and not a binary one \cite{training_train_tf_keras_crossentropy}.
 % The implementation is shown in listing \ref{lst:model_fitting} on line \ref{lst:ln:compile}.
 The method call is shown in listing \ref{lst:model_fitting} on line \ref{lst:ln:compile}.
 
@@ -187,7 +187,7 @@ Xilinx requires such a frozen graph for the quantization of the \acrshort{cnn} m
 Unfortunately, TensorFlow dropped support for freezing models since v2.x.
 It is, however, still possible to freeze a model created with TensorFlow 2 with the usage of low-level TensorFlow \acrshort{api} calls.
 % For this purpose
-Listing \ref{lst:frozen_graph} shows how the the \texttt{frozen\_graph.pb} file is created \cite{training_train_frozen}.
+Listing \ref{lst:frozen_graph} shows how the \texttt{frozen\_graph.pb} file is created \cite{training_train_frozen}.
 
 For inference tasks, it is important to know the names of the input and output layers of the frozen graph.
 How this information can be obtained is shown in listing \ref{lst:frozen_graph} on line \ref{lst:ln:input_info} and \ref{lst:ln:output_info}.

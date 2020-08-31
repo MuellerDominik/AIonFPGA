@@ -127,10 +127,10 @@ The entire \texttt{arch.json} file may look like this:
 \end{lstlisting}
 
 Due to a programming error of Xilinx, the \texttt{net\_name} parameter must not end with an \texttt{s}.
-The Python script responsible for loading the overlay uses the \texttt{rstrip} function to remove the trailing charachter sequence \texttt{.s}.
-However, the \texttt{rstrip} function cannot be used to remove charachter sequences, only single characters.
-It therefore removes any trailing \texttt{.} (dot) or \texttt{s} until another charachter is present.
-% It therefore removes as many trailing charachters until the last charachter is not contained in the specified sequence.
+The Python script responsible for loading the overlay uses the \texttt{rstrip} function to remove the trailing character sequence \texttt{.s}.
+However, the \texttt{rstrip} function cannot be used to remove character sequences, only single characters.
+It therefore removes any trailing \texttt{.} (dot) or \texttt{s} until another character is present.
+% It therefore removes as many trailing character until the last character is not contained in the specified sequence.
 % everything from the end of the specified name until there is no s or \_0.
 % \todo[inline]{what does it remove exactly?}
 

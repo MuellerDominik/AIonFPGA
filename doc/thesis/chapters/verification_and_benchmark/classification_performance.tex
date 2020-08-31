@@ -20,7 +20,7 @@ Furthermore, the determination of the overall accuracy of the models is not suff
 The fact that some classes might perform worse than others would not be noticed.
 % Therefore, the individual Top-$K$ accuaries of the different classes are evaluated as well.
 % The individual Top-$K$ accuaries of the different classes are, therefore, evaluated as well.
-The individual Top-$K$ accuaries of the different classes are therefore also evaluated.
+The individual Top-$K$ accuracies of the different classes are therefore also evaluated.
 % Additionally, the overall accuracy of a test dataset that contains only images in which the object is fully visible is computed.
 Additionally, the overall accuracy of a test dataset containing only images in which the object is fully visible is computed.
 
@@ -28,7 +28,7 @@ Additionally, the overall accuracy of a test dataset containing only images in w
 \subsection{Top-K}
 \label{subsec:verification_and_benchmark:classification_performance:topk}
 
-A common way to quantify the perfomance of a single prediction is its Top-$K$ value.
+A common way to quantify the performance of a single prediction is its Top-$K$ value.
 In general, Top-$K$ means that the element with the $K$-th highest probability of the prediction vector corresponds to its true label.
 % Top-1 means that the element with the highest probability of the prediction vector corresponds to the true label.
 % Top-2 means that the element with the second highest probability of the prediction vector corresponds to the true label and so on.
@@ -57,7 +57,7 @@ The implementation uses the NumPy function \texttt{np.unique} with the parameter
 % The first array contains the in ascending order sorted unique elements of the input array (the probabilities of the prediction).
 % The first array contains the in ascending order sorted unique elements of the input prediction array.
 The first array contains the unique elements of the input prediction array sorted in ascending order.
-The second array contains the number of occurances of each of the values from the first array \cite[inf_numpy_unique].
+The second array contains the number of occurrences of each of the values from the first array \cite[inf_numpy_unique].
 % The next step involves finding the index of the probability in the first array which corresponds to the probability at the position of the label in the input array.
 The next step involves finding the position of the probability in the first array which corresponds to the probability at the index of the label in the input array.
 % The last step is to sum up the elements of the second array from the position of the previously found index to the end of the array.
@@ -229,7 +229,7 @@ Furthermore, it is noticeable that some of the classes perform somewhat worse th
 
 As expected, the classification performance of the quantized model is slightly worse than that of the floating-point model.
 % While the floating-point model features a Top-1 accuary of \SI{99.5}{\percent} and a Top-5 accuracy of \SI{100.0}{\percent}, the Top-1 accuary of the
-While the floating-point model features a Top-1 accuary of about \SI{99.5}{\percent}, the Top-1 accuary of the quantized model is only about \SI{97.2}{\percent}.
+While the floating-point model features a Top-1 accuracy of about \SI{99.5}{\percent}, the Top-1 accuracy of the quantized model is only about \SI{97.2}{\percent}.
 % This corresponds to a drop of about \SI{2.3}{\percent} in accuracy due to the quantization process.
 This corresponds to a drop in accuracy of about \SI{2.3}{\percent} due to the quantization process.
 However, since a throw usually creates more than one frame, the average of the probabilities can be used.
@@ -248,5 +248,5 @@ More interestingly is the fact that the entire test dataset performs worse than 
 The Top-1 accuracy of the quantized model is increased by about \SI{1.3}{\percent} when the modified dataset is used.
 % This corresponds to an increase in the Top-1 accuracy of about \SI{1.3}{\percent}
 
-For this reason, it is highly benefitial to weight the frames according to their occurrence in the throw (see section \ref{subsec:inference:app:weighting}). % or position on the throw?
+For this reason, it is highly beneficial to weight the frames according to their occurrence in the throw (see section \ref{subsec:inference:app:weighting}). % or position on the throw?
 Frames from the beginning of the throw, where the object is only partially visible, are weighted less than frames from the middle of the throw, where the object is most likely fully visible.

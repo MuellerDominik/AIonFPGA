@@ -26,7 +26,7 @@ The clock frequency is also defined in the \texttt{prj\_config} file.
 For the ZU3 device, the maximum clock frequency is \SI{370}{MHz}.
 Due to a hardware design flaw on the Ultra96-V2 board, the maximum frequency is \SI{300}{MHz} with PYNQ and \SI{150}{MHz} with PetaLinux.
 At higher frequencies the \acrfull{pmic} reboots the entire system.
-uld be possible to fix this problem, but it requires both hardware and firmware changes \cite{pmic_issue}.
+It is possible to fix this problem, but it requires both hardware and firmware changes \cite{pmic_issue}.
 The frequency can be adjusted by setting the variable \texttt{freqHz=150000000:DPUCZDX8G\_1.aclk}.
 % Another way is using the predefined frequencies from Xilinx.
 Another possibility is to use the predefined frequencies from Xilinx.
@@ -180,5 +180,5 @@ These files can be copied to the board and the customized \acrshort{dpu} is read
 When working with PetaLinux the generated \texttt{BOOT.BIN} file is also of interest.
 This file is located in the \texttt{boards/Ultra96/binary\_container\_1/sd\_card/} directory.
 The \texttt{BOOT.BIN} file is responsible for loading the \acrshort{dpu} during boot with the \texttt{.xclbin} file.
-The \texttt{.xclbin} file file should be located under \texttt{/usr/lib/} on the board.
+The \texttt{.xclbin} file should be located under \texttt{/usr/lib/} on the board.
 Using PYNQ, the \acrshort{fpga} can be programmed when the application is started.
