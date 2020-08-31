@@ -100,15 +100,11 @@ This is to avoid a reboot of the entire system if the camera is not plugged in d
 % ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Image Acquisition}
 \label{subsec:inference:app:image_acquisition}
-\todo[inline]{not quite finished yet}
 
 The camera library features several accessor functions to access the global variables.
 % This allows the use of parallelism.
-
-
-
-The image acquisition 
-
+This enables the use of parallel processing.
+% The image acquisition
 
 % thread -> Concurrency
 % process -> Parallelism
@@ -138,41 +134,30 @@ However, practical tests have shown that the embedded system is not powerful eno
 % As soon as any other processor-intensive calculation starts, the Camera Library starts losing images.
 The camera library starts to drop frames as soon as another processor-intensive task, such as the image processing, is started.
 
-
 % still benefitial because of
 % - pDevice->GetRemoteNode("AcquisitionStop")->Execute();
 % - pDataStream->StopAcquisition();
+Nevertheless, using a thread-based approach is still benefitial.
+This is due to the specific implementation of the \texttt{libcamera.start\_acquisition} function, which introduces some overhead.
+After a throw has ended, the function stops the device and the datastream before returning.
+This task is not computationally intensive, but still requires a significant amount of time.
 
+Therefore, the implementation of the image acquisition uses a thread and polls the global variable \texttt{throw\_end}.
+As soon as the global variable \texttt{throw\_end} is set to \texttt{true}, the image processing begins.
+This is shown in appendix \ref{app:inference_application} on lines \ref{lst:ln:threading}--\ref{lst:ln:polling}.
 
-
-
-
+% After the image processng is done, the global variables are reset by calling the \texttt{libcamera.reset\_global\_variables} function.
+% After the image processing is done, the \texttt{libcamera.reset\_global\_variables} function is called to reset the global variables.
+As soon as the image processing is done, the \texttt{libcamera.reset\_global\_variables} function is called to reset the global variables.
+% After that image acquisition is started again.
+% Then, the image acquisition and the polling of the global variable \texttt{throw\_end} is started again.
+After that, the image acquisition and the polling of the global variable \texttt{throw\_end} is restarted.
 
 % Camera
 % start acquisition
 % - multi processing
 % reset variables
 % terminate
-
-
-
-
-% ## our application
-
-% - explain how it could have been done in C++ or Python
-%   - python wins, because it's easier for quick prototyping
-%   - there is no (noticable) performance loss when using Python, since the same N2Cube lib is used with a minimal Python wrapper around it (this is possible with ctypes, since cpython is used [most common])
-%     - there is also no perfomance loss for the camera application because of the same reason (ctypes-implementation)
-%   - explain both processes in detail (C++ with the CMake file, which requires the sysroot with all the headers and shared objects [libraries])
-%     - maybe talk about the docker conatainer which could be used but is not ideal if you add stuff to the sysroot, weh creating your own PwtaLinux with opencv + baumer...
-%   - explain that the C++ and Python API are very similar and so a conversion between the two is not really difficult
-
-
-
-
-
-
-
 
 % ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Image Processing}
