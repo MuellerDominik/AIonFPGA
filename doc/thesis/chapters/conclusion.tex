@@ -1,44 +1,52 @@
 \chapter{Conclusion}
 \label{ch:conclusion}
+
 This chapter summarizes the most important results.
-It also presents possibilities for further project developments.
+% It also presents possibilities for further project developments.
+It also points out possibilities for further project developments.
 
 \section{Training}
 \label{sec:conclusion:training}
-First of all a data set is generated for the training with Python scripts.
-Since the images were not generalized enough, different transformations were used.
-On one hand the brightness was changed to a range from \numrange{85}{160}.
-On the other hand the images were flipped.
-In a next step the architecture of the \acrshort{cnn} was defined.
-Convolution, flatten, maximum pooling and fully connected layers were used.
-The network is built with TensorFlow v2.2.0 and the Keras \acrshortpl{api}.
-In a next step the \acrshort{cnn} was trained and the result was saved as a frozen graph, ready for quantization.
-Thereby a validation accuracy of \SI{99.6}{\%} was achieved.
 
-For example, the water bottle was recognized much better after the transformations, which shows that subsequent corrections to the data set are very effective. 
+% First of all a data set is generated for the training with Python scripts.
+First, a Python script is used to generate the datasets used during the training.
+% dataset for training with Python scripts is created.
+Since the images were not generalized enough, different augmentations were used.
+On the one hand, the brightness was changed to a range from \numrange{85}{160}.
+On the other hand, the images were flipped.
+In a next step the architecture of the \acrshort{cnn} was defined.
+% Convolution, flatten, maximum pooling and fully connected layers were used.
+Convolution, max-pooling and fully-connected layers were used.
+The network is built with TensorFlow v2.2.0 and the Keras \acrshortpl{api}.
+In a next step, the \acrshort{cnn} was trained and the result was saved as a frozen graph, ready for quantization.
+Thereby a validation accuracy of \SI{99.6}{\percent} was achieved.
+
+For example, the water bottle was recognized much better after the transformations, which shows that subsequent corrections to the data set are very effective.
 
 \section{\Acrlong{os}}
 \label{sec:conclusion:os}
 Two different \acrshort{os} with very different approaches were analyzed.
-For Petalinux a platform is created, configured and the files are built using the make command.
+For PetaLinux a platform is created, configured and the files are built using the \texttt{make} command.
 The \acrshort{dpu} is programmed by the bootloader already at startup.
 
-Thanks to the public repositories PYNQ can be configured and built by the user as well.
-For some development boards such as the Ultra96-V2 board a prebuilt image already exists.
+Thanks to the public repositories, PYNQ can be configured and built by the user as well.
+For some development boards, such as the Ultra96-V2 board, a pre-built image already exists.
 PYNQ offers its own Python class, which allows programming the \acrshort{fpga} at any time.
 This does not offer any special advantage in this project, but may be very helpful in certain applications.
 
-Finally a prebuilt image of PYNQ was used in this project.
-This \acrlong{os} supports the use of the Baumer camera unlike Petalinux.
-It is also easier to install new packages, because thanks to Ubuntu the apt package manager is already available.
+Finally, a pre-built image of PYNQ was used in this project.
+This \acrlong{os} supports the use of the Baumer camera unlike PetaLinux.
+% It is also easier to install new packages, because thanks to Ubuntu the apt package manager is already available.
+It is also easier to install new packages, because thanks to Ubuntu the \acrshort{apt} package manager is already available.
 
 \section{\Acrlong{dpu}}
 \label{sec:conclusion:dpu}
 The \acrshort{dpu} can be configured according to the available hardware and user-specific requirements.
-By executing the make command, the \acrshort{dpu} and a bootloader, which programs the \acrshort{fpga}, are built.
+By executing the \texttt{make} command, the \acrshort{dpu} and a bootloader, which programs the \acrshort{fpga}, are built.
 Xilinx offers the \acrshort{n2cube} \acrshortpl{api} to use the \acrshort{dpu} from the application.
-The constructed \acrshort{cnn} must be present as a frozen graph.
-Due to the quantization the Top1 accuracy was affected, but one frame can be recognized within \SI{7.422}{ms}.
+The designed \acrshort{cnn} model must be present as a frozen graph.
+% Due to the quantization, the Top-1 accuracy was affected, but one frame can be recognized within \SI{7.422}{ms}.
+Quantization affected the Top-1 accuracy, but an individual frame can be classified within \SI{7.422}{ms}.
 
 \section{Inference}
 \label{sec:conclusion:inference}
@@ -46,21 +54,27 @@ The inference application is a Python script and uses three additional component
 The camera library is written in C++ to process 200 frames per second.
 It is a shared object that provides various functions.
 After the end of the throw or a maximum of 44 frames, the images are transferred to the \acrshort{dpu}, which returns the results.
-The result is shown to the user on the screen together with an image of the object.
-If the quad core A53 processor had been a little more powerful, this setup would also have made it possible to run image acquisition, image processing and image recognition in parallel.
+The result is shown to the user on the display together with an image of the object.
+% If the quad-core A53 processor had been a little more powerful, this setup would also have made it possible to run image acquisition, image processing and image recognition in parallel.
+% If the processor had been a little more powerful, this setup would also have made it possible to run image acquisition, image processing and image recognition in parallel.
+If the processor had been a bit more powerful, this setup would have made it possible to run image acquisition, image processing and image recognition in parallel.
 This would have allowed approximately twice the frame rate. 
 
 \section{Future Work}
 \label{sec:conclusion:future_work}
-For this task, the neural network could be reduced in size, since no overfitting has taken place yet.
-This would reduce the latency time and increase the throughput.
-The same result is achieved with a larger \acrshort{fpga}.
-On an Ultrascale+ XCZU9EG chip on the ZU102 development board, three \acrshort{dpu} \acrshortpl{ip} with a B4096 architecture would be possible.
+% For this task, the neural network could be reduced in size, since no overfitting has taken place yet.
+For this task, the neural network could be reduced in size, since it converged so quickly.
+% This would reduce the latency time and increase the throughput.
+This would reduce latency and increase throughput.
+The same result could be achieved with a larger \acrshort{fpga}.
+On an UltraScale+ XCZU9EG chip on the ZU102 development board, three \acrshort{dpu} \acrshortpl{ip} with a B4096 architecture would be possible.
 This would allow up to five times more throughput on the \acrshort{dpu} \cite{dpu_product_guide}.
 
-A detected problem is caused when an object is thrown from an unknown angle. 
+% A detected problem is caused when an object is thrown from an unknown angle.
+A recognized problem is caused when an object is thrown from an unknown angle.
 If the object is thrown very close to the camera, the detection is not always correct because the object appears too large.
 Zooming in on the frames before training might eliminate this problem.
 
 The implementation of a \acrlong{cnn} on the \acrshort{fpga} yielded great results.
-If fast image recognition is needed, the Xilinx \acrshort{dpu} is a good solution which is worth to be used further on.
+% If fast image recognition is needed, the Xilinx \acrshort{dpu} is a good solution which is worth to be used further on.
+If fast image recognition is required, the Xilinx \acrshort{dpu} is a good solution that is worth continuing to use.
