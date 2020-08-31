@@ -1,5 +1,5 @@
 \chapter*{Abstract}
-\todo[inline]{needs to be updated}
+% \todo[inline]{needs to be updated}
 % Motivation
 In a world of self-driving cars and automated quality control in manufacturing, real-time image classification is becoming increasingly important.
 Artificial intelligence, and deep learning in particular, are achieving excellent classification accuracies, but there are some challenges.
@@ -7,16 +7,22 @@ Artificial intelligence, and deep learning in particular, are achieving excellen
 For one thing, high-resolution image acquisition systems require a lot of processing power.
 For another, a large labeled dataset of training data is required to train deep convolutional neural networks.
 % Approach
-A solution for the former is to use field-programmable gate arrays as hardware accelerators.
-The focus of this project, however, is to collect a labeled dataset.
-For this purpose, an industrial camera with a frame rate of \SI{200}{fps} is used to acquire images of 22 different throwing objects.
-To simplify this task, a camera throw detection mechanism is implemented and various Python scripts are used.
+% A solution for the former is to use field-programmable gate arrays as hardware accelerators.
+A solution for the former is to use field-programmable gate arrays (FPGAs) as hardware accelerators.
+Therefore, an embedded system featuring a multiprocessor system-on-chip with an integrated FPGA is deployed.
+The second problem is approached with data augmentation to artificially increase the size of the labeled dataset.
 % Results
-The developed software uses an image change detection algorithm to detect individual throws.
-The result is a fully labeled dataset that consists of more than \num{15000} usable images with at least 480 images of each object.
+% The deployed convolutional neural network achieves a Top-1 accuracy of \SI{97.2}{\percent} and a Top-5 accuracy of \SI{99.5}{\percent}.
+% The deployed convolutional neural network achieved a Top-1 accuracy of \SI{97.2}{\percent} and a Top-5 accuracy of \SI{99.5}{\percent}.
+This allows the deployed convolutional neural network to achieve a Top-1 accuracy of \SI{97.2}{\percent} and a Top-5 accuracy of \SI{99.5}{\percent}.
+% This allowed the deployed convolutional neural network to achieve a Top-1 accuracy of \SI{97.2}{\percent} and a Top-5 accuracy of \SI{99.5}{\percent}.
+% The throughput of the image classification chain \SI{41.1}{fps}.
+% In addition, the throughput of the image classification chain reached \SI{41.1}{fps} for color images of $1280\times\SI{1024}{px}$.
+In addition, the throughput of the image classification chain reaches \SI{41.1}{fps} for color images of $1280\times\SI{1024}{px}$.
+% Additionally, the throughput of the image classification chain equals \SI{41.1}{fps} for color images of $1280\times\SI{1024}{px}$.
 % Conclusions
-Developing software to support the image acquisition proved to be extremely useful.
-It made it possible to collect the complete dataset in only two days.
+Using data augmentation significantly improved the real-world classification performance by reducing the impact of ambient light.
+Furthermore, it completely eliminated the need to collect additional data samples.
 
 % from https://users.ece.cmu.edu/~koopman/essays/abstract.html
 
