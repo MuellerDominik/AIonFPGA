@@ -1,0 +1,64 @@
+\title{AI High-Performance Solution on FPGA}
+
+\team{Nico Canzani, Dominik M\"uller}
+
+\client{Inst. for Sensors and Electronics}
+
+\coaches{%
+  Prof. Michael Pichler,\\
+  Prof. Dr. Hanspeter Schmid
+}
+
+\repo{https://git.io/aionfpga}
+
+\fssummary{
+  In a world of self-driving cars and automated quality control in manufacturing, real-time image classification is becoming increasingly important.
+  Artificial intelligence (AI), and deep learning in particular, are achieving excellent classification accuracies.
+  However, the training of a convolutional neural network (CNN) requires a sufficiently large labeled dataset.
+}
+
+\fsgraphics{
+  \includegraphics[width=\textwidth]{graphics/arch.pdf}
+  \graphicscaption{Architecture of the Convolutional Neural Network}
+}
+
+\fscontent{
+  \section{Difficulty}
+  Collecting a sufficiently large dataset of pictures is not trivial.
+  When done manually, the camera has to be started and stopped for each throw.
+  This likely creates many empty frames at the beginning and at the end of the capture.
+  Those empty and therefore invalid frames must be removed to avoid errors during the training of the CNN later on.
+  Furthermore, each valid frame must be labeled.
+  This procedure is very error-prone if it is performed manually for each individual frame.
+
+  \newcol
+  \section{Software}
+  To simplify the image collection, a camera throw detection mechanism is implemented and various Python scripts are used.
+  The goal of the throw detection is to extract valid frames of a throw --- with objects on them --- from the continuous data stream of the camera.
+  Therefore, the throw detection needs to work in real time.
+  At a frame rate of \SI{200}{fps}, there is less than \SI{5}{ms} to process a single frame.
+  Due to this time constraint, a simple image change detection algorithm is implemented.
+
+  \newcol
+  \section{Dataset}
+  The dataset contains images of 22 different throwing objects, ranging from sports equipment to toys.
+  It is fully labeled and consists of more than \num{15000} usable images with at least 480 images of each object.
+  The employed software made it possible to collect all images over the course of only two days.
+  The above images are two examples from the labeled dataset.
+  The first one shows the \textit{Stuffed Bunny} and the second one shows the \textit{Hand Featherball}.
+}
+
+\infobox{Throwing Booth}{
+  \begin{minipage}{0.65\textwidth}
+    The throwing booth is constructed from general-purpose aluminium profiles.
+    Due to its robust impact strength, the rear panel is made of a white ABS plastic sheet and has a target hole.
+    The white side panel serves as a consistent background for the images.
+    It is made of a foamed PVC sheet with a fine-textured surface to reduce light reflections.
+    The image acquisition system consists of a Baumer industrial camera combined with a suitable lens.
+    Strong diffuse lighting is used to minimize the required exposure time and to illuminate the side panel as evenly as possible.
+    Finally, a monitor is used to display the detected object.
+  \end{minipage}\hfill%
+  \begin{minipage}{0.32\textwidth}
+    \includegraphics[width=\textwidth]{graphics/top_assembly.png}
+  \end{minipage}
+}
