@@ -1,6 +1,7 @@
 %%
-%% This is file `fhnwreport.cls',
-%% generated with the docstrip utility.
+%% This is file `aionfpgareport.cls',
+%% generated with the docstrip utility
+%% and manually modified by Dominik Müller <me@muellerdominik.ch>.
 %%
 %% The original source files were:
 %%
@@ -21,7 +22,7 @@
 %% same distribution. (The sources need not necessarily be
 %% in the same archive or directory.)
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{fhnwreport}[2018/05/06 v2.5 PDF-LaTeX class for FHNW reports]
+\ProvidesClass{aionfpgareport}[2018/05/06 v2.5 PDF-LaTeX class for FHNW reports]
 \LoadClass[twoside,openright]{report}
 \usepackage{emptypage}
 \RequirePackage{geometry}
@@ -228,4 +229,4 @@
 \renewcommand{\bottomfraction}{0.7}
 \endinput
 %%
-%% End of file `fhnwreport.cls'.
+%% End of file `aionfpgareport.cls'.
