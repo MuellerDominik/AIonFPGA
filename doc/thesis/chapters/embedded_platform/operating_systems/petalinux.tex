@@ -1,13 +1,11 @@
 \subsection{PetaLinux}
 \label{subsec:embedded_platform:operating_systems:petalinux}
 
-% built with petalinux tools
 Xilinx provides PetaLinux Tools to build your own PetaLinux \acrshort{os}.
 It is recommended to work with the so-called target platform.
 The target platform is a combination of hardware and software components.
 The most important hardware component is a proprietary file format, called XSA.
 XSA stands for Xilinx Support Archive and contains one or more \texttt{.hwh} files, \texttt{.bit} files, driver files and other metadata files.
-% In a hardware hand-off file (\texttt{.hwh} file), information about Vivado tool version and the board tag are saved.
 A hardware hand-off file (\texttt{.hwh} file) stores information about the Vivado tool version and the board tag.
 Furthermore, \texttt{.hwh} files contain \acrshort{ip} instances, name and parameters as well as memory map information of the processors \cite{vitis_user_guide}.
 
@@ -21,7 +19,6 @@ Red names mean that the files on the SD card are needed, while black names serve
 The grayed out field needs further programs from Xilinx to be executed.
 This step is not essential, but can improve performance.
 It is not used in this project, however.
-% In the following sections the step Vitis Platform is described more precisely.
 The Vitis Platform step is described in more detail in the following sections.
 Building the \acrshort{dpu} is described in section \ref{sec:embedded_platform:dpu}, and the model deployment procedure is documented in section \ref{sec:embedded_platform:model_deployment}.
 
@@ -43,14 +40,12 @@ Four repositories from Avnet are required:
 
 The \texttt{bdf} (board definition files) repository contains one folder for each of their development boards.
 The \texttt{hdl} repo is required to use the \acrfull{pl} on UltraScale+ \acrshortpl{mpsoc}.
-% In the \texttt{petalinux} archive are, among other things, the configurations of the PetaLinux operating system.
 The \texttt{petalinux} archive contains, among other things, the configurations of the operating system PetaLinux.
 To build a Vitis platform, the \texttt{vitis} archive is also required.
 The \texttt{vitis} folder contains several Makefiles which refer to the other three repositories.
 The repositories \texttt{hdl} and \texttt{petalinux} must be checked out to the same branch as the Xilinx Tools version.
 
 The building process can be started with the Makefile in the \texttt{vitis/} directory.
-% Which board is used, needs to be given as a parameter.
 Which board is used must be specified as a parameter.
 Building the platform takes several hours, requires about \SI{200}{GB} of disk space and a minimum of \SI{32}{GB} of RAM.
 After the process is completed, the platform is located in the \texttt{vitis/platform\_repo/} directory.
@@ -59,7 +54,6 @@ The Makefile from Avnet creates a sysroot by default.
 Since all header and library files are included in this directory structure, cross compiling an application is possible.
 
 \paragraph{Configure own Vitis Platform}
-% The platform can be customized according to individual needs.
 The platform can be adapted to individual needs.
 First, a new PetaLinux project is created.
 The generated directory \texttt{project-spec/meta-user} contains recipes for adding or removing programs like \acrshort{opencv} or a package manager.
@@ -69,10 +63,8 @@ It is possible to create a component from existing content or from a predefined 
 After adding all recipes, the commands \texttt{petalinux-config} and \texttt{petalinux-build} create the custom root filesystem, the required boot files and the Linux kernel \cite{petalinux_user_guide}.
 
 The first stage bootloader, the device tree blob and U-Boot are stored in the \texttt{BOOT.BIN} file by default configuration.
-% They are needed to first initialize the board and load the kernel image \cite{xilinx_wiki_boot}.
 They are required to initialize the board and load the kernel image \cite{xilinx_wiki_boot}.
 The kernel image is located in the \texttt{image.ub} file \cite{xilinx_wiki_uboot}.
-% They are located in the \texttt{petalinux/projects/ultra96v2\_oob\_2019\_2/images/linux} directory.
 Both files are located in the \texttt{petalinux/projects/ultra96v2\_oob\_2019\_2/images/linux/} directory.
 
 \paragraph{Flash SD Card}
@@ -123,6 +115,5 @@ For example, the file could be named \texttt{dnndk.conf}, and its contents could
 Running \texttt{ldconfig} configures the dynamic loader to search for the \acrshort{n2cube} library in the \texttt{/usr/local/lib/} directory.
 \texttt{ldconfig} is always executed at boot time.
 
-% To be able to use the Baumer camera, the same procedure must be done.
 To use the Baumer camera, the same procedure must be performed.
 The respective include, library and header files can be obtained from Baumer.

@@ -1,21 +1,14 @@
 \section{Throughput}
 \label{sec:verification_and_benchmark:throughput}
 
-% All steps which are passed through in the while true loop are measured.
 All steps from the image classification chain and the weighting are measured.
 This results in the following measurements:
 \begin{itemize}
-  % \item Get raw Bayer from \acrshort{ram}
   \item Getting the raw Baumer \texttt{BayerRG8} frame
-  % \item transform Bayer to \acrshort{bgr}
   \item Converting the color space
-  % \item resize frame size %from \SI{1280}{px} $\times$ \SI{1024}{px} to \SI{320}{px} $\times$ \SI{256}{px}
   \item Resizing the frame
-  % \item normalize the image which is a float32 division
   \item Normalizing the pixel values
   \item Running inference
-  % \item run inference on the \acrshort{dpu}
-  % \item run softmax function
   \item Applying the softmax function
   \item Weighting
 \end{itemize}
@@ -41,16 +34,11 @@ Listing \ref{lst:measure_time} shows an example for the color transformation.
   meas_time['Transform color']['end'].append(datetime.now())
 \end{lstlisting}
 
-% The time which is needed for each step is the difference between end and start.
 The time needed for each step is the difference between end and start.
-% When all images have been computed, the average value is calculated for each step.
-% When all of the individual times are computed, the average value is calculated for each step.
 When all individual times are computed, the average value is calculated for each step.
-% This is printed on the console and written to a file.
 This is printed out on the console and written to a file.
 Table \ref{tab:measured_times} lists the measured times.
 
-% By calculating the reciprocal value of the total time required, the frame rate can be determined:
 By calculating the reciprocal of the total time required, the frame rate can be determined:
 
 \begin{equation}

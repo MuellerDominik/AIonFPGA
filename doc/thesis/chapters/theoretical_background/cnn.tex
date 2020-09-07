@@ -1,80 +1,28 @@
 \section{Convolutional Neural Network}
 \label{sec:theoretical_background:cnn}
 
-% \Acrlongpl{cnn} are a type of deep learning architecture that is primarily used to classify images.
-% They are based on artificial neural networks and the mathematical convolution operation.
-% based on the convolution operation
-% \Acrlongpl{cnn} are based on the mathematical convolution operation.
-% A \acrlong{cnn} is a specialized deep learning architecture which is based on the mathematical convolution operation.
-% A \acrlong{cnn} is a specialized architecture for deep learning based on the mathematical convolution operation.
-% A \acrlong{cnn} features a specialized architecture to process data that has a known grid-like topology, such as images.
 \Acrlongpl{cnn} feature a specialized architecture to process data that has a known grid-like topology, such as images.
 They are based on \acrlongpl{ann} and the mathematical convolution operation \cite[p.~326--331]{deeplearningbook}.
-% It is primarily used for image classification problems.
-
-% % CNNs more complex, better for image classification
-% % why are they better
-% % -> example of number of weights
-% % A problem with this approach arises with a large amount of input data, such as images.
-% A problem with the approach of \acrshortpl{ann} arises with a large amount of input data, such as images.
-% % Even a relatively small image with
-% Even a small image with the dimension of $5\times\SI{5}{px}$ and a desired output of $3\times\SI{3}{px}$ results in \num{225} parameters.
-% A \acrshort{cnn}
-
-% % The efficiency in image classification of CNNs is largely responsible for the reputation of deep learning.
 
 The main problems when working with color images is that they are high-dimensional and therefore require a lot of processing power.
 For this reason, \acrlongpl{cnn} use special layers to detect features and reduce the amount of data.
 
+% ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Architecture}
 \label{subsec:theoretical_background:cnn:architecture}
-% Different types of layers
 
 A \acrlong{cnn} features a variety of different layers.
-% The most relevant ones are described in this section.
 The three most relevant layers are described in this section.
-% A \acrlong{cnn} mainly features three different layers.
-% The three different layers used are convolution layers, pooling layers and fully-connected layers.
 
-% -----------------------
+% -----------------------------
 \paragraph{Convolutional Layer}
-% Convolutional layers apply a set amount of filters by sliding them along the input image.
 Convolutional layers apply a set amount of filters to the input image.
-% A filter consists of as many so-called kernels as the input features channels.
 Filters are used to recognize certain features (e.g. edges) and consist of as many so-called kernels as there are input channels.
-% The kernels perform the actual convolution operation by sliding them along the individual channels and convolving
-% The individual kernels are applied by sliding them along the input channels and generate new layers by calculating the scalar product of the kernel and the input channel.
-% An individual kernel is applied by sliding it along an individual input channel.
-% An individual kernel is applied by sliding it along an individual input channel and calculating the scalar product of the overlapping region of the kernel and the input channel.
-% An individual kernel is applied by sliding it along an individual input channel and calculating the scalar product of the overlapping region.
 A kernel is applied by sliding it along an input channel and calculating the scalar product of the overlapping region.
-% This generates a new layers by calculating the scalar product of the kernel and the input channel.
-% Therefore, each kernel generates a new layer.
-% This generates new layers which are summed up to a feature map.
-This generates new layers which are summed up to a feature maps.
-% These layers are then summed up to a feature map.s
-% All generated layers of a certain filter are then summed up to a feature map.
-% Each kernel convolves a section of the input
-% A convolutional layer performs the convolution operation with so-called kernels.
-% Kernels are
-% These kernels are applied to the input data by sliding them along.
-% Filters, consisting of as many kernels as the input features channels, are applied to the input
-% These kernels are applied to the input by sliding them along.
-% The output of a convolutional layer is often referred to as a feature map. ------------------
-% Therefore, a kernel is applied to
-% Therefore, a filter is applied to
-% A filter consists of as many kernels as there are input feature maps.
-% Each convolutional layer applies a set amount of filters to the input feature maps or the input channels of an image.
-% Each convolutional layer applies a set amount of filters to the input feature maps.
-% The number of kernels is equal to the number of input feature maps.
-% The goal of the convolution operation is to extract certain features --- such as edges --- from the image.
-% Different filters are used to detect different features.
+This generates new layers which are summed up to a feature maps. % feature map
 The first convolutional layers are responsible for detecting low-level features, while following layers are responsible for detecting high-level features \cite[p.~327--330]{deeplearningbook}.
 
-% Many \acrlong{ml} algorithms require the specification of so-called hyperparameters.
-% These are determined outside of the learning algorithm itself. % remove of
 Convolutional layers require the specification of many hyperparameters:
-% The most important ones are the number of filters and the kernel size.
 \begin{enumerate}
   \item Number of filters
   \item Kernel size
@@ -87,25 +35,15 @@ Convolutional layers require the specification of many hyperparameters:
 The number of filters corresponds to the number of convolved feature maps produced.
 The kernel size specifies the height and the width of the convolution window used.
 Padding can be used to preserve the spatial dimensions by adding layers of zeros to the input image.
-% Stride specifies the number of pixels the kernel moves between its applications.
 Stride specifies the amount of movement between applications of the filter.
 The activation parameter is used to specify an activation function (typically \acrshort{relu}).
 Finally, the bias parameter specifies whether to use a bias term.
 
-% striding is an option to reduce data / alternative to pooling
-
 % -----------------------
 \paragraph{Pooling Layer}
-% Pooling layers are used to reduce the spatial dimensions of the convolved features.
 Pooling layers are used to reduce the spatial dimensions of the convolved feature maps.
-% They replace the output of a
-% This is done by replacing a portion of the feature map with a statistic of the nearby values.
-% This is done by replacing a rectangular neighborhood of the feature map with a summary of this region.
 This is done by replacing a rectangular region of the feature map with a summary of this region.
-% Pooling is done by only looking at the portion of the image masked by the kernel.
-% Maximum pooling yields the maximum value and average pooling yields the average value of the masked portion.
 Maximum pooling yields the maximum value and average pooling yields the average value of a specific rectangular region.
-% Usually max-pooling is used due to the fact that large values correspond to detected features
 Usually, max-pooling is used to preserve large values which correspond to detected features.
 By doing so, the required computational power is significantly decreased and the dominant features are extracted \cite[p.~335--339]{deeplearningbook}.
 
@@ -113,16 +51,11 @@ Max-pooling layers mainly require two hyperparameters: the pool size and the str
 The pool size is the region over which the maximum is taken.
 The strides value specifies how far the pooling window moves for each pooling step.
 
-% ------------------------------
+% -------------------------------
 \paragraph{Fully-Connected Layer}
-% Each artificial neruron is connected to every neuron from the previous and the next layer.
-% If every output of every artifical neuron in layer $n$ is connected to every input of every artifical neuron in layer $n + 1$, it is referred to as a fully-connected or dense layer.
 If every artificial neuron in layer $n$ is connected to every artificial neuron in layer $n + 1$, it is referred to as a fully-connected or dense layer.
-% Fully-connected layers are also reffered to as dense layers.
 Fully-connected layers are responsible for learning the non-linear combinations of the high-level convolved feature maps.
-% talk about the flattening process between the output of a conv-layer and a dense layer
 They are used at the end of \acrshortpl{cnn} to flatten the result of the convolution process into a vector of values.
-% Each value corresponds to the probability that a certain feature belongs to a label.
 The output layer usually contains as many artificial neurons as there are classes \cite{cnn_fc}.
 
 The three main hyperparameters of fully-connected layers are the number of artificial neurons, the activation function and wheter to use a bias term.

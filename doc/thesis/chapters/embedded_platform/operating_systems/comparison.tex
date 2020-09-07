@@ -1,5 +1,6 @@
 \subsection{Comparison}
 \label{subsec:embedded_platform:operating_systems:comparison}
+
 Table \ref{tab:compare_os} provides an overview of the main functions and properties of the two \acrlongpl{os}.
 
 \begin{table}
@@ -8,7 +9,7 @@ Table \ref{tab:compare_os} provides an overview of the main functions and proper
   \centering
   \begin{tabular}{lll}
     \toprule
-    \textbf{} & \textbf{PYNQ} & \textbf{PetaLinux} \\
+     & \textbf{PYNQ} & \textbf{PetaLinux} \\
     \midrule
     Kernel version & 4.19.0 & 4.19.0 \\
     Basic distribution & Ubuntu \cite{pynq_presentation} & - \\
@@ -23,10 +24,8 @@ Table \ref{tab:compare_os} provides an overview of the main functions and proper
 PYNQ is based on Ubuntu.
 Since Baumer supports Ubuntu, the Baumer camera should work with this \acrlong{os}.
 However, the installation of the official \texttt{.deb} package does not work.
-% The workaround is to use the installation package for the Rock64 board that Baumer distributed for a while.
 The workaround is to use the installation package for the Rock64 board that Baumer distributed for a while in the past.
 The Rock64 development board features a quad-core ARM Cortex A53 processor like the UltraScale+ family.
-% In addition mysqlclient and pq5 have to be installed to use the Baumer camera.
 Additionally, \texttt{mysqlclient} and \texttt{pq5} must be installed to use the Baumer camera.
 
 Although both \acrlongpl{os} officially support Wi-Fi, PetaLinux has connecting problems due to a faulty root filesystem.

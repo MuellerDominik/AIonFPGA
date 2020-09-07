@@ -1,40 +1,27 @@
 \section{Camera Library}
 \label{sec:inference:camera_library}
 
-% The camera library shares a great
 The camera library is very similar to the camera application created during the previous project.
 Therefore, only the differences and the various functions are described in this section.
 
-% Differences:
-% - major difference = source code of the camera interface is compiled to a shared library and not to an application
-% - own buffer implemenetd
-% - glitch will not decrement the buffer size (introduction of a throw_bgn local variable)
-% - also glitch will not be a false positive for an application polling the global variable
 The main difference between the old camera application and the new camera library is the way they are compiled.
 Previously, the source code of the camera interface was compiled to an application, whereas now it is compiled to a shared library (\texttt{libcamera.so}).
 
 Furthermore, the various state and configuration variables are now globally declared.
-% This allows an application which uses the shared library to poll these global variables and act upon a change.
-% This allows an application which uses the shared library to poll these global variables and act upon a change.
 This allows an application using the shared library to poll these global variables and react to a change.
 
 The required memory for the frames is allocated manually and is no longer managed by the Baumer \texttt{BGAPI2}.
 This leads to a decrease in memory usage of about \SI{66}{\percent}.
 
-% The glitch detection was revised.
 The glitch detection (single frame changes) has been completely revised.
 Removed glitches no longer reduce the buffer size because the respective Baumer \texttt{Buffer} objects are released properly.
-% It has also been ensured that the global variable \texttt{throw\_bgn} is not set to \texttt{true} when a glitch occurs.
 It has also been ensured that the global variable \texttt{throw\_bgn} is not changed when a glitch occurs.
 Otherwise, an application that polls the \texttt{throw\_bgn} variable could obtain a false positive reading.
-% Otherwise, an application that polls the \texttt{throw\_bgn} variable could get a false positive value.
 
 \subsection{Functions}
 \label{subsec:inference:camera_library:functions}
 
-% Besides the main functions, the camera library also features several accessor functions to access global variables and mutator functions to control the camera parameters.
 Besides the main functions, the camera library also provides several accessor functions for accessing global variables and mutator functions for controlling the camera parameters.
-% The camera library consists of accessor and mutator function.
 
 The main functions:
 

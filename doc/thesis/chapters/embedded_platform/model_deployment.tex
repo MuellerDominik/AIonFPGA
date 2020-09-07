@@ -1,15 +1,13 @@
 \section{Model Deployment}
 \label{sec:embedded_platform:model_deployment}
 
-% Xilinx provides functions to prepare the deployed model described in chapter \ref{ch:training_of_the_cnn} for the \acrshort{dpu}.
 Xilinx provides functions to prepare the floating-point model described in chapter \ref{ch:training_of_the_cnn} for the \acrshort{dpu}.
 The preparation is done in two main steps:
 \begin{enumerate}
-	\item Quantization
-	\item Compilation
+  \item Quantization
+  \item Compilation
 \end{enumerate}
 Xilinx makes it easy to use those functions by using Docker.
-% Docker makes it possible to run an application in an isolated environment called container.
 Docker allows you to run an application in an isolated environment called a container.
 The Xilinx images for creating a container are distributed via Docker Hub.
 An image is automatically pulled when a command like
@@ -22,12 +20,13 @@ The process shown in figure \ref{fig:petalinux_workflow} is valid apart from the
 
 \subsection{Quantize}
 \label{subsec:embedded_platform:model_deployment:quantize}
+
 The function to quantize a TensorFlow model is called \texttt{vai\_q\_tensorflow}, where \textit{vai} stands for Vits AI and \textit{q} for quantization.
 Quantize a Caffe model is possible with the \texttt{vai\_q\_caffe} function.
 The quantizer has the following parameters:
 \begin{itemize}
-	\item quantize
-	\item dump
+  \item quantize
+  \item dump
 \end{itemize}
 
 \paragraph{Quantize}
@@ -54,14 +53,12 @@ Listing \ref{lst:quantize} shows an example of what the quantization command mig
   --method 1
 \end{lstlisting}
 
-% The input node name as well as the output node name are set when generating the frozen graph.
 Both the name of the input node and the name of the output node are defined during the generation of the frozen graph.
 These are the first and last entries when the layers are listed.
 The parameter \texttt{input\_frozen\_graph} is the path to the frozen graph, which is generated as described in section \ref{subsec:training_of_the_cnn:training:saving_of_the_model}.
 
 The \texttt{input\_nodes} parameter defines the first layer to be quantized and the last layer is set by the \texttt{output\_nodes} parameter.
 The \texttt{input\_fn} is a Python script that processes the calibration images in the same way as during inference.
-% Amongst others the path to the calibration dataset is set in the python script.
 Among other things, the path to the calibration dataset is defined in the Python script.
 The parameter \texttt{calib\_iter} defines the number of iterations.
 100 is the default number but 50 turned out to be quite sufficient.
@@ -79,7 +76,6 @@ The default value of this parameter is 0.
 Furthermore, the dump function is called by \texttt{vai\_q\_tensorflow dump}.
 
 \paragraph{Prune}
-% Most neural network have significant redundancy to achieve a certain accuracy.
 Most neural networks have considerable redundancy to achieve a certain accuracy.
 The redundancy comes from overparameterized models.
 Pruning is the process of removing some of the weights while keeping the loss of accuracy as low as possible \cite{pruning_overview}.
@@ -93,7 +89,6 @@ Therefore, no pruning is carried out in this project.
 According to the Vitis AI quantize tool, the compile command is named \texttt{vai\_c\_tensorflow}.
 The goal of the compiler is to map the network model into a highly optimized \acrshort{dpu} instruction sequence.
 
-% Start compiling can be done like shown in listing \ref{lst:compile}.
 The compilation can be done as shown in listing \ref{lst:compile}.
 
 \begin{lstlisting}[style=bash, caption={Compilation command}, label=lst:compile]
@@ -120,9 +115,9 @@ a file named \texttt{dpu-<dd-mm-yyyy-hh-mm>.dcf} is created, where \texttt{<dd-m
 The entire \texttt{arch.json} file may look like this:
 \begin{lstlisting}[style=bash, caption={}, label=lst:arch_json]
   {
-  	"target": "dpuv2",
-  	"dcf": "'dpu-01-01-2000-00-01.dcf'",
-  	"cpu_arch": "arm64"
+    "target": "dpuv2",
+    "dcf": "'dpu-01-01-2000-00-01.dcf'",
+    "cpu_arch": "arm64"
   }
 \end{lstlisting}
 
@@ -130,14 +125,10 @@ Due to a programming error of Xilinx, the \texttt{net\_name} parameter must not 
 The Python script responsible for loading the overlay uses the \texttt{rstrip} function to remove the trailing character sequence \texttt{.s}.
 However, the \texttt{rstrip} function cannot be used to remove character sequences, only single characters.
 It therefore removes any trailing \texttt{.} (dot) or \texttt{s} until another character is present.
-% It therefore removes as many trailing character until the last character is not contained in the specified sequence.
-% everything from the end of the specified name until there is no s or \_0.
-% \todo[inline]{what does it remove exactly?}
 
 The \acrshort{dpu} mode can be set either to normal, profile or debug mode.
 In normal mode the application can achieve the best performance.
 When using the profile mode, the output is printed to the console.
-% If debug mode is selected, raw data for each \acrshort{dpu} computation node will be dumped.
 If debug mode is selected, raw data is dumped for each \acrshort{dpu} computation node.
 
 After the compilation is done a file with the name \texttt{<netname>.elf} is SAVED in the defined output directory.

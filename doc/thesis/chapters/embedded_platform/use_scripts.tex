@@ -7,9 +7,9 @@ The scripts provided in the \texttt{AIonFPGA} repository on GitHub allow buildin
 The first script in the \texttt{mpsoc/build-pynq/} directory requires internet access, root privileges, the local Wi-Fi configurations and three Debian packages in the \texttt{packages/} folder.
 It is important to have the correct three package versions:
 \begin{itemize}
-	 \item \texttt{baumer-gapi-sdk-linux-v2.9.2.22969-Ubuntu-18.04-rock64.deb}
-	 \item \texttt{libmysqlclient20\_5.7.23-0ubuntu0.18.04.1\_arm64.deb}
-	 \item \texttt{libpq5\_10.4-0ubuntu0.18.04\_arm64.deb}
+  \item \texttt{baumer-gapi-sdk-linux-v2.9.2.22969-Ubuntu-18.04-rock64.deb}
+  \item \texttt{libmysqlclient20\_5.7.23-0ubuntu0.18.04.1\_arm64.deb}
+  \item \texttt{libpq5\_10.4-0ubuntu0.18.04\_arm64.deb}
 \end{itemize}
 
 To prevent the destruction of the own hard disk, specify the correct block device of the SD card.
@@ -41,12 +41,10 @@ After executing the other three Makefiles, insert the SD card and power the Ultr
 The Makefile in the \texttt{mpsoc/pynq-setup/} directory can now be executed.
 
 To execute the script successfully, the IP address of the board must be changed to the respective IP address.
-% This address is viewable at the Wi-Fi access point.
 This address can be read from the Wi-Fi access point.
 
 In a first step the \acrshort{ssh} keys are exchanged by the \texttt{make} command.
 Therefore, the host computer needs a key pair in the default directory (\texttt{/home/<user>/.ssh} where \texttt{<user>} is replaced with the respective username).
 
 Running the script takes about four hours and the passwords for the user and the root user of the board are needed at the beginning.
-% Both passwords are just xilinx by default.
 Both passwords are \textit{xilinx} by default.

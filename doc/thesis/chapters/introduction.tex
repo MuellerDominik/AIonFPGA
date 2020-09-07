@@ -23,8 +23,8 @@ In order to keep up with the current state of development, the institute for sen
 This project has two main objectives:
 
 \begin{enumerate}
-	\item Showing the FHNW how to run hardware accelerated \acrshort{ai}
-	\item Developing an eye-catcher for the ISE, which can be presented at trade fairs
+  \item Showing the FHNW how to run hardware accelerated \acrshort{ai}
+  \item Developing an eye-catcher for the ISE, which can be presented at trade fairs
 \end{enumerate}
 
 Apart from the hardware, which is an Ultra96-V2 development board, the procedure was not defined more precisely, which allowed a certain leeway.
@@ -41,14 +41,10 @@ During the previous project, the throwing booth was designed and built.
 An industrial camera and suitable lighting were evaluated, purchased and installed.
 Furthermore, a dataset was collected, which consists of more than \num{15000} usable frames with at least \num{485} frames of each object.
 Each frame in the dataset is labeled and therefore indicates what kind of object it is.
-% For each image in the database, labels have been set to indicate what kind of object it is.
-% Also it is noted if the picture is not good (for example because a hand was on the picture) or if the object is cut off at the edge of the image.
 
 In this project an \acrfull{os} for the processor of the Ultra96-V2 is set up.
 The \acrshort{os} can control the \acrfull{fpga}, which is included in the \acrfull{mpsoc}.
 On this \acrshort{fpga} a \acrfull{dpu} is implemented, which performs the high-speed image recognition.
-% The trained neural network was quantized before.
-% This makes it possible to execute the image recognition by using C-code commands. % why C-code?
 The results are verified for accuracy and throughput.
 
 This thesis contains seven main parts.

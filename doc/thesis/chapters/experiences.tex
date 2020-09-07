@@ -6,61 +6,42 @@ During the execution of the project we encountered various problems.
 Some of them were caused by us.
 On others, we had little influence.
 The global coronavirus pandemic did not really have a major impact on the work.
-% Even during the lock down it was possible to work.
 It was even possible to work during the lockdown.
 However, when it was possible to meet again at school in June, we encountered serious difficulties.
 It turned out that the camera was incompatible with PetaLinux.
-% The camera was not with the one who was working on the \acrlong{os}.
 The camera was not with the person who was working on the \acrlong{os}.
 Since compiling and running the application was always possible, we assumed that everything would work.
-% However, successful compilation was only a necessary condition, but not a sufficient one.
 However, successful compilation was only a necessary, but not a sufficient condition.
-As a result, an alternative \acrlong{os} had to be used in the last two months, and much of the work that had been done until then was lost. 
+As a result, an alternative \acrlong{os} had to be used in the last two months, and much of the work that had been done until then was lost.
 
 The experience with Avnet was not very positive either.
 Firstly, the bug with the \acrshort{pmic} is annoying because it reduces performance.
-% But also the documentation on how to use their hardware is very sparse.
-% There is very sparse documentation on how to use the hardware.
 There is very little documentation on how to use the hardware.
 There are a few examples on Hackster.io, but no technical documentation exists.
 Furthermore, the written scripts are not very good.
 One example was already mentioned in section \ref{sec:embedded_platform:xilinx_tools}.
-% Because we did not install Petalinux in the default directory, the makefile could not be finished.
 Since we did not install PetaLinux into the default directory, the Makefile could not be completed.
 Unfortunately, there was no error message and the log file with about \num{10000} lines had to be searched manually.
-% Here is another example:
-% Avnet creates makefiles in makefiles to allow modularity of the build process.
-% Another example is, that Avnet creates makefiles in makefiles to allow modularity of the build process.
 Another example is that Avnet creates Makefiles within Makefiles to allow for a modular build process.
 Because of bad programming, artifacts appeared in the Makefile like a \textit{-e} in front of the Make target.
 But with our own experiments we could show that the Make command can handle this situation.
 
 When trying to read the dataset in the TFRecords file format with TensorFlow, there were also several problems.
-% These could be resolved with NumPy arrays.
 However, these could be resolved with NumPy arrays.
 
-% The experiences with Xilinx were appealing, but it is difficult to get in as a newcomer.
 The experience with Xilinx was appealing, but it has a steep learning curve.
-% There are many tools and user guides.
-% But after a while this worked.
 However, with the help of many tools and user manuals it was possible to overcome the initial difficulties.
 
-% But there were also very good experiences.
 Nevertheless, there were also very good experiences.
 When we tried to fix the camera problem on the PetaLinux \acrshort{os} we contacted Baumer.
 Very quickly we got help from developers, although it is clearly stated that only certain \acrlongpl{os} are supported and PetaLinux is clearly not one of them.
-% The help was detailed and led to partial success, but it was not possible to run the application without losing frames.
 The help was detailed and resulted in partial success, but it was not possible to run the application without dropping frames.
 
-% Xilinx's \acrshort{dpu} was also put into operation with the documentation in an appealing time and reliable function and with high performance.
-% Thanks to the Xilinx documentation, the DPU could be put into operation in an appealing time and with reliable function and high performance.
 Thanks to the Xilinx documentation, the \acrshort{dpu} was put into operation in an appealing time and with reliable function and high-performance.
 The solution to work with Docker turned out to be extremely useful and easy to use.
 
 TensorFlow 2 worked absolutely satisfying during the whole project except for reading the dataset in the TFRecords format.
 
-% In summary, we are very satisfied with the result.
-In summary, we can say that we are very satisfied with the result. 
-% The image recognition is performing fast and accurate, the throwing booth looks good and the application is running error-free according to our current state of knowledge.
+In summary, we can say that we are very satisfied with the result.
 The image recognition works fast and accurate, the throwing booth looks good and the application runs error-free according to our current knowledge.
 While we recommend both TensorFlow 2 and Xilinx, we cannot recommend the use of Avnet.
