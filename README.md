@@ -4,6 +4,24 @@
 
 <img src="https://github.com/MuellerDominik/AIonFPGA/blob/master/doc/.imgs/arch.svg" alt="Architecture of the Convolutional Neural Network">
 
+## Abstract
+
+In a world of self-driving cars and automated quality control in manufacturing, real-time image classification is becoming increasingly important.
+Artificial intelligence, and deep learning in particular, are achieving excellent classification accuracies, but there are some challenges.
+
+For one thing, high-resolution image acquisition systems require a lot of processing power.
+For another, a large labeled dataset of training data is required to train deep convolutional neural networks.
+
+A solution for the former is to use field-programmable gate arrays (FPGAs) as hardware accelerators.
+Therefore, an embedded system featuring a multiprocessor system-on-chip with an integrated FPGA is deployed.
+The second problem is approached with data augmentation to artificially increase the size of the labeled dataset.
+
+This allowed the deployed convolutional neural network to achieve a Top-1 accuracy of 97.2&nbsp;% and a Top-5 accuracy of 99.5&nbsp;%.
+In addition, the throughput of the image classification chain reached 41.1&nbsp;fps for color images of 1280×1024&nbsp;px.
+
+Using data augmentation significantly improved the real-world classification performance by reducing the impact of ambient light.
+Furthermore, it completely eliminated the need to collect additional data samples.
+
 ## Repository Structure
 
 This repository is structured as follows:
