@@ -65,6 +65,10 @@ $ make build clean
 | Quantized Model | [.elf][Quantized Model]                                         | `9ff451d90434959103951976859c2be538e2d89b06f886ac267ea05bff0ac436` |
 | DPU             | [.bit][DPU bit] <br> [.hwh][DPU hwh] <br> [.xclbin][DPU xclbin] | `478f05f4b1a9a35121b8cf3824cc096ba514157be8aa402950668746027e3d0c` <br> `0c64dc4a6f8912893d6fa3967ed937d2ec10abd4e1d81800386e6540eed877ab` <br> `29e5adb0218e1ead172f36f8c88f805d3f3d039bb1ccb6041286e0e21ba86dcf` |
 
+## Previous Project
+
+This bachelor thesis is the continuation of the following previous project: [P5-AIonFPGA](https://git.io/p5-aionfpga)
+
 ## License
 
 Copyright &copy; 2020 Dominik Müller and Nico Canzani
