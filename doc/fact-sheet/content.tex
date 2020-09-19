@@ -14,7 +14,7 @@
 \fssummary{
   In a world of self-driving cars and automated quality control in manufacturing, real-time image classification is becoming increasingly important.
   Artificial intelligence (AI), and deep learning in particular, are achieving excellent classification accuracies.
-  However, the training of a convolutional neural network (CNN) requires a sufficiently large labeled dataset.
+  However, there are certain difficulties associated with this approach.
 }
 
 \fsgraphics{
@@ -23,29 +23,27 @@
 }
 
 \fscontent{
-  \section{Difficulty}
-  Collecting a sufficiently large dataset of pictures is not trivial.
-  When done manually, the camera has to be started and stopped for each throw.
-  This likely creates many empty frames at the beginning and at the end of the capture.
-  Those empty and therefore invalid frames must be removed to avoid errors during the training of the CNN later on.
-  Furthermore, each valid frame must be labeled.
-  This procedure is very error-prone if it is performed manually for each individual frame.
+  \section{Difficulties}
+  There are two main difficulties that need to be overcome.
+  For one thing, high-resolution image acquisition systems require a lot of processing power.
+  % The first one is that high-resolution image acquisition systems require a lot of processing power.
+  % For another, a large labeled dataset of training data is required to train deep convolutional neural networks (CNNs).
+  For another, a large labeled dataset of images is required to train deep convolutional neural networks (CNNs).
+  % The second one is that a large labeled dataset of general enough training data is required to train deep convolutional neural networks (CNNs).
+  % Additionally, the training dataset needs to be general enough.
+  Additionally, the training dataset must represent real-world conditions.
 
   \newcol
-  \section{Software}
-  To simplify the image collection, a camera throw detection mechanism is implemented and various Python scripts are used.
-  The goal of the throw detection is to extract valid frames of a throw --- with objects on them --- from the continuous data stream of the camera.
-  Therefore, the throw detection needs to work in real time.
-  At a frame rate of \SI{200}{fps}, there is less than \SI{5}{ms} to process a single frame.
-  Due to this time constraint, a simple image change detection algorithm is implemented.
+  \section{Solutions}
+  A solution for the former difficulty is to use field-programmable gate arrays (FPGAs) as hardware accelerators.
+  Therefore, an embedded system featuring a multiprocessor system-on-chip with an integrated FPGA is deployed.
+  The second difficulty is approached with data augmentation to artificially increase the size of the labeled dataset.
 
   \newcol
-  \section{Dataset}
-  The dataset contains images of 22 different throwing objects, ranging from sports equipment to toys.
-  It is fully labeled and consists of more than \num{15000} usable images with at least 480 images of each object.
-  The employed software made it possible to collect all images over the course of only two days.
-  The above images are two examples from the labeled dataset.
-  The first one shows the \textit{Stuffed Bunny} and the second one shows the \textit{Hand Featherball}.
+  \section{Results}
+  The result is the deep convolutional neural network shown in the image above.
+  It achieves a Top-1 classification accuracy of \SI{97.2}{\percent} and a Top-5 classification accuracy of \SI{99.5}{\percent}.
+  In addition, the throughput of the image classification chain reaches \SI{41.1}{fps} for color images of a size of $1280\times\SI{1024}{pixels}$.
 }
 
 \infobox{Throwing Booth}{
@@ -59,6 +57,6 @@
     Finally, a monitor is used to display the detected object.
   \end{minipage}\hfill%
   \begin{minipage}{0.32\textwidth}
-    \includegraphics[width=\textwidth]{graphics/top_assembly.png}
+    \includegraphics[width=\textwidth]{graphics/throwing_booth.png}
   \end{minipage}
 }
