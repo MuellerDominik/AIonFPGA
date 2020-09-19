@@ -62,8 +62,8 @@ The compiled `.pdf` files can be downloaded from here directly:
 | Project Plan        | [.pdf][Project Plan]    | `ca5c77def20f017892c571859c7772a77c04b8ebc5d4bef795865e88b3c6474f` |
 | **Bachelor Thesis** | [.pdf][Bachelor Thesis] | `818df883f765bed2fa2e500bd5064ae3236327c9e5a2626e270d5e65cc38c8f0` |
 | Presentation        | [.pdf][Presentation]    | `2e3b39469f03a21843b4881c65a7d82646388275b02431f400497ac3d9e51925` |
-| Fact Sheet          | [.pdf][Fact Sheet]      | `...` |
-| Poster              | [.pdf][Poster]          | `...` |
+| Fact Sheet          | [.pdf][Fact Sheet]      | `b85f36d1627cad99a8532ecc9528f8b2400884795de159473b460e02a38514ba` |
+| Poster              | [.pdf][Poster]          | `8605bac39041a88e24b22f1d9ff3b48a6822ba567db58a8b4c57e0f313d0df62` |
 
 #### Compilation
 
@@ -96,8 +96,8 @@ This project is licensed under the terms of the Apache License 2.0 - see the [LI
 [Project Plan]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v0.0.2/project-plan_aionfpga_canzani_mueller_v002.pdf
 [Bachelor Thesis]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v1.0.0/p6_aionfpga_thesis_canzani_mueller.pdf
 [Presentation]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v1.0.0/p6_aionfpga_presentation_canzani_mueller.pdf
-[Fact Sheet]: #
-[Poster]: #
+[Fact Sheet]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v1.0.0/p6_aionfpga_fact-sheet_canzani_mueller.pdf
+[Poster]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v1.0.0/p6_aionfpga_poster_canzani_mueller.pdf
 
 [Camera Library]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v1.0.0/libcamera.so
 [Saved Model]: https://github.com/MuellerDominik/AIonFPGA/releases/download/v1.0.0/SavedModel.zip
